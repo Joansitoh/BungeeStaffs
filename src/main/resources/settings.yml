@@ -1,0 +1,14 @@
+################################################
+#
+# BUNGEESTAFFS - v0.1
+# https://discord.gg/9N963feMZb
+#
+################################################
+
+EVENTS:
+  STAFFS:
+    PERMISSION: 'bstaffs.staff'
+
+    JOIN-MESSAGE: true
+    LEFT-MESSAGE: true
+    MOVE-MESSAGE: true

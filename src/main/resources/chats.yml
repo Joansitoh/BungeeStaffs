@@ -1,0 +1,18 @@
+################################################
+#
+# BUNGEESTAFFS - v0.1
+# https://discord.gg/9N963feMZb
+#
+################################################
+
+# You can create how many chat what you want.
+CHATS:
+  STAFF-CHAT: # Example custom chat.
+
+    # The input are the char how you use to write a message on this chat.
+    # Example: (#I love minecraft) // "STAFF (Lobby) | Joansiitoh: I love minecraft"
+    INPUT: '#'
+    FORMAT: '&c&lSTAFF &7(&o<server>&7) &7&l| &c<staff>: &f<message>'
+
+    # Permission needed to use and read this chat.
+    PERMISSION: 'bstaffs.staffchat'
