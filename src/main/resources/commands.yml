@@ -1,7 +1,7 @@
 ################################################
 #
 # BUNGEESTAFFS - v0.1
-# https://discord.gg/9N963feMZb
+# https://discord.gg/gXzRaYdzsh
 #
 ################################################
 
@@ -11,7 +11,8 @@
 # * COMMAND: The command name.
 # * TYPE: Command type. (Available: SOLO, TARGET)
 # * USAGE: Command usage help message.
-# * FORMAT: Output message format.
+# * FORMAT: Staff output message format.
+# * OUTPUT: User send output message format.
 # * PERMISSION: Permission needed for read the command output.
 # * COOLDOWN: Add cooldown in seconds for command.
 ###############################################################
@@ -22,9 +23,12 @@ COMMANDS:
     COMMAND: 'helpop'
     USAGE: 'Use /helpop <message>'
 
+    PERMISSIONS:
+      SEND: ""
+      RECEIVE: "bstaffs.helpop"
+
     FORMAT: '&5&lHELPOP &7&l| &c<player>&f: <message>'
-    OUTPUT: '&aMessage successfully send to staffs.'
-    PERMISSION: 'bstaffs.helpop'
+    OUTPUT: '&5&lHELPOP &7&l| &aMessage successfully send to staffs.'
     COOLDOWN: 20
 
   REPORT-CMD:
@@ -32,7 +36,11 @@ COMMANDS:
     COMMAND: 'report'
     USAGE: 'Use /report <player> <message>'
 
+    PERMISSIONS:
+      SEND: ""
+      RECEIVE: "bstaffs.report"
+
     FORMAT: '&4&lREPORT &7&l| &c<player> &fhas reported &6<target>&f: &f<message>'
-    OUTPUT: '&aReport send successfully.'
+    OUTPUT: '&4&lREPORT &7&l| &aReport send successfully.'
     PERMISSION: 'bstaffs.staffchat'
     COOLDOWN: 60

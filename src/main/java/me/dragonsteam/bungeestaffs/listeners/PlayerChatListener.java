@@ -24,11 +24,11 @@ public class PlayerChatListener implements Listener {
         }
 
         if (chats == null) return;
-        //if (!player.hasPermission(chats.getPermission())) return;
+        if (!player.hasPermission(chats.getPermission())) return;
         e.setCancelled(true);
 
         for (ProxiedPlayer p : bStaffs.INSTANCE.getProxy().getPlayers()) {
-            //if (!p.hasPermission(chats.getPermission())) continue;
+            if (!p.hasPermission(chats.getPermission())) continue;
             p.sendMessage(chats.getPlayerFormat(player, e.getMessage()));
         }
     }

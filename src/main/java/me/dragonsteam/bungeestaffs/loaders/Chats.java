@@ -1,5 +1,6 @@
 package me.dragonsteam.bungeestaffs.loaders;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.utils.ChatUtils;
@@ -16,6 +17,7 @@ import java.util.List;
  * Date: 02/08/2021 - 16:23.
  */
 @Getter
+@AllArgsConstructor
 public class Chats {
 
     @Getter
@@ -28,25 +30,24 @@ public class Chats {
     }
 
     public Chats(Plugin plugin) {
+        chatsHashMap.clear();
         bStaffs.logger("Registering custom chats.", "[Loader]");
         ConfigFile config = bStaffs.INSTANCE.getChatsFile();
         for (String s : config.getConfiguration().getSection("CHATS").getKeys()) {
             Configuration section = config.getConfiguration().getSection("CHATS." + s);
 
             try {
-                Chats chats = new Chats(section.getString("INPUT"), section.getString("FORMAT"), section.getString("PERMISSION"));
+                Chats chats = new Chats(
+                        section.getString("INPUT"),
+                        section.getString("FORMAT"),
+                        section.getString("PERMISSION")
+                );
                 chatsHashMap.put(chats.getInput(), chats);
                 bStaffs.logger("* New custom chat created. (" + s + ")", "[Loader]");
             } catch (Exception e) {
                 bStaffs.logger("* Error on load custom chat.", "[Loader]");
             }
         }
-    }
-
-    public Chats(String input, String format, String permission) {
-        this.input = input;
-        this.format = format;
-        this.permission = permission;
     }
 
     public String getPlayerFormat(ProxiedPlayer player, String message) {

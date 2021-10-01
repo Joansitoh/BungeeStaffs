@@ -25,13 +25,14 @@ public class Comms {
 
     private int cooldown;
     private CommandType type;
-    private String command, usage, format, permission;
+    private String command, usage, format, output, sendPermission, receivePermission;
 
     public static Comms getCommandByName(String input) {
         return commsHashMap.get(input);
     }
 
     public Comms(Plugin plugin) {
+        commsHashMap.clear();
         bStaffs.logger("Registering custom commands.", "[Loader]");
         ConfigFile config = bStaffs.INSTANCE.getCommandsFile();
         for (String s : config.getConfiguration().getSection("COMMANDS").getKeys()) {
@@ -41,7 +42,8 @@ public class Comms {
                 Comms comms = new Comms(
                         section.getInt("COOLDOWN"), CommandType.valueOf(section.getString("TYPE")),
                         section.getString("COMMAND"), section.getString("USAGE"),
-                        section.getString("FORMAT"), section.getString("PERMISSION")
+                        section.getString("FORMAT"), section.getString("OUTPUT"),
+                        section.getString("PERMISSIONS.SEND"), section.getString("PERMISSIONS.RECEIVE")
                 );
 
                 commsHashMap.put(comms.getCommand(), comms);

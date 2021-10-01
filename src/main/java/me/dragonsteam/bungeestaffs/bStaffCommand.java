@@ -1,5 +1,8 @@
 package me.dragonsteam.bungeestaffs;
 
+import me.dragonsteam.bungeestaffs.listeners.PlayerCommandListener;
+import me.dragonsteam.bungeestaffs.loaders.Chats;
+import me.dragonsteam.bungeestaffs.loaders.Comms;
 import me.dragonsteam.bungeestaffs.loaders.Lang;
 import me.dragonsteam.bungeestaffs.utils.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.ConfigFile;
@@ -47,6 +50,9 @@ public class bStaffCommand extends Command {
                     sender.sendMessage("");
                     sender.sendMessage(ChatUtils.translate("&eAll files config has been reloaded."));
                     sender.sendMessage(ChatUtils.MEDIUM_CHAT_BAR);
+
+                    new Chats(bStaffs.INSTANCE);
+                    new Comms(bStaffs.INSTANCE);
                 }, 2, TimeUnit.SECONDS);
                 return;
             }

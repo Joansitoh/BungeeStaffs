@@ -30,12 +30,6 @@ import java.util.List;
 public class PlayerCommandListener implements Listener {
 
     private final ConfigFile config = bStaffs.INSTANCE.getCommandsFile();
-    private final List<String> commands;
-
-    public PlayerCommandListener() {
-        this.commands = new ArrayList<>();
-        Comms.getCommsHashMap().values().forEach(comms -> this.commands.add(comms.getCommand()));
-    }
 
     @EventHandler
     public void onPlayerChat(ChatEvent e) {
@@ -52,7 +46,7 @@ public class PlayerCommandListener implements Listener {
 
         if (comms == null) return;
         e.setCancelled(true);
-        if (!hasPermission(player, comms.getPermission())) {
+        if (!hasPermission(player, comms.getSendPermission())) {
             player.sendMessage(Lang.NO_PERMISSION.toString());
             return;
         }
@@ -69,13 +63,14 @@ public class PlayerCommandListener implements Listener {
             return;
         }
 
-        if (comms.getCooldown() != 0) TimerUtils.setPlayerCooldown(player, comms, comms.getCooldown());
+        player.sendMessage(new TextComponent(ChatUtils.translate(comms.getOutput())));
+        if (comms.getCooldown() != 0 && !player.hasPermission("bstaffs.bypass")) TimerUtils.setPlayerCooldown(player, comms, comms.getCooldown());
         StringBuilder builder = new StringBuilder();
         switch (comms.getType()) {
             case SOLO:
                 for (int x = 1; x < args.length; x++) builder.append(args[x]).append(" ");
                 for (ProxiedPlayer p : bStaffs.INSTANCE.getProxy().getPlayers()) {
-                    if (!hasPermission(p, comms.getPermission())) continue;
+                    if (!hasPermission(p, comms.getReceivePermission())) continue;
                     p.sendMessage(new TextComponent(comms.getPlayerFormat(player, null, builder.toString())));
                 }
                 break;
@@ -94,7 +89,7 @@ public class PlayerCommandListener implements Listener {
                 //player.sendMessage(comms.get);
                 for (int x = 2; x < args.length; x++) builder.append(args[x]).append(" ");
                 for (ProxiedPlayer p : bStaffs.INSTANCE.getProxy().getPlayers()) {
-                    if (!hasPermission(p, comms.getPermission())) continue;
+                    if (!hasPermission(p, comms.getReceivePermission())) continue;
                     p.sendMessage(new TextComponent(comms.getPlayerFormat(player, target, builder.toString())));
                 }
                 break;
@@ -108,12 +103,13 @@ public class PlayerCommandListener implements Listener {
 
     @EventHandler
     public void onTabComplete(TabCompleteEvent e) {
+        List<String> commands = new ArrayList<>(Comms.getCommsHashMap().keySet());
         List<String> list = new ArrayList<>();
         if (!e.getCursor().startsWith("/")) return;
         String[] dargs = e.getCursor().substring(1).split(" ");
         String command = dargs[0];
 
-        if (!this.commands.contains(command)) return;
+        if (!commands.contains(command)) return;
         Comms comms = Comms.getCommandByName(command);
         String[] args = e.getCursor().substring(1).replace(command, "").split(" ");
         if (args.length == 0 || args.length == 1) {
