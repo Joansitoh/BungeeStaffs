@@ -9,10 +9,13 @@ import me.dragonsteam.bungeestaffs.loaders.Comms;
 import me.dragonsteam.bungeestaffs.loaders.Lang;
 import me.dragonsteam.bungeestaffs.utils.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.ConfigFile;
+import me.dragonsteam.bungeestaffs.utils.Runnables;
+import me.dragonsteam.bungeestaffs.utils.UpdateChecker;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Joansiitoh (DragonsTeam && SkillTeam)
@@ -43,6 +46,19 @@ public final class bStaffs extends Plugin {
         new Chats(this);
         new Comms(this);
         Lang.loadLanguage();
+
+        Runnables.runLater(() -> {
+            int resourceId = 95425;
+            new UpdateChecker(this, resourceId).getVersion(version -> {
+                if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
+                    logger("&aThere is not a new update available.");
+                } else {
+                    logger("&aThere is a new update available.");
+                    logger("&aDownload new version at:");
+                    logger("&f* &ehttps://www.spigotmc.org/resources/" + resourceId + "/");
+                }
+            });
+        }, 2, TimeUnit.SECONDS);
 
         registerListeners(
                 new PlayerChatListener(), new PlayerCommandListener(), new PlayerServerListeners()

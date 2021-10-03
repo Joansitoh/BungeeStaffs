@@ -14,6 +14,7 @@
 
         <mainClass>me.dragonsteam.bungeestaffs.bStaffs</mainClass>
         <author>Joansiitoh</author>
+        <customOutput>C:\Users\joans\Documents\GitHub\MavenPlugins\${artifactId}</customOutput>
 
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
@@ -43,6 +44,7 @@
     </dependencies>
 
     <build>
+        <outputDirectory>${customOutput}</outputDirectory>
         <defaultGoal>clean install</defaultGoal>
         <resources>
             <resource>
@@ -77,10 +79,20 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.3.1</version>
+                <configuration>
+                    <outputDirectory>${customOutput}</outputDirectory>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.2.1</version>
 
                 <configuration>
+                    <outputDirectory>${customOutput}</outputDirectory>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <shadedArtifactAttached>true</shadedArtifactAttached>
                 </configuration>
@@ -124,6 +136,7 @@
                 </executions>
                 <configuration>
                     <obfuscate>true</obfuscate>
+                    <outputDirectory>${customOutput}</outputDirectory>
                     <outjar>${project.build.finalName}-Lite.jar</outjar>
                     <proguardVersion>7.1</proguardVersion>
                     <options>
@@ -133,7 +146,7 @@
                         <option>-dontshrink</option>
                         <option>-dontoptimize</option>
                         <option>-dontusemixedcaseclassnames</option>
-                        <option>-keep public class me.dragonsteam.bungeestaffs.bStaffs {
+                        <option>-keep public class ${mainClass} {
                             public void onEnable();
                             public void onDisable();
                             }</option>
