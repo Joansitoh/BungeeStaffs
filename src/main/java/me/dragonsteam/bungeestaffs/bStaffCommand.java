@@ -1,14 +1,11 @@
 package me.dragonsteam.bungeestaffs;
 
-import me.dragonsteam.bungeestaffs.listeners.PlayerCommandListener;
 import me.dragonsteam.bungeestaffs.loaders.Chats;
 import me.dragonsteam.bungeestaffs.loaders.Comms;
-import me.dragonsteam.bungeestaffs.loaders.Lang;
-import me.dragonsteam.bungeestaffs.utils.ChatUtils;
-import me.dragonsteam.bungeestaffs.utils.ConfigFile;
-import me.dragonsteam.bungeestaffs.utils.Runnables;
+import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
+import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
+import me.dragonsteam.bungeestaffs.utils.defaults.Runnables;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.util.Arrays;

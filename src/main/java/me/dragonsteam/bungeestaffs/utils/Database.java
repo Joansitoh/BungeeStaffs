@@ -1,7 +1,5 @@
 package me.dragonsteam.bungeestaffs.utils;
 
-import me.dragonsteam.bungeestaffs.bStaffs;
-
 import java.sql.*;
 
 public class Database {
@@ -77,44 +75,44 @@ public class Database {
         return this.conn;
     }
 
+    public void setConn(Connection conn) {
+        this.conn = conn;
+    }
+
     public int getPort() {
         return this.port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 
     public String getDatabase() {
         return this.database;
     }
 
-    public String getHost() {
-        return this.host;
-    }
-
-    public String getPassword() {
-        return this.password;
-    }
-
-    public String getUsername() {
-        return this.username;
-    }
-
     public void setDatabase(String database) {
         this.database = database;
+    }
+
+    public String getHost() {
+        return this.host;
     }
 
     public void setHost(String host) {
         this.host = host;
     }
 
-    public void setConn(Connection conn) {
-        this.conn = conn;
+    public String getPassword() {
+        return this.password;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public void setPort(int port) {
-        this.port = port;
+    public String getUsername() {
+        return this.username;
     }
 
     public void setUsername(String username) {

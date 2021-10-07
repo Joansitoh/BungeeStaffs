@@ -2,7 +2,6 @@ package me.dragonsteam.bungeestaffs.utils;
 
 import me.dragonsteam.bungeestaffs.loaders.Comms;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Command;
 
 import java.util.HashMap;
 

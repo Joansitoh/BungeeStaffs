@@ -1,4 +1,4 @@
-package me.dragonsteam.bungeestaffs.utils;
+package me.dragonsteam.bungeestaffs.utils.defaults;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import me.dragonsteam.bungeestaffs.bStaffs;

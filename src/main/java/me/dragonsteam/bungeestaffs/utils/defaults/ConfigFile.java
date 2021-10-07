@@ -1,4 +1,4 @@
-package me.dragonsteam.bungeestaffs.utils;
+package me.dragonsteam.bungeestaffs.utils.defaults;
 
 import lombok.Getter;
 import me.dragonsteam.bungeestaffs.bStaffs;
@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

@@ -3,8 +3,8 @@ package me.dragonsteam.bungeestaffs.loaders;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import me.dragonsteam.bungeestaffs.bStaffs;
-import me.dragonsteam.bungeestaffs.utils.ChatUtils;
-import me.dragonsteam.bungeestaffs.utils.ConfigFile;
+import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
+import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
@@ -31,6 +31,9 @@ public enum Lang {
     PLAYER_NOT_FOUND("PLAYER-NOT-FOUND", "DEFAULT", "&cPlayer <target> not found."),
     ONLY_FOR_PLAYERS("ONLY-PLAYERS", "DEFAULT", "&cOnly players can execute this command."),
 
+    BOOLEAN_TRUE("TRUE-ARGUMENT", "DEFAULT.OBJECTS", "&aenabled"),
+    BOOLEAN_FALSE("FALSE-ARGUMENT", "DEFAULT.OBJECTS", "&cdisabled"),
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Disguise List
@@ -40,16 +43,17 @@ public enum Lang {
 
     HAVE_COOLDOWN("HAVE-COOLDOWN", "COOLDOWN", "&bPlease, wait &9<cooldown> &7second(s) to execute this command &bagain&7."),
 
+    COMMAND_TOGGLED("COMMAND-TOGGLED", "COMMANDS", "&7Command outputs of '&b<command>&7' has been <value>&7."),
+    COMMAND_NOT_FOUND("COMMAND-NO-EXIST", "COMMANDS", "&7This command not exist&7."),
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ;
 
+    private static final ConfigFile config = bStaffs.INSTANCE.getMessagesFile();
     private final String path;
     private final String subPath;
-
     private String def;
     private List<String> defList;
-
-    private static final ConfigFile config = bStaffs.INSTANCE.getMessagesFile();
 
     Lang(String path, String subPath, String... defList) {
         this.path = path;
@@ -57,29 +61,6 @@ public enum Lang {
 
         if (defList.length == 1) this.def = defList[0];
         else this.defList = Arrays.asList(defList);
-    }
-
-    public String toStringDefault() {
-        return config.getString(getFinalPath(), def);
-    }
-
-    public String toString() {
-        if (defList != null) {
-            StringBuilder builder = new StringBuilder();
-            toList().forEach(text -> builder.append(text).append("\n"));
-            return ChatUtils.translate(builder.toString());
-        }
-
-        return config.getString(getFinalPath(), def);
-    }
-
-    public List<String> toList() {
-        if (def != null) return Collections.singletonList(toString());
-        return config.getStringListOrDefault(getFinalPath(), defList);
-    }
-
-    public String getFinalPath() {
-        return subPath.equalsIgnoreCase("") ? path : subPath + "." + path;
     }
 
     public static void loadLanguage() {
@@ -96,6 +77,29 @@ public enum Lang {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String toStringDefault() {
+        return config.getString(getFinalPath(), def);
+    }
+
+    public String toString() {
+        if (defList != null) {
+            StringBuilder builder = new StringBuilder();
+            toList().forEach(text -> builder.append(text).append("\n"));
+            return ChatUtils.translate(builder.toString());
+        }
+
+        return ChatUtils.translate(config.getString(getFinalPath(), def));
+    }
+
+    public List<String> toList() {
+        if (def != null) return ChatUtils.translate(Collections.singletonList(toString()));
+        return ChatUtils.translate(config.getStringListOrDefault(getFinalPath(), defList));
+    }
+
+    public String getFinalPath() {
+        return subPath.equalsIgnoreCase("") ? path : subPath + "." + path;
     }
 
 }

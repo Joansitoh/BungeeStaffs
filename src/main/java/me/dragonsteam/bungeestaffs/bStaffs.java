@@ -4,13 +4,14 @@ import lombok.Getter;
 import me.dragonsteam.bungeestaffs.listeners.PlayerChatListener;
 import me.dragonsteam.bungeestaffs.listeners.PlayerCommandListener;
 import me.dragonsteam.bungeestaffs.listeners.PlayerServerListeners;
+import me.dragonsteam.bungeestaffs.listeners.PlayerToggleListener;
 import me.dragonsteam.bungeestaffs.loaders.Chats;
 import me.dragonsteam.bungeestaffs.loaders.Comms;
 import me.dragonsteam.bungeestaffs.loaders.Lang;
-import me.dragonsteam.bungeestaffs.utils.ChatUtils;
-import me.dragonsteam.bungeestaffs.utils.ConfigFile;
-import me.dragonsteam.bungeestaffs.utils.Runnables;
 import me.dragonsteam.bungeestaffs.utils.UpdateChecker;
+import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
+import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
+import me.dragonsteam.bungeestaffs.utils.defaults.Runnables;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -30,6 +31,14 @@ public final class bStaffs extends Plugin {
     private ConfigFile commandsFile;
     private ConfigFile chatsFile;
     private ConfigFile messagesFile;
+
+    public static void logger(String message) {
+        logger(message, null);
+    }
+
+    public static void logger(String message, String subMsg) {
+        INSTANCE.getProxy().getConsole().sendMessage(ChatUtils.translate(Lang.PREFIX.getDef() + (subMsg != null ? (subMsg + " &f") : "") + message));
+    }
 
     @Override
     public void onEnable() {
@@ -51,17 +60,18 @@ public final class bStaffs extends Plugin {
             int resourceId = 95425;
             new UpdateChecker(this, resourceId).getVersion(version -> {
                 if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
-                    logger("&aThere is not a new update available.");
+                    logger("&aThere are no updates available.");
+                    logger("&aCurrent version: &f" + getDescription().getVersion());
                 } else {
-                    logger("&aThere is a new update available.");
+                    logger("&aThere is a &enew update &aavailable. (" + version + ")");
                     logger("&aDownload new version at:");
                     logger("&f* &ehttps://www.spigotmc.org/resources/" + resourceId + "/");
                 }
             });
-        }, 2, TimeUnit.SECONDS);
+        }, 5, TimeUnit.SECONDS);
 
         registerListeners(
-                new PlayerChatListener(), new PlayerCommandListener(), new PlayerServerListeners()
+                new PlayerChatListener(), new PlayerCommandListener(), new PlayerServerListeners(), new PlayerToggleListener()
         );
 
         getProxy().getPluginManager().registerCommand(this, new bStaffCommand());
@@ -70,14 +80,6 @@ public final class bStaffs extends Plugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-    }
-
-    public static void logger(String message) {
-        logger(message, null);
-    }
-
-    public static void logger(String message, String subMsg) {
-        INSTANCE.getProxy().getConsole().sendMessage(ChatUtils.translate(Lang.PREFIX.getDef() + (subMsg != null ? (subMsg + " &f") : "") + message));
     }
 
     private void registerListeners(Listener... listeners) {

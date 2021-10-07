@@ -1,14 +1,16 @@
 package me.dragonsteam.bungeestaffs.listeners;
 
 import me.dragonsteam.bungeestaffs.bStaffs;
+import me.dragonsteam.bungeestaffs.loaders.Comms;
 import me.dragonsteam.bungeestaffs.loaders.Lang;
-import me.dragonsteam.bungeestaffs.utils.ConfigFile;
+import me.dragonsteam.bungeestaffs.utils.PlayerCommandEvent;
+import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
-import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -21,6 +23,26 @@ public class PlayerServerListeners implements Listener {
 
     private final ConfigFile config = bStaffs.INSTANCE.getSettingsFile();
     private final String permission = config.getString("EVENTS.STAFFS.PERMISSION");
+
+    @EventHandler
+    public void onPlayerChat(ChatEvent e) {
+        if (!(e.getSender() instanceof ProxiedPlayer)) return;
+        ProxiedPlayer player = (ProxiedPlayer) e.getSender();
+
+        if (!e.isCommand()) return;
+        String message = e.getMessage().substring(1);
+
+        String[] firstArgs = message.split(" ");
+        String command = firstArgs[0], arguments = message.replace(command + " ", "").replace(command, "");
+
+        if (command.length() == 0) return;
+        String[] finalArgs = arguments.split(" ");
+        if (!Comms.getCommsHashMap().containsKey(command) && !command.equalsIgnoreCase("toggle")) return;
+        e.setCancelled(true);
+
+        PlayerCommandEvent event = new PlayerCommandEvent(player, command, arguments.equals("") ? new String[0] : finalArgs);
+        bStaffs.INSTANCE.getProxy().getPluginManager().callEvent(event);
+    }
 
     @EventHandler
     public void onPostLogin(PostLoginEvent e) {

@@ -1,5 +1,6 @@
 package me.dragonsteam.bungeestaffs.utils;
 
+import me.dragonsteam.bungeestaffs.utils.defaults.Runnables;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.IOException;
@@ -15,8 +16,8 @@ import java.util.function.Consumer;
 
 public class UpdateChecker {
 
-    private Plugin plugin;
-    private int resourceId;
+    private final Plugin plugin;
+    private final int resourceId;
 
     public UpdateChecker(Plugin plugin, int resourceId) {
         this.plugin = plugin;
