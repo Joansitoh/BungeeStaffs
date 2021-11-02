@@ -1,6 +1,8 @@
 package me.dragonsteam.bungeestaffs;
 
 import lombok.Getter;
+import me.dragonsteam.bungeestaffs.commands.SearchCMD;
+import me.dragonsteam.bungeestaffs.commands.StaffListCMD;
 import me.dragonsteam.bungeestaffs.listeners.PlayerChatListener;
 import me.dragonsteam.bungeestaffs.listeners.PlayerCommandListener;
 import me.dragonsteam.bungeestaffs.listeners.PlayerServerListeners;
@@ -58,7 +60,10 @@ public final class bStaffs extends Plugin {
 
         Runnables.runLater(() -> {
             int resourceId = 95425;
+            System.out.println(getDescription().getVersion());
+
             new UpdateChecker(this, resourceId).getVersion(version -> {
+                System.out.println(version);
                 if (this.getDescription().getVersion().equalsIgnoreCase(version)) {
                     logger("&aThere are no updates available.");
                     logger("&aCurrent version: &f" + getDescription().getVersion());
@@ -75,6 +80,8 @@ public final class bStaffs extends Plugin {
         );
 
         getProxy().getPluginManager().registerCommand(this, new bStaffCommand());
+        getProxy().getPluginManager().registerCommand(this, new SearchCMD());
+        getProxy().getPluginManager().registerCommand(this, new StaffListCMD());
     }
 
     @Override

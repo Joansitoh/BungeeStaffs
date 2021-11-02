@@ -5,6 +5,10 @@
 #
 ################################################
 
+# Turn between bungeecord motd name or server name
+# for variable <server>.
+USE-BUNGEE-MOTD: true
+
 EVENTS:
   STAFFS:
     PERMISSION: 'bstaffs.staff'

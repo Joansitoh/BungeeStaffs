@@ -1,9 +1,11 @@
 package me.dragonsteam.bungeestaffs.listeners;
 
+import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.loaders.Comms;
 import me.dragonsteam.bungeestaffs.loaders.Lang;
 import me.dragonsteam.bungeestaffs.utils.PlayerCommandEvent;
+import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -37,7 +39,9 @@ public class PlayerServerListeners implements Listener {
 
         if (command.length() == 0) return;
         String[] finalArgs = arguments.split(" ");
-        if (!Comms.getCommsHashMap().containsKey(command) && !command.equalsIgnoreCase("toggle")) return;
+        if (!Comms.getCommsHashMap().containsKey(command) && !command.equalsIgnoreCase("toggle") && !command.equalsIgnoreCase("togglechat"))
+            return;
+
         e.setCancelled(true);
 
         PlayerCommandEvent event = new PlayerCommandEvent(player, command, arguments.equals("") ? new String[0] : finalArgs);
@@ -51,9 +55,7 @@ public class PlayerServerListeners implements Listener {
         if (!player.hasPermission(permission)) return;
         for (ProxiedPlayer p : ProxyServer.getInstance().getPlayers()) {
             if (!p.hasPermission(permission)) continue;
-            p.sendMessage(new TextComponent(Lang.STAFF_JOIN.toString()
-                    .replace("<staff>", player.getName())
-            ));
+            p.sendMessage(new TextComponent(bStaffHolder.getStaffHolder(p, Lang.STAFF_JOIN.toString())));
         }
     }
 
@@ -64,10 +66,7 @@ public class PlayerServerListeners implements Listener {
         if (!player.hasPermission(permission)) return;
         for (ProxiedPlayer p : ProxyServer.getInstance().getPlayers()) {
             if (!p.hasPermission(permission)) continue;
-            p.sendMessage(new TextComponent(Lang.STAFF_LEFT.toString()
-                    .replace("<staff>", player.getName())
-                    .replace("<server>", player.getServer().getInfo().getMotd())
-            ));
+            p.sendMessage(new TextComponent(bStaffHolder.getStaffHolder(p, Lang.STAFF_LEFT.toString())));
         }
     }
 
@@ -79,10 +78,7 @@ public class PlayerServerListeners implements Listener {
 
         for (ProxiedPlayer p : ProxyServer.getInstance().getPlayers()) {
             if (!p.hasPermission(permission)) continue;
-            p.sendMessage(new TextComponent(Lang.STAFF_MOVE.toString()
-                    .replace("<staff>", player.getName())
-                    .replace("<server>", player.getServer().getInfo().getMotd())
-            ));
+            p.sendMessage(new TextComponent(bStaffHolder.getStaffHolder(p, Lang.STAFF_MOVE.toString())));
         }
     }
 

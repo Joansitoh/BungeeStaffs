@@ -15,7 +15,9 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Joansiitoh (DragonsTeam && SkillTeam)
@@ -93,17 +95,29 @@ public class PlayerCommandListener implements Listener {
     @EventHandler
     public void onTabComplete(TabCompleteEvent e) {
         List<String> commands = new ArrayList<>(Comms.getCommsHashMap().keySet());
+        List<String> extras = Arrays.asList(
+                "stafflist", "toggle", "search"
+        );
+        commands.addAll(extras);
+
         List<String> list = new ArrayList<>();
         if (!e.getCursor().startsWith("/")) return;
         String[] dargs = e.getCursor().substring(1).split(" ");
         String command = dargs[0];
 
-        if (!commands.contains(command)) return;
+        if (!commands.contains(command)) {
+            commands.stream().filter(s -> s.startsWith(command)).forEach(s -> e.getSuggestions().add("/" + s));
+            return;
+        }
+
+        if (extras.contains(command)) return;
+
         Comms comms = Comms.getCommandByName(command);
         String[] args = e.getCursor().substring(1).replace(command, "").split(" ");
         if (args.length == 0 || args.length == 1) {
             if (e.getSender() instanceof ProxiedPlayer) {
                 ProxiedPlayer player = (ProxiedPlayer) e.getSender();
+                if (player.getPendingConnection().getVersion() > 390) return;
                 player.sendMessage(comms.getUsage());
             }
             return;

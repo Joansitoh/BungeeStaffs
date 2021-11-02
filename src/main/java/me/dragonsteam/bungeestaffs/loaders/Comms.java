@@ -2,6 +2,7 @@ package me.dragonsteam.bungeestaffs.loaders;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.utils.CommandType;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
@@ -64,11 +65,7 @@ public class Comms {
     }
 
     public String getPlayerFormat(ProxiedPlayer player, ProxiedPlayer target, String message) {
-        String result = format
-                .replace("<player>", player.getName())
-                .replace("<target>", target != null ? target.getName() : "")
-                .replace("<server>", player.getServer().getInfo().getMotd())
+        return bStaffHolder.getStaffHolder(player, format.replace("<target>", target != null ? target.getName() : ""))
                 .replace("<message>", message);
-        return ChatUtils.translate(result);
     }
 }

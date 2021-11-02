@@ -36,15 +36,32 @@ public enum Lang {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    // Disguise List
-    STAFF_JOIN("JOIN", "STAFFS", "&b<staff> &7has joined the server."),
-    STAFF_LEFT("LEFT", "STAFFS", "&b<staff> &7has left the server."),
-    STAFF_MOVE("MOVE", "STAFFS", "&b<staff> &7has switch to &b<server>&7."),
+    SEARCH("SEARCH-FORMAT", "SEARCH",
+            "<chat_bar>",
+            "&fPlayer &a<player> &fhas been &afound&f.",
+            "&fCurrent server: &a<server>",
+            "<chat_bar>"
+    ),
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    // Control event messages
+    STAFF_LIST("LIST-FORMAT", "STAFFS",
+            "&b>> &fCurrent &bstaffs&f online:",
+            "&f* &a<player> &7(<server>)"
+    ),
+
+    STAFF_JOIN("JOIN", "STAFFS", "&b<player> &7has joined the server."),
+    STAFF_LEFT("LEFT", "STAFFS", "&b<player> &7has left the server."),
+    STAFF_MOVE("MOVE", "STAFFS", "&b<player> &7has switch to &b<server>&7."),
 
     HAVE_COOLDOWN("HAVE-COOLDOWN", "COOLDOWN", "&bPlease, wait &9<cooldown> &7second(s) to execute this command &bagain&7."),
 
     COMMAND_TOGGLED("COMMAND-TOGGLED", "COMMANDS", "&7Command outputs of '&b<command>&7' has been <value>&7."),
     COMMAND_NOT_FOUND("COMMAND-NO-EXIST", "COMMANDS", "&7This command not exist&7."),
+
+    CHAT_TOGGLED("CHAT-TOGGLED", "CHATS", "&7Chat outputs of '&b<command>&7' has been <value>&7."),
+    CHAT_NOT_FOUND("CHAT-NO-EXIST", "CHATS", "&7This chat input not exist&7."),
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ;

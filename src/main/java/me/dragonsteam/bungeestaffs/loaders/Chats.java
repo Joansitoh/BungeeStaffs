@@ -2,6 +2,7 @@ package me.dragonsteam.bungeestaffs.loaders;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
@@ -50,10 +51,7 @@ public class Chats {
     }
 
     public String getPlayerFormat(ProxiedPlayer player, String message) {
-        String result = format
-                .replace("<staff>", player.getName())
-                .replace("<server>", player.getServer().getInfo().getMotd())
+        return bStaffHolder.getStaffHolder(player, format)
                 .replace("<message>", message.substring(input.length()));
-        return ChatUtils.translate(result);
     }
 }

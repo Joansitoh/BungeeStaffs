@@ -24,6 +24,7 @@ public class PlayerChatListener implements Listener {
         }
 
         if (chats == null) return;
+        if (e.getMessage().substring(chats.getInput().length()).equalsIgnoreCase("")) return;
         if (!player.hasPermission(chats.getPermission())) return;
         e.setCancelled(true);
 
