@@ -3,10 +3,7 @@ package me.dragonsteam.bungeestaffs;
 import lombok.Getter;
 import me.dragonsteam.bungeestaffs.commands.SearchCMD;
 import me.dragonsteam.bungeestaffs.commands.StaffListCMD;
-import me.dragonsteam.bungeestaffs.listeners.PlayerChatListener;
-import me.dragonsteam.bungeestaffs.listeners.PlayerCommandListener;
-import me.dragonsteam.bungeestaffs.listeners.PlayerServerListeners;
-import me.dragonsteam.bungeestaffs.listeners.PlayerToggleListener;
+import me.dragonsteam.bungeestaffs.listeners.*;
 import me.dragonsteam.bungeestaffs.loaders.Chats;
 import me.dragonsteam.bungeestaffs.loaders.Comms;
 import me.dragonsteam.bungeestaffs.loaders.Lang;
@@ -76,7 +73,8 @@ public final class bStaffs extends Plugin {
         }, 5, TimeUnit.SECONDS);
 
         registerListeners(
-                new PlayerChatListener(), new PlayerCommandListener(), new PlayerServerListeners(), new PlayerToggleListener()
+                new PlayerChatListener(), new PlayerCommandListener(), new PlayerServerListeners(), new PlayerToggleListener(),
+                new PlayerTabComepleListener()
         );
 
         getProxy().getPluginManager().registerCommand(this, new bStaffCommand());

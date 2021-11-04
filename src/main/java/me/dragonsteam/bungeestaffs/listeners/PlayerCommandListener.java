@@ -32,10 +32,12 @@ public class PlayerCommandListener implements Listener {
         ProxiedPlayer player = e.getSender();
         String[] args = e.getArgs();
 
-        if (e.getCommand().equalsIgnoreCase("toggle")) return;
+        System.out.println(e.getSender().getName() + " has execute command: " + e.getCommand());
+
+        if (e.getCommand().equalsIgnoreCase("toggle") || e.getCommand().equalsIgnoreCase("togglechat")) return;
         Comms comms = Comms.getCommandByName(e.getCommand());
 
-        if (!hasPermission(player, comms.getSendPermission())) {
+        if (!hasPermission(player, comms.getSendPermission()) && comms.getSendPermission() != null) {
             player.sendMessage(new TextComponent(Lang.NO_PERMISSION.toString()));
             return;
         }
@@ -92,46 +94,4 @@ public class PlayerCommandListener implements Listener {
         return player.hasPermission(permission);
     }
 
-    @EventHandler
-    public void onTabComplete(TabCompleteEvent e) {
-        List<String> commands = new ArrayList<>(Comms.getCommsHashMap().keySet());
-        List<String> extras = Arrays.asList(
-                "stafflist", "toggle", "search"
-        );
-        commands.addAll(extras);
-
-        List<String> list = new ArrayList<>();
-        if (!e.getCursor().startsWith("/")) return;
-        String[] dargs = e.getCursor().substring(1).split(" ");
-        String command = dargs[0];
-
-        if (!commands.contains(command)) {
-            commands.stream().filter(s -> s.startsWith(command)).forEach(s -> e.getSuggestions().add("/" + s));
-            return;
-        }
-
-        if (extras.contains(command)) return;
-
-        Comms comms = Comms.getCommandByName(command);
-        String[] args = e.getCursor().substring(1).replace(command, "").split(" ");
-        if (args.length == 0 || args.length == 1) {
-            if (e.getSender() instanceof ProxiedPlayer) {
-                ProxiedPlayer player = (ProxiedPlayer) e.getSender();
-                if (player.getPendingConnection().getVersion() > 390) return;
-                player.sendMessage(comms.getUsage());
-            }
-            return;
-        }
-
-        if (args.length == 2) {
-            if (comms.getType().equals(CommandType.TARGET)) {
-                ArrayList<String> players = new ArrayList<>();
-                bStaffs.INSTANCE.getProxy().getPlayers().forEach(player -> {
-                    if (player.getName().toLowerCase().startsWith(args[0].toLowerCase()))
-                        players.add(player.getName());
-                });
-                e.getSuggestions().addAll(players);
-            }
-        }
-    }
 }

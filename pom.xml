@@ -6,7 +6,7 @@
 
     <groupId>me.dragonsteam.bungeestaffs</groupId>
     <artifactId>bStaffs</artifactId>
-    <version>0.2.2</version>
+    <version>0.2.3</version>
 
     <properties>
         <!-- Removes warnings -->
@@ -14,7 +14,7 @@
 
         <mainClass>me.dragonsteam.bungeestaffs.bStaffs</mainClass>
         <author>Joansiitoh</author>
-        <customOutput>C:\Users\34644\Documents\GitHub\${artifactId}</customOutput>
+        <customOutput>C:\Users\joans\Documents\GitHub\MavenPlugins\${artifactId}</customOutput>
 
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>

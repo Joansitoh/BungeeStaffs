@@ -60,7 +60,7 @@ public enum Lang {
     COMMAND_TOGGLED("COMMAND-TOGGLED", "COMMANDS", "&7Command outputs of '&b<command>&7' has been <value>&7."),
     COMMAND_NOT_FOUND("COMMAND-NO-EXIST", "COMMANDS", "&7This command not exist&7."),
 
-    CHAT_TOGGLED("CHAT-TOGGLED", "CHATS", "&7Chat outputs of '&b<command>&7' has been <value>&7."),
+    CHAT_TOGGLED("CHAT-TOGGLED", "CHATS", "&7Chat outputs of '&b<chat>&7' has been <value>&7."),
     CHAT_NOT_FOUND("CHAT-NO-EXIST", "CHATS", "&7This chat input not exist&7."),
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
