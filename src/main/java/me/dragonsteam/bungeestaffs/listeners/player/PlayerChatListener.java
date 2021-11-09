@@ -1,4 +1,4 @@
-package me.dragonsteam.bungeestaffs.listeners;
+package me.dragonsteam.bungeestaffs.listeners.player;
 
 import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.loaders.Chats;

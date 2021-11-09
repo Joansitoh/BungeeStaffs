@@ -6,6 +6,6 @@ package me.dragonsteam.bungeestaffs.utils;
  */
 public enum CommandType {
 
-    SOLO(), TARGET()
+    SOLO(), TARGET(), PRIVATE(),
 
 }

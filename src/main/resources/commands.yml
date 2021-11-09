@@ -1,6 +1,6 @@
 ################################################
 #
-# BUNGEESTAFFS - v0.1
+# BUNGEESTAFFS - v0.2
 # https://discord.gg/gXzRaYdzsh
 #
 ################################################
@@ -9,11 +9,16 @@
 #                         ALL VARIABLES                       #
 ###############################################################
 # * COMMAND: The command name.
-# * TYPE: Command type. (Available: SOLO, TARGET)
+# * TYPE: Command type. (Available: SOLO, TARGET; PRIVATE)
 # * USAGE: Command usage help message.
 # * FORMAT: Staff output message format.
 # * OUTPUT: User send output message format.
 # * COOLDOWN: Add cooldown in seconds for command.
+
+# * TYPE LIST:
+# * SOLO: Send simple message to players.
+# * TARGET: Send message using target.
+# * PRIVATE: Send private message to player.
 
 # * PERMISSION LIST:
 # * SEND > PERMISSION FOR USE COMMAND:
@@ -48,5 +53,18 @@ COMMANDS:
 
     FORMAT: '&4&lREPORT &7&l| &c<player> &fhas reported &6<target>&f: &f<message>'
     OUTPUT: '&4&lREPORT &7&l| &aReport send successfully.'
-    PERMISSION: 'bstaffs.staffchat'
     COOLDOWN: 60
+
+  MSG-CMD:
+    TYPE: PRIVATE
+    COMMAND: 'msg'
+    USAGE: 'Use /msg <player> <message>'
+
+    PERMISSIONS:
+      SEND: ""
+      RECEIVE: ""
+      TOGGLE: ""
+
+    FORMAT: '&7&l| &fFrom &c<player>&f: &f<message>'
+    OUTPUT: '&7&l| &fTo &c<target>&f: <message>'
+    COOLDOWN: 3

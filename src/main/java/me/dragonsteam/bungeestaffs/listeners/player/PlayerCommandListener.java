@@ -1,4 +1,4 @@
-package me.dragonsteam.bungeestaffs.listeners;
+package me.dragonsteam.bungeestaffs.listeners.player;
 
 import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.loaders.Comms;
@@ -32,12 +32,10 @@ public class PlayerCommandListener implements Listener {
         ProxiedPlayer player = e.getSender();
         String[] args = e.getArgs();
 
-        System.out.println(e.getSender().getName() + " has execute command: " + e.getCommand());
-
-        if (e.getCommand().equalsIgnoreCase("toggle") || e.getCommand().equalsIgnoreCase("togglechat")) return;
+        if (bStaffs.INSTANCE.getExtraCommands().contains(e.getCommand())) return;
         Comms comms = Comms.getCommandByName(e.getCommand());
 
-        if (!hasPermission(player, comms.getSendPermission()) && comms.getSendPermission() != null) {
+        if (!hasPermission(player, comms.getSendPermission())) {
             player.sendMessage(new TextComponent(Lang.NO_PERMISSION.toString()));
             return;
         }
@@ -67,6 +65,7 @@ public class PlayerCommandListener implements Listener {
                 }
                 break;
             case TARGET:
+            case PRIVATE:
                 if (args.length == 1) {
                     player.sendMessage(new TextComponent(comms.getUsage()));
                     return;
@@ -78,8 +77,19 @@ public class PlayerCommandListener implements Listener {
                     return;
                 }
 
-                player.sendMessage(new TextComponent(ChatUtils.translate(comms.getOutput())));
                 for (int x = 1; x < args.length; x++) builder.append(args[x]).append(" ");
+                player.sendMessage(ChatUtils.translate(comms.getOutput())
+                        .replace("<message>", builder.toString())
+                        .replace("<target>", target.getName())
+                        .replace("<player>", player.getName())
+                );
+
+                if (comms.getType() == CommandType.PRIVATE) {
+                    if (ChatUtils.isToggledCommand(target, comms)) return;
+                    target.sendMessage(comms.getPlayerFormat(player, target, builder.toString()));
+                    return;
+                }
+
                 for (ProxiedPlayer p : bStaffs.INSTANCE.getProxy().getPlayers()) {
                     if (!hasPermission(p, comms.getReceivePermission())) continue;
                     if (ChatUtils.isToggledCommand(p, comms)) continue;

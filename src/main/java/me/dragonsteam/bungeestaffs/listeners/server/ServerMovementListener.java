@@ -1,4 +1,4 @@
-package me.dragonsteam.bungeestaffs.listeners;
+package me.dragonsteam.bungeestaffs.listeners.server;
 
 import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.bStaffs;
@@ -21,32 +21,10 @@ import net.md_5.bungee.event.EventHandler;
  * Created by Joansiitoh (DragonsTeam && SkillTeam)
  * Date: 02/08/2021 - 17:13.
  */
-public class PlayerServerListeners implements Listener {
+public class ServerMovementListener implements Listener {
 
     private final ConfigFile config = bStaffs.INSTANCE.getSettingsFile();
     private final String permission = config.getString("EVENTS.STAFFS.PERMISSION");
-
-    @EventHandler
-    public void onPlayerChat(ChatEvent e) {
-        if (!(e.getSender() instanceof ProxiedPlayer)) return;
-        ProxiedPlayer player = (ProxiedPlayer) e.getSender();
-
-        if (!e.isCommand()) return;
-        String message = e.getMessage().substring(1);
-
-        String[] firstArgs = message.split(" ");
-        String command = firstArgs[0], arguments = message.replace(command + " ", "").replace(command, "");
-
-        if (command.length() == 0) return;
-        String[] finalArgs = arguments.split(" ");
-        if (!Comms.getCommsHashMap().containsKey(command) && !command.equalsIgnoreCase("toggle") && !command.equalsIgnoreCase("togglechat"))
-            return;
-
-        e.setCancelled(true);
-
-        PlayerCommandEvent event = new PlayerCommandEvent(player, command, arguments.equals("") ? new String[0] : finalArgs);
-        bStaffs.INSTANCE.getProxy().getPluginManager().callEvent(event);
-    }
 
     @EventHandler
     public void onPostLogin(PostLoginEvent e) {

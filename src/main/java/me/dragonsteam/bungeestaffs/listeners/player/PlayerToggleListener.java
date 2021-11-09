@@ -1,4 +1,4 @@
-package me.dragonsteam.bungeestaffs.listeners;
+package me.dragonsteam.bungeestaffs.listeners.player;
 
 import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.loaders.Chats;
@@ -93,34 +93,4 @@ public class PlayerToggleListener implements Listener {
         return player.hasPermission(permission);
     }
 
-    @EventHandler
-    public void onTabComplete(TabCompleteEvent e) {
-        if (!e.getCursor().startsWith("/")) return;
-        String[] dargs = e.getCursor().substring(1).split(" ");
-        String command = dargs[0];
-
-        if (!command.equalsIgnoreCase("toggle")) return;
-        String[] args = e.getCursor().substring(1).replace(command, "").split(" ");
-        if (args.length < 2) {
-            if (args.length == 1) {
-                System.out.println(args[0]);
-            }
-
-            if (e.getSender() instanceof ProxiedPlayer) {
-                ProxiedPlayer player = (ProxiedPlayer) e.getSender();
-                player.sendMessage(ChatUtils.translate("&cUsage: &f/toggle <command>"));
-            }
-            return;
-        }
-
-        if (args.length == 2) {
-            ArrayList<String> list = new ArrayList<>();
-            Comms.getCommsHashMap().keySet().forEach(cmd -> {
-                if (cmd.toLowerCase().startsWith(args[1].toLowerCase()))
-                    list.add(cmd);
-            });
-
-            e.getSuggestions().addAll(list);
-        }
-    }
 }
