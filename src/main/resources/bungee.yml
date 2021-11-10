@@ -2,3 +2,6 @@ name: ${project.name}
 version: ${project.version}
 author: ${author}
 main: ${mainClass}
+
+softdepends:
+  - LuckPerms

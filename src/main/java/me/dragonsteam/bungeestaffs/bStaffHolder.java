@@ -1,5 +1,7 @@
 package me.dragonsteam.bungeestaffs;
 
+import me.dragonsteam.bungeestaffs.managers.HookHandler;
+import me.dragonsteam.bungeestaffs.managers.hooks.LuckPermsHandler;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -11,14 +13,27 @@ public class bStaffHolder {
         if (player != null) {
             ConfigFile config = bStaffs.INSTANCE.getSettingsFile();
             String server = "", name = player.getName();
+            String prefix = "", suffix = "";
 
+            // Checking the server motd method.
             try {
                 if (config.getBoolean("USE-BUNGEE-MOTD"))
                     server = player.getServer().getInfo().getMotd();
                 else server = player.getServer().getInfo().getName();
             } catch (Exception ignore) {}
 
-            message = message.replace("<server>", server).replace("<player>", name);
+            // Loading prefix and suffix using LuckPerms.
+            HookHandler handler = bStaffs.INSTANCE.getHookManager().getHandler("LuckPerms");
+            if (handler != null) {
+                LuckPermsHandler luckPermsHandler = (LuckPermsHandler) handler;
+                if (luckPermsHandler.getPrefix(player.getUniqueId()) != null)
+                    prefix = luckPermsHandler.getPrefix(player.getUniqueId());
+
+                if (luckPermsHandler.getSuffix(player.getUniqueId()) != null)
+                    suffix = luckPermsHandler.getSuffix(player.getUniqueId());
+            }
+
+            message = message.replace("<server>", server).replace("<player>", name).replace("<prefix>", prefix).replace("<suffix>", suffix);
         }
 
         message = message

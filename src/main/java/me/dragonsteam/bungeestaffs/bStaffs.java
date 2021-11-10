@@ -11,6 +11,7 @@ import me.dragonsteam.bungeestaffs.listeners.ServerMovementListener;
 import me.dragonsteam.bungeestaffs.loaders.Chats;
 import me.dragonsteam.bungeestaffs.loaders.Comms;
 import me.dragonsteam.bungeestaffs.loaders.Lang;
+import me.dragonsteam.bungeestaffs.managers.HookManager;
 import me.dragonsteam.bungeestaffs.utils.UpdateChecker;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
@@ -41,6 +42,8 @@ public final class bStaffs extends Plugin {
     private ConfigFile chatsFile;
     private ConfigFile messagesFile;
 
+    private HookManager hookManager;
+
     public static void logger(String message) {
         logger(message, null);
     }
@@ -66,6 +69,8 @@ public final class bStaffs extends Plugin {
         messagesFile = new ConfigFile(this, "messages.yml");
 
         commands = new HashMap<>();
+
+        Runnables.runLater(() -> hookManager = new HookManager(), 2, TimeUnit.SECONDS);
 
         ////////////////////////////////////////////////////////////////////////////////
 
