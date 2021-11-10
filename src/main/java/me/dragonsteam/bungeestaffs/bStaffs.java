@@ -1,13 +1,13 @@
 package me.dragonsteam.bungeestaffs;
 
 import lombok.Getter;
-import me.dragonsteam.bungeestaffs.commands.SearchCMD;
-import me.dragonsteam.bungeestaffs.commands.StaffListCMD;
-import me.dragonsteam.bungeestaffs.listeners.player.PlayerChatListener;
-import me.dragonsteam.bungeestaffs.listeners.player.PlayerCommandListener;
-import me.dragonsteam.bungeestaffs.listeners.player.PlayerToggleListener;
-import me.dragonsteam.bungeestaffs.listeners.server.ServerCommandListener;
-import me.dragonsteam.bungeestaffs.listeners.server.ServerMovementListener;
+import me.dragonsteam.bungeestaffs.commands.types.SearchCMD;
+import me.dragonsteam.bungeestaffs.commands.types.StaffListCMD;
+import me.dragonsteam.bungeestaffs.commands.types.ToggleCMD;
+import me.dragonsteam.bungeestaffs.commands.types.ToggleChatCMD;
+import me.dragonsteam.bungeestaffs.listeners.PlayerChatListener;
+import me.dragonsteam.bungeestaffs.listeners.PlayerCompleteListener;
+import me.dragonsteam.bungeestaffs.listeners.ServerMovementListener;
 import me.dragonsteam.bungeestaffs.loaders.Chats;
 import me.dragonsteam.bungeestaffs.loaders.Comms;
 import me.dragonsteam.bungeestaffs.loaders.Lang;
@@ -15,8 +15,10 @@ import me.dragonsteam.bungeestaffs.utils.UpdateChecker;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import me.dragonsteam.bungeestaffs.utils.defaults.Runnables;
+import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
+import org.bstats.bungeecord.Metrics;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -50,8 +52,12 @@ public final class bStaffs extends Plugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-
         INSTANCE = this;
+
+        // Loading plugin metrics.
+        new Metrics(this, 13287);
+
+        ////////////////////////////////////////////////////////////////////////////////
 
         // Loading recipients
         settingsFile = new ConfigFile(this, "settings.yml");
@@ -61,9 +67,13 @@ public final class bStaffs extends Plugin {
 
         commands = new HashMap<>();
 
+        ////////////////////////////////////////////////////////////////////////////////
+
         new Chats(this);
-        new Comms(this);
+        new Comms();
         Lang.loadLanguage();
+
+        ////////////////////////////////////////////////////////////////////////////////
 
         Runnables.runLater(() -> {
             int resourceId = 95425;
@@ -79,16 +89,14 @@ public final class bStaffs extends Plugin {
             });
         }, 5, TimeUnit.SECONDS);
 
-        logger("Registering listeners and commands...");
+        ////////////////////////////////////////////////////////////////////////////////
 
+        logger("Registering listeners and commands...");
         registerListeners(
-                new PlayerChatListener(), new PlayerCommandListener(), new ServerMovementListener(), new PlayerToggleListener(),
-                new ServerCommandListener()
+                new PlayerChatListener(), new ServerMovementListener(), new PlayerCompleteListener()
         );
 
-        getProxy().getPluginManager().registerCommand(this, new bStaffCommand());
-        getProxy().getPluginManager().registerCommand(this, new SearchCMD());
-        getProxy().getPluginManager().registerCommand(this, new StaffListCMD());
+        registerCommands(new bStaffCommand(), new SearchCMD(), new StaffListCMD(), new ToggleChatCMD(), new ToggleCMD());
     }
 
     @Override
@@ -98,6 +106,10 @@ public final class bStaffs extends Plugin {
 
     private void registerListeners(Listener... listeners) {
         Arrays.stream(listeners).forEach(listener -> getProxy().getPluginManager().registerListener(this, listener));
+    }
+
+    private void registerCommands(Command... commands) {
+        Arrays.stream(commands).forEach(command -> getProxy().getPluginManager().registerCommand(this, command));
     }
 
     public List<String> getExtraCommands() {

@@ -49,7 +49,7 @@ public class bStaffCommand extends Command {
                     sender.sendMessage(ChatUtils.MEDIUM_CHAT_BAR);
 
                     new Chats(bStaffs.INSTANCE);
-                    new Comms(bStaffs.INSTANCE);
+                    new Comms();
                 }, 2, TimeUnit.SECONDS);
                 return;
             }

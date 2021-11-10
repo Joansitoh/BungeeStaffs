@@ -2,8 +2,10 @@ package me.dragonsteam.bungeestaffs.loaders;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.bStaffs;
+import me.dragonsteam.bungeestaffs.commands.CommandManager;
 import me.dragonsteam.bungeestaffs.utils.CommandType;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
@@ -17,37 +19,72 @@ import java.util.HashMap;
  * Created by Joansiitoh (DragonsTeam && SkillTeam)
  * Date: 03/08/2021 - 1:30.
  */
-@Getter
-@AllArgsConstructor
+@Getter @Setter
 public class Comms {
 
     @Getter
     private static final HashMap<String, Comms> commsHashMap = new HashMap<>();
 
+    ////////////////////////////////////////////////////////////////////////////////
+
     private int cooldown;
     private CommandType type;
-    private String command, usage, format, output, sendPermission, receivePermission, togglePermission;
 
-    public Comms(Plugin plugin) {
+    private String command, usage, format, output;
+    private String sendPermission, receivePermission, togglePermission;
+
+    ////////////////////////////////////////////////////////////////////////////////
+
+    public Comms(CommandType type, String command) {
+        this.type = type;
+        this.command = command;
+
+        // Set defaults for all variables.
+        this.cooldown = 0;
+        this.usage = "";
+        this.format = "";
+        this.output = "";
+
+        this.sendPermission = "";
+        this.receivePermission = "";
+        this.togglePermission = "";
+    }
+
+    /**
+     * Loads the config file and sets all variables.
+     */
+    public Comms() {
+        // Unregister comms using CommandManager.
+        for (Comms comms : commsHashMap.values())
+            CommandManager.unregisterCommand(comms);
+
         commsHashMap.clear();
         bStaffs.logger("Registering custom commands.", "[Loader]");
         ConfigFile config = bStaffs.INSTANCE.getCommandsFile();
+
         for (String s : config.getConfiguration().getSection("COMMANDS").getKeys()) {
             Configuration section = config.getConfiguration().getSection("COMMANDS." + s);
 
+            // Setting default permissions for corrupted configs.
             ChatUtils.setDefaultIfNotSet(section, "PERMISSION.SEND", "bstaffs.send." + s.toLowerCase());
             ChatUtils.setDefaultIfNotSet(section, "PERMISSION.RECEIVE", "bstaffs.receive." + s.toLowerCase());
             ChatUtils.setDefaultIfNotSet(section, "PERMISSION.TOGGLE", "bstaffs.toggle." + s.toLowerCase());
 
             try {
-                Comms comms = new Comms(
-                        section.getInt("COOLDOWN"), CommandType.valueOf(section.getString("TYPE")),
-                        section.getString("COMMAND"), section.getString("USAGE"),
-                        section.getString("FORMAT"), section.getString("OUTPUT"),
-                        section.getString("PERMISSIONS.SEND"), section.getString("PERMISSIONS.RECEIVE"),
-                        section.getString("PERMISSIONS.TOGGLE")
-                );
+                Comms comms = new Comms(CommandType.valueOf(section.getString("TYPE")), section.getString("COMMAND"));
 
+                /* Set comms defaults accessors with config values */
+                comms.setCooldown(section.getInt("COOLDOWN"));
+                comms.setUsage(section.getString("USAGE"));
+                comms.setFormat(section.getString("FORMAT"));
+                comms.setOutput(section.getString("OUTPUT"));
+
+                /* Set comms permission accessors with config values */
+                comms.setSendPermission(section.getString("PERMISSIONS.SEND"));
+                comms.setReceivePermission(section.getString("PERMISSIONS.RECEIVE"));
+                comms.setTogglePermission(section.getString("PERMISSIONS.TOGGLE"));
+
+                CommandManager.registerCommand(comms);
                 commsHashMap.put(comms.getCommand(), comms);
                 bStaffs.logger("* New custom command created. (" + comms.getCommand() + ")", "[Loader]");
             } catch (Exception e) {
@@ -64,8 +101,18 @@ public class Comms {
         return ChatUtils.translate(this.usage);
     }
 
+    /**
+     * Replace custom command using StaffHolder.
+     *
+     * @param player who send the command.
+     * @param target for no SOLO commands.
+     * @param message of the command.
+     */
     public String getPlayerFormat(ProxiedPlayer player, ProxiedPlayer target, String message) {
         return bStaffHolder.getStaffHolder(player, format.replace("<target>", target != null ? target.getName() : ""))
+
+                // Get message without color codes and holders.
                 .replace("<message>", message);
     }
+
 }

@@ -29,6 +29,4 @@ public class bStaffHolder {
         return ChatUtils.translate(message);
     }
 
-
-
 }

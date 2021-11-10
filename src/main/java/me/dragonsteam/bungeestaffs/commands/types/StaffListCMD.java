@@ -1,4 +1,4 @@
-package me.dragonsteam.bungeestaffs.commands;
+package me.dragonsteam.bungeestaffs.commands.types;
 
 import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.loaders.Lang;

@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by Joansiitoh (DragonsTeam)
@@ -39,9 +40,11 @@ public enum Lang {
     SEARCH("SEARCH-FORMAT", "SEARCH",
             "<chat_bar>",
             "&fPlayer &a<player> &fhas been &afound&f.",
-            "&fCurrent server: &a<server>",
+            "&fCurrent server: &a<hover><server></hover>",
             "<chat_bar>"
     ),
+    SEARCH_HOVER("SEARCH-HOVER", "SEARCH", "&7| &eClick to join"),
+    SEARCH_COMMAND("SEARCH-COMMAND", "SEARCH", "/server <server>"),
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -67,8 +70,9 @@ public enum Lang {
     ;
 
     private static final ConfigFile config = bStaffs.INSTANCE.getMessagesFile();
-    private final String path;
-    private final String subPath;
+
+    private final String path, subPath;
+
     private String def;
     private List<String> defList;
 
@@ -112,7 +116,7 @@ public enum Lang {
 
     public List<String> toList() {
         if (def != null) return ChatUtils.translate(Collections.singletonList(toString()));
-        return ChatUtils.translate(config.getStringListOrDefault(getFinalPath(), defList));
+        return ChatUtils.translate(config.getStringListOrDefault(getFinalPath(), defList)).stream().map(text -> text.replace("§", "&")).collect(Collectors.toList());
     }
 
     public String getFinalPath() {

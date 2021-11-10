@@ -1,8 +1,9 @@
-package me.dragonsteam.bungeestaffs.listeners.player;
+package me.dragonsteam.bungeestaffs.listeners;
 
 import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.loaders.Chats;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
+import me.dragonsteam.bungeestaffs.utils.defaults.ToggleUtils;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -31,7 +32,7 @@ public class PlayerChatListener implements Listener {
 
         for (ProxiedPlayer p : bStaffs.INSTANCE.getProxy().getPlayers()) {
             if (!p.hasPermission(chats.getPermission())) continue;
-            if (ChatUtils.isToggledChat(p, chats)) continue;
+            if (ToggleUtils.isToggledChat(p, chats)) continue;
             p.sendMessage(chats.getPlayerFormat(player, e.getMessage()));
         }
     }

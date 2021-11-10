@@ -6,15 +6,15 @@
 
     <groupId>me.dragonsteam.bungeestaffs</groupId>
     <artifactId>bStaffs</artifactId>
-    <version>0.2.5</version>
+    <version>0.2.9</version>
 
     <properties>
         <!-- Removes warnings -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <mainClass>me.dragonsteam.bungeestaffs.bStaffs</mainClass>
+        <mainClass>${project.groupId}.bStaffs</mainClass>
         <author>Joansiitoh</author>
-        <customOutput>C:\Users\34644\Documents\GitHub\${artifactId}</customOutput>
+        <customOutput>C:\Users\joans\Documents\GitHub\MavenPlugins\${artifactId}</customOutput>
 
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
@@ -33,6 +33,13 @@
             <artifactId>lombok</artifactId>
             <version>1.16.18</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bungeecord</artifactId>
+            <version>2.2.1</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
@@ -73,26 +80,12 @@
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>3.0.0-M4</version>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.1</version>
-                <configuration>
-                    <outputDirectory>${customOutput}</outputDirectory>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.2.1</version>
 
                 <configuration>
                     <outputDirectory>${customOutput}</outputDirectory>
+                    <minimizeJar>true</minimizeJar>
                     <createDependencyReducedPom>false</createDependencyReducedPom>
                     <shadedArtifactAttached>true</shadedArtifactAttached>
                 </configuration>
@@ -109,60 +102,14 @@
                                     <pattern>com.google.gson</pattern>
                                     <shadedPattern>${project.groupId}.libs.gson</shadedPattern>
                                 </relocation>
+                                <relocation>
+                                    <pattern>org.bstats</pattern>
+                                    <shadedPattern>${project.groupId}.libs.bstats</shadedPattern>
+                                </relocation>
                             </relocations>
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>com.github.wvengen</groupId>
-                <artifactId>proguard-maven-plugin</artifactId>
-                <version>2.0.14</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>net.sf.proguard</groupId>
-                        <artifactId>proguard-base</artifactId>
-                        <version>5.3.3</version>
-                    </dependency>
-                </dependencies>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>proguard</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <obfuscate>true</obfuscate>
-                    <outputDirectory>${customOutput}</outputDirectory>
-                    <outjar>${project.build.finalName}-Lite.jar</outjar>
-                    <proguardVersion>7.1</proguardVersion>
-                    <options>
-                        <option>-dontnote</option>
-                        <option>-overloadaggressively</option>
-                        <option>-useuniqueclassmembernames</option>
-                        <option>-dontshrink</option>
-                        <option>-dontoptimize</option>
-                        <option>-dontusemixedcaseclassnames</option>
-                        <option>-keep public class ${mainClass} {
-                            public void onEnable();
-                            public void onDisable();
-                            }</option>
-                        <option>
-                            -keepclassmembers class * extends java.lang.Enum {
-                            public static **[] values();
-                            public static ** valueOf(java.lang.String);
-                            }
-                        </option>
-                        <option>-keepattributes Exceptions,InnerClasses,Signature,Deprecated,SourceFile,LineNumberTable,LocalVariable*Table,*Annotation*,Synthetic,EnclosingMethod,*Annotations*,EventHandler,Override</option>
-                    </options>
-                    <libs>
-                        <lib>${java.home}/lib/rt.jar</lib>
-                        <lib>${java.home}/lib/jce.jar</lib>
-                    </libs>
-                </configuration>
             </plugin>
         </plugins>
 

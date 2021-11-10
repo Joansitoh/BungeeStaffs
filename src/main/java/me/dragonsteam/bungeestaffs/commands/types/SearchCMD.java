@@ -1,4 +1,4 @@
-package me.dragonsteam.bungeestaffs.commands;
+package me.dragonsteam.bungeestaffs.commands.types;
 
 import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.bStaffs;
@@ -6,6 +6,7 @@ import me.dragonsteam.bungeestaffs.loaders.Lang;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -34,10 +35,33 @@ public class SearchCMD extends Command implements TabExecutor {
             return;
         }
 
+        String prefix = "<hover>", suffix = "</hover>";
         for (String s : Lang.SEARCH.toList()) {
-            player.sendMessage(bStaffHolder.getStaffHolder(target, s));
+            s = bStaffHolder.getStaffHolder(target, s);
+
+            // Get string between tags hover.
+            String between = ChatUtils.substringBetween(s, prefix, suffix);
+            if (between != null && !between.equalsIgnoreCase("")) {
+                // Splitting text to create hover event.
+                String[] arg = s.split(between);
+                TextComponent message = new TextComponent(arg[0]
+                        .replace(prefix, "")
+                        .replace("<target>", target.getName())
+                );
+
+                TextComponent hover = new TextComponent(between);
+                hover.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(Lang.SEARCH_HOVER.toString())));
+                hover.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, bStaffHolder.getStaffHolder(target, Lang.SEARCH_COMMAND.toString())));
+
+                TextComponent message2 = new TextComponent(arg[1].replace(suffix, ""));
+                player.sendMessage(message, hover, message2);
+                continue;
+            }
+
+            player.sendMessage(s);
         }
     }
+
 
     @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
