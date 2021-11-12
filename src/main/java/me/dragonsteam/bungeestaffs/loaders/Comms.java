@@ -9,11 +9,12 @@ import me.dragonsteam.bungeestaffs.commands.CommandManager;
 import me.dragonsteam.bungeestaffs.utils.CommandType;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Created by Joansiitoh (DragonsTeam && SkillTeam)
@@ -33,6 +34,8 @@ public class Comms {
     private String command, usage, format, output;
     private String sendPermission, receivePermission, togglePermission;
 
+    private List<String> aliases;
+
     ////////////////////////////////////////////////////////////////////////////////
 
     public Comms(CommandType type, String command) {
@@ -48,6 +51,8 @@ public class Comms {
         this.sendPermission = "";
         this.receivePermission = "";
         this.togglePermission = "";
+
+        this.aliases = new ArrayList<>();
     }
 
     /**
@@ -62,6 +67,7 @@ public class Comms {
         bStaffs.logger("Registering custom commands.", "[Loader]");
         ConfigFile config = bStaffs.INSTANCE.getCommandsFile();
 
+        // Loop through all commands.
         for (String s : config.getConfiguration().getSection("COMMANDS").getKeys()) {
             Configuration section = config.getConfiguration().getSection("COMMANDS." + s);
 
@@ -78,6 +84,9 @@ public class Comms {
                 comms.setUsage(section.getString("USAGE"));
                 comms.setFormat(section.getString("FORMAT"));
                 comms.setOutput(section.getString("OUTPUT"));
+
+                if (section.getString("ALIASES") != null)
+                    comms.setAliases(section.getStringList("ALIASES"));
 
                 /* Set comms permission accessors with config values */
                 comms.setSendPermission(section.getString("PERMISSIONS.SEND"));
@@ -113,6 +122,10 @@ public class Comms {
 
                 // Get message without color codes and holders.
                 .replace("<message>", message);
+    }
+
+    public boolean hasPermission(CommandSender player) {
+        return sendPermission.equals("") || player.hasPermission(sendPermission);
     }
 
 }

@@ -54,9 +54,9 @@ public enum Lang {
             "&f* &a<player> &7(<server>)"
     ),
 
-    STAFF_JOIN("JOIN", "STAFFS", "&b<player> &7has joined the server."),
-    STAFF_LEFT("LEFT", "STAFFS", "&b<player> &7has left the server."),
-    STAFF_MOVE("MOVE", "STAFFS", "&b<player> &7has switch to &b<server>&7."),
+    STAFF_JOIN("JOIN", "STAFFS", "&b<prefix><player> &7has joined the server."),
+    STAFF_LEFT("LEFT", "STAFFS", "&b<prefix><player> &7has left the server."),
+    STAFF_MOVE("MOVE", "STAFFS", "&b<prefix><player> &7has switch to &b<server>&7."),
 
     HAVE_COOLDOWN("HAVE-COOLDOWN", "COOLDOWN", "&bPlease, wait &9<cooldown> &7second(s) to execute this command &bagain&7."),
 

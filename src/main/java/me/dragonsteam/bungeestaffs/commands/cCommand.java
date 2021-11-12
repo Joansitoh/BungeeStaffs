@@ -13,22 +13,29 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.TabCompleteEvent;
 import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.TabExecutor;
 import net.md_5.bungee.event.EventHandler;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by Joansiitoh (DragonsTeam && SkillTeam)
  * Date: 09/11/2021 - 17:41.
  */
-public class cCommand extends Command {
+public class cCommand extends Command implements TabExecutor {
 
     private final Comms comms;
 
     public cCommand(Comms comms) {
-        super(comms.getCommand(), comms.getSendPermission());
+        super(comms.getCommand(), comms.getSendPermission(), comms.getAliases().toArray(new String[0]));
         this.comms = comms;
+
+        // Register command and aliases.
+        bStaffs.INSTANCE.getKnownCommands().put(comms.getCommand(), this);
+        for (String alias : comms.getAliases())
+            bStaffs.INSTANCE.getKnownCommands().put(alias, this);
     }
 
     @Override
@@ -112,4 +119,20 @@ public class cCommand extends Command {
         return player.hasPermission(permission);
     }
 
+    @Override
+    public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
+        if (!comms.hasPermission(sender)) return Collections.emptyList();
+        if (args.length == 1) {
+            if (comms.getType().equals(CommandType.TARGET) || comms.getType().equals(CommandType.PRIVATE)) {
+                ArrayList<String> players = new ArrayList<>();
+                bStaffs.INSTANCE.getProxy().getPlayers().forEach(onlinePlayer -> {
+                    if (onlinePlayer.getName().toLowerCase().startsWith(args[0].toLowerCase()))
+                        players.add(onlinePlayer.getName());
+                });
+                return players;
+            }
+        }
+
+        return Collections.emptyList();
+    }
 }

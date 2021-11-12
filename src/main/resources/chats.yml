@@ -14,7 +14,7 @@ CHATS:
     # The input are the char how you use to write a message on this chat.
     # Example: (#I love minecraft) // "STAFF (Lobby) | Joansiitoh: I love minecraft"
     INPUT: '#'
-    FORMAT: '&c&lSTAFF &7(&o<server>&7) &7&l| &c<player>: &f<message>'
+    FORMAT: '&c&lSTAFF &7(&o<server>&7) &7&l| <prefix>&c<player>: &f<message>'
 
     # Permission needed to use and read this chat.
     PERMISSION: 'bstaffs.staffchat'

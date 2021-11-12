@@ -33,6 +33,12 @@ public class ChatUtils {
         return input.stream().map(ChatUtils::translate).collect(Collectors.toList());
     }
 
+    public static boolean startsWithIgnoreCase(final String string, final String prefix) {
+        if (string.length() < prefix.length())
+            return false;
+        return string.regionMatches(true, 0, prefix, 0, prefix.length());
+    }
+
     public static String substringBetween(String str, String open, String close) {
         if (str != null && open != null && close != null) {
             int start = str.indexOf(open);

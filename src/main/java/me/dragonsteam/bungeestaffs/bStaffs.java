@@ -24,6 +24,7 @@ import org.bstats.bungeecord.Metrics;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -35,14 +36,16 @@ public final class bStaffs extends Plugin {
 
     public static bStaffs INSTANCE;
 
+    ///////////////////////////////////////////////////////////////////////////
+
     private HashMap<String, String> commands;
+    private Map<String, Command> knownCommands;
 
-    private ConfigFile settingsFile;
-    private ConfigFile commandsFile;
-    private ConfigFile chatsFile;
-    private ConfigFile messagesFile;
-
+    private ConfigFile settingsFile, commandsFile, chatsFile, messagesFile;
     private HookManager hookManager;
+    private String configVersion;
+
+    ///////////////////////////////////////////////////////////////////////////
 
     public static void logger(String message) {
         logger(message, null);
@@ -51,6 +54,8 @@ public final class bStaffs extends Plugin {
     public static void logger(String message, String subMsg) {
         INSTANCE.getProxy().getConsole().sendMessage(ChatUtils.translate(Lang.PREFIX.getDef() + (subMsg != null ? (subMsg + " &f") : "") + message));
     }
+
+    ///////////////////////////////////////////////////////////////////////////
 
     @Override
     public void onEnable() {
@@ -68,9 +73,16 @@ public final class bStaffs extends Plugin {
         chatsFile = new ConfigFile(this, "chats.yml");
         messagesFile = new ConfigFile(this, "messages.yml");
 
+        configVersion = "0.2.5";
         commands = new HashMap<>();
+        knownCommands = new HashMap<>();
 
-        Runnables.runLater(() -> hookManager = new HookManager(), 2, TimeUnit.SECONDS);
+        Runnables.runLater(() -> hookManager = new HookManager(), 1, TimeUnit.SECONDS);
+
+        ////////////////////////////////////////////////////////////////////////////////
+
+        ChatUtils.setDefaultIfNotSet(commandsFile.getConfiguration(), "CONFIG-VERSION", this.configVersion);
+        ChatUtils.setDefaultIfNotSet(chatsFile.getConfiguration(), "CONFIG-VERSION", this.configVersion);
 
         ////////////////////////////////////////////////////////////////////////////////
 
@@ -114,7 +126,10 @@ public final class bStaffs extends Plugin {
     }
 
     private void registerCommands(Command... commands) {
-        Arrays.stream(commands).forEach(command -> getProxy().getPluginManager().registerCommand(this, command));
+        Arrays.stream(commands).forEach(command -> {
+            getProxy().getPluginManager().registerCommand(this, command);
+            knownCommands.put(command.getName(), command);
+        });
     }
 
     public List<String> getExtraCommands() {

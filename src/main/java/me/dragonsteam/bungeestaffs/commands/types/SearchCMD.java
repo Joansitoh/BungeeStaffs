@@ -4,6 +4,7 @@ import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.loaders.Lang;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -51,7 +52,8 @@ public class SearchCMD extends Command implements TabExecutor {
 
                 TextComponent hover = new TextComponent(between);
                 hover.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(Lang.SEARCH_HOVER.toString())));
-                hover.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, bStaffHolder.getStaffHolder(target, Lang.SEARCH_COMMAND.toString())));
+                hover.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
+                        ChatColor.stripColor(bStaffHolder.getStaffHolder(target, Lang.SEARCH_COMMAND.toString()))));
 
                 TextComponent message2 = new TextComponent(arg[1].replace(suffix, ""));
                 player.sendMessage(message, hover, message2);

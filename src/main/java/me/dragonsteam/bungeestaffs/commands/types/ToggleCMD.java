@@ -10,12 +10,17 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
+import net.md_5.bungee.api.plugin.TabExecutor;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by Joansiitoh (DragonsTeam && SkillTeam)
  * Date: 09/11/2021 - 17:48.
  */
-public class ToggleCMD extends Command {
+public class ToggleCMD extends Command implements TabExecutor {
 
     public ToggleCMD() {
         super("toggle", "bstaffs.toggle");
@@ -57,6 +62,21 @@ public class ToggleCMD extends Command {
     private boolean hasPerm(ProxiedPlayer player, String permission) {
         if (permission.equalsIgnoreCase("")) return true;
         return player.hasPermission(permission);
+    }
+
+    @Override
+    public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
+        if (args.length == 1) {
+            List<String> arguments = new ArrayList<>();
+            Comms.getCommsHashMap().keySet().forEach(cmd -> {
+                if (cmd.toLowerCase().startsWith(args[0].toLowerCase()))
+                    arguments.add(cmd);
+            });
+
+            return arguments;
+        }
+
+        return Collections.emptyList();
     }
 
 }

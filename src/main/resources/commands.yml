@@ -1,6 +1,6 @@
 ################################################
 #
-# BUNGEESTAFFS - v0.2
+# BUNGEESTAFFS - v0.3
 # https://discord.gg/gXzRaYdzsh
 #
 ################################################
@@ -11,6 +11,8 @@
 # * COMMAND: The command name.
 # * TYPE: Command type. (Available: SOLO, TARGET; PRIVATE)
 # * USAGE: Command usage help message.
+# * ALIASES: Command aliases.
+
 # * FORMAT: Staff output message format.
 # * OUTPUT: User send output message format.
 # * COOLDOWN: Add cooldown in seconds for command.
@@ -25,6 +27,12 @@
 # * RECEIVE > PERMISSION FOR SEE OUTPUT:
 # * TOGGLE > PERMISSION FOR TOGGLE OUTPUTS:
 ###############################################################
+
+
+# Execution list
+
+# send: Send message using receive permission and format.
+# chat: Execute command using command arguments.
 
 COMMANDS:
   HELPOP-CMD:
@@ -44,6 +52,8 @@ COMMANDS:
   REPORT-CMD:
     TYPE: TARGET
     COMMAND: 'report'
+    ALIASES:
+      - 'rep'
     USAGE: 'Use /report <player> <message>'
 
     PERMISSIONS:
