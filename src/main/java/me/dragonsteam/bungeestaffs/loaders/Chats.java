@@ -6,6 +6,7 @@ import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
@@ -50,8 +51,7 @@ public class Chats {
         return chatsHashMap.get(input);
     }
 
-    public String getPlayerFormat(ProxiedPlayer player, String message) {
-        return bStaffHolder.getStaffHolder(player, format)
-                .replace("<message>", message.substring(input.length()));
+    public BaseComponent[] getPlayerFormat(ProxiedPlayer player, String message) {
+        return bStaffHolder.getStaffHolder(player, format.replace("<message>", message.substring(input.length())));
     }
 }

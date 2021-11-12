@@ -1,14 +1,17 @@
 package me.dragonsteam.bungeestaffs;
 
+import de.themoep.minedown.MineDown;
 import me.dragonsteam.bungeestaffs.managers.HookHandler;
 import me.dragonsteam.bungeestaffs.managers.hooks.LuckPermsHandler;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 public class bStaffHolder {
 
-    public static String getStaffHolder(ProxiedPlayer player, String s) {
+    public static String getStaffHolderMessage(ProxiedPlayer player, String s) {
         String message = s;
         if (player != null) {
             ConfigFile config = bStaffs.INSTANCE.getSettingsFile();
@@ -41,7 +44,11 @@ public class bStaffHolder {
                 .replace("<medium_chat_bar>", ChatUtils.MEDIUM_CHAT_BAR)
         ;
 
-        return ChatUtils.translate(message);
+        return message;
+    }
+
+    public static BaseComponent[] getStaffHolder(ProxiedPlayer player, String s) {
+        return MineDown.parse(getStaffHolderMessage(player, s));
     }
 
 }

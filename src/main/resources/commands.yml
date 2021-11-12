@@ -28,12 +28,6 @@
 # * TOGGLE > PERMISSION FOR TOGGLE OUTPUTS:
 ###############################################################
 
-
-# Execution list
-
-# send: Send message using receive permission and format.
-# chat: Execute command using command arguments.
-
 COMMANDS:
   HELPOP-CMD:
     TYPE: SOLO

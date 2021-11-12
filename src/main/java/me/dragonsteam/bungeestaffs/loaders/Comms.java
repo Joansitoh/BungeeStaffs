@@ -10,6 +10,7 @@ import me.dragonsteam.bungeestaffs.utils.CommandType;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
@@ -117,11 +118,8 @@ public class Comms {
      * @param target for no SOLO commands.
      * @param message of the command.
      */
-    public String getPlayerFormat(ProxiedPlayer player, ProxiedPlayer target, String message) {
-        return bStaffHolder.getStaffHolder(player, format.replace("<target>", target != null ? target.getName() : ""))
-
-                // Get message without color codes and holders.
-                .replace("<message>", message);
+    public BaseComponent[] getPlayerFormat(ProxiedPlayer player, ProxiedPlayer target, String message) {
+        return bStaffHolder.getStaffHolder(player, format.replace("<target>", target != null ? target.getName() : "").replace("<message>", message));
     }
 
     public boolean hasPermission(CommandSender player) {
