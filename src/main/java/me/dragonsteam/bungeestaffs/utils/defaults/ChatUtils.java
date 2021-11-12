@@ -17,9 +17,8 @@ import java.util.stream.Collectors;
 
 public class ChatUtils {
 
-
-    public static String CHAT_BAR = ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "------------------------------------------------";
-    public static String MEDIUM_CHAT_BAR = ChatColor.GRAY.toString() + ChatColor.STRIKETHROUGH + "------------------------------";
+    public static String CHAT_BAR = ChatColor.STRIKETHROUGH + "------------------------------------------------";
+    public static String MEDIUM_CHAT_BAR = ChatColor.STRIKETHROUGH + "------------------------------";
 
     public static String translate(String input) {
         return ChatColor.translateAlternateColorCodes('&', input);

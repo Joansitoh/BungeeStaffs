@@ -1,6 +1,6 @@
 ################################################
 #
-# BUNGEESTAFFS - v0.2
+# BUNGEESTAFFS - v0.3
 # https://discord.gg/gXzRaYdzsh
 #
 ################################################
@@ -14,7 +14,7 @@ CHATS:
     # The input are the char how you use to write a message on this chat.
     # Example: (#I love minecraft) // "STAFF (Lobby) | Joansiitoh: I love minecraft"
     INPUT: '#'
-    FORMAT: '&#ff1100-#ff0095&&lSTAFF &7(&o<server>&7) &7&l| <prefix>&rainbow:20&<player>: &f<message>'
+    FORMAT: '[&lSTAFF](#ff1100-#ff0095) &7(&o<server>&7) &7&l| <prefix>[<player>](rainbow): &f<message>'
 
     # Permission needed to use and read this chat.
     PERMISSION: 'bstaffs.staffchat'

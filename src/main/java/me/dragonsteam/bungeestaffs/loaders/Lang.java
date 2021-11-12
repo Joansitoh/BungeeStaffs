@@ -38,10 +38,10 @@ public enum Lang {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     SEARCH("SEARCH-FORMAT", "SEARCH",
-            "<chat_bar>",
+            "[<chat_bar>](rainbow)",
             "&fPlayer &a<player> &fhas been &afound&f.",
             "&fCurrent server: &a<hover><server></hover>",
-            "<chat_bar>"
+            "[<chat_bar>](rainbow)"
     ),
     SEARCH_HOVER("SEARCH-HOVER", "SEARCH", "&7| &eClick to join"),
     SEARCH_COMMAND("SEARCH-COMMAND", "SEARCH", "/server <server>"),
@@ -50,8 +50,10 @@ public enum Lang {
 
     // Control event messages
     STAFF_LIST("LIST-FORMAT", "STAFFS",
+            "[<chat_bar>](rainbow)",
             "&b>> &fCurrent &bstaffs&f online:",
-            "&f* &a<player> &7(<server>)"
+            "&f* &a<player> &7(<server>)",
+            "[<chat_bar>](rainbow)"
     ),
 
     STAFF_JOIN("JOIN", "STAFFS", "&b<prefix><player> &7has joined the server."),
@@ -69,58 +71,81 @@ public enum Lang {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ;
 
-    private static final ConfigFile config = bStaffs.INSTANCE.getMessagesFile();
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     private final String path, subPath;
 
     private String def;
     private List<String> defList;
 
+    private static final ConfigFile config = bStaffs.INSTANCE.getMessagesFile();
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    Lang(String path, String def) {
+        this.path = path;
+        this.subPath = "";
+        this.def = def;
+    }
+
     Lang(String path, String subPath, String... defList) {
         this.path = path;
         this.subPath = subPath;
-
-        if (defList.length == 1) this.def = defList[0];
-        else this.defList = Arrays.asList(defList);
+        this.defList = Arrays.asList(defList);
+        this.def = null;
     }
 
-    public static void loadLanguage() {
-        Configuration cfg = config.getConfiguration();
-        for (Lang lang : values()) {
-            if (!cfg.contains(lang.getFinalPath())) {
-                if (lang.getDefList() != null) cfg.set(lang.getFinalPath(), lang.toList());
-                else cfg.set(lang.getFinalPath(), lang.toString().replace("§", "&"));
-            }
-        }
-
-        try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(cfg, config.getFile());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    Lang(String path, String subPath, String def) {
+        this.path = path;
+        this.subPath = subPath;
+        this.defList = null;
+        this.def = def;
     }
 
-    public String toStringDefault() {
-        return config.getString(getFinalPath(), def);
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public String toString(boolean prefix) {
+        return (prefix ? Lang.PREFIX.toString(false) : "") + ChatUtils.translate(config.getString(getFinalPath(), this.def));
     }
 
     public String toString() {
-        if (defList != null) {
-            StringBuilder builder = new StringBuilder();
-            toList().forEach(text -> builder.append(text).append("\n"));
-            return ChatUtils.translate(builder.toString());
+        // Check if final path is a list using config.getStringList().
+        if (config.getStringList(getFinalPath()) != null && config.getStringList(getFinalPath()).size() > 0) {
+            // Transform list to string using "\n".
+            StringBuilder sb = new StringBuilder();
+            for (String s : config.getStringList(getFinalPath())) sb.append(s).append("\n");
+            return sb.toString();
         }
 
-        return ChatUtils.translate(config.getString(getFinalPath(), def));
+        return ChatUtils.translate(config.getString(getFinalPath(), this.def));
     }
 
     public List<String> toList() {
-        if (def != null) return ChatUtils.translate(Collections.singletonList(toString()));
-        return ChatUtils.translate(config.getStringListOrDefault(getFinalPath(), defList)).stream().map(text -> text.replace("§", "&")).collect(Collectors.toList());
+        return config.getStringList(getFinalPath());
     }
 
-    public String getFinalPath() {
-        return subPath.equalsIgnoreCase("") ? path : subPath + "." + path;
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    private String getFinalPath() {
+        return this.subPath.equalsIgnoreCase("") ? this.path : this.subPath + "." + this.path;
+    }
+
+    public static void load() {
+        Configuration cfg = config.getConfiguration();
+        for (Lang item : Lang.values()) {
+            if (!config.getConfiguration().contains(item.getFinalPath())) {
+                config.getConfiguration().set(item.getFinalPath(),
+                        item.getDef() == null || item.getDef().equalsIgnoreCase("") ? item.getDefList() : item.getDef());
+            }
+
+            try {
+                ConfigurationProvider.getProvider(YamlConfiguration.class).save(cfg, config.getFile());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        config.save();
     }
 
 }

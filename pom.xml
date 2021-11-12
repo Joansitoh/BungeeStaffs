@@ -6,7 +6,7 @@
 
     <groupId>me.dragonsteam.bungeestaffs</groupId>
     <artifactId>bStaffs</artifactId>
-    <version>0.3.2</version>
+    <version>0.3.2-b${buildNumber}</version>
 
     <properties>
         <!-- Removes warnings -->
@@ -146,7 +146,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <finalName>${project.name}_v${project.version}-b${buildNumber}</finalName>
+                            <finalName>${project.name}_v${project.version}</finalName>
                             <relocations>
                                 <relocation>
                                     <pattern>com.google.gson</pattern>

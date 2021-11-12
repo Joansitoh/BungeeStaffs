@@ -25,7 +25,11 @@ public class StaffListCMD extends Command {
                 continue;
             }
 
-            sender.sendMessage(ChatUtils.translate(s));
+            // Check if sender instanceof ProxiedPlayer.
+            if (sender instanceof ProxiedPlayer) {
+                ProxiedPlayer player = (ProxiedPlayer) sender;
+                sender.sendMessage(bStaffHolder.getStaffHolder(player, s));
+            } else sender.sendMessage(ChatUtils.translate(s));
         }
     }
 }

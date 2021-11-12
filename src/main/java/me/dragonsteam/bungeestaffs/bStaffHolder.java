@@ -26,14 +26,18 @@ public class bStaffHolder {
             } catch (Exception ignore) {}
 
             // Loading prefix and suffix using LuckPerms.
-            HookHandler handler = bStaffs.INSTANCE.getHookManager().getHandler("LuckPerms");
-            if (handler != null) {
-                LuckPermsHandler luckPermsHandler = (LuckPermsHandler) handler;
-                if (luckPermsHandler.getPrefix(player.getUniqueId()) != null)
-                    prefix = luckPermsHandler.getPrefix(player.getUniqueId());
+            try {
+                HookHandler handler = bStaffs.INSTANCE.getHookManager().getHandler("LuckPerms");
+                if (handler != null) {
+                    LuckPermsHandler luckPermsHandler = (LuckPermsHandler) handler;
+                    if (luckPermsHandler.getPrefix(player.getUniqueId()) != null)
+                        prefix = luckPermsHandler.getPrefix(player.getUniqueId());
 
-                if (luckPermsHandler.getSuffix(player.getUniqueId()) != null)
-                    suffix = luckPermsHandler.getSuffix(player.getUniqueId());
+                    if (luckPermsHandler.getSuffix(player.getUniqueId()) != null)
+                        suffix = luckPermsHandler.getSuffix(player.getUniqueId());
+                }
+            } catch (Exception e) {
+                player.disconnect(TextComponent.fromLegacyText("Error on load your data, try login again."));
             }
 
             message = message.replace("<server>", server).replace("<player>", name).replace("<prefix>", prefix).replace("<suffix>", suffix);
@@ -49,6 +53,10 @@ public class bStaffHolder {
 
     public static BaseComponent[] getStaffHolder(ProxiedPlayer player, String s) {
         return MineDown.parse(getStaffHolderMessage(player, s));
+    }
+
+    public static BaseComponent[] getStaffHolderBase(ProxiedPlayer player, String s) {
+        return MineDown.parse(s);
     }
 
 }

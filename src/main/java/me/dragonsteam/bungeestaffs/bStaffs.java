@@ -77,7 +77,7 @@ public final class bStaffs extends Plugin {
         commands = new HashMap<>();
         knownCommands = new HashMap<>();
 
-        Runnables.runLater(() -> hookManager = new HookManager(), 1, TimeUnit.SECONDS);
+        Runnables.runLater(() -> hookManager = new HookManager(), 2, TimeUnit.SECONDS);
 
         ////////////////////////////////////////////////////////////////////////////////
 
@@ -88,7 +88,7 @@ public final class bStaffs extends Plugin {
 
         new Chats(this);
         new Comms();
-        Lang.loadLanguage();
+        Lang.load();
 
         ////////////////////////////////////////////////////////////////////////////////
 

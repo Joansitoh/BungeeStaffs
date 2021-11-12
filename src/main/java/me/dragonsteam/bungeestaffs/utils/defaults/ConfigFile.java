@@ -48,13 +48,7 @@ public class ConfigFile {
         }
     }
 
-    public void reloadConfig() {
-        try {
-            this.configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(this.file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    ///////////////////////////////////////////////////////////////////////////
 
     public double getDouble(String path) {
         if (configuration.contains(path))
@@ -92,6 +86,8 @@ public class ConfigFile {
         return ChatUtils.translate(callback);
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+
     public List<String> getReversedStringList(String path) {
         List<String> list = getStringList(path);
         if (list != null) {
@@ -119,12 +115,21 @@ public class ConfigFile {
     public List<String> getStringListOrDefault(String path, List<String> toReturn) {
         if (configuration.contains(path)) {
             ArrayList<String> strings = new ArrayList<>();
-            for (String string : configuration.getStringList(path)) {
+            for (String string : configuration.getStringList(path))
                 strings.add(ChatColor.translateAlternateColorCodes('&', string));
-            }
             return strings;
         }
         return toReturn;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    public void reloadConfig() {
+        try {
+            this.configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(this.file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void save() {

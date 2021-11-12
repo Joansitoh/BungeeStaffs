@@ -1,11 +1,13 @@
 package me.dragonsteam.bungeestaffs.commands.types;
 
+import de.themoep.minedown.MineDown;
 import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.loaders.Lang;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -14,6 +16,7 @@ import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SearchCMD extends Command implements TabExecutor {
@@ -38,13 +41,13 @@ public class SearchCMD extends Command implements TabExecutor {
 
         String prefix = "<hover>", suffix = "</hover>";
         for (String s : Lang.SEARCH.toList()) {
-            s = bStaffHolder.getStaffHolderMessage(target, s);
+            String holder = bStaffHolder.getStaffHolderMessage(target, s);
 
             // Get string between tags hover.
-            String between = ChatUtils.substringBetween(s, prefix, suffix);
+            String between = ChatUtils.substringBetween(holder, prefix, suffix);
             if (between != null && !between.equalsIgnoreCase("")) {
                 // Splitting text to create hover event.
-                String[] arg = s.split(between);
+                String[] arg = holder.split(between);
                 TextComponent message = new TextComponent(arg[0]
                         .replace(prefix, "")
                         .replace("<target>", target.getName())
@@ -60,7 +63,7 @@ public class SearchCMD extends Command implements TabExecutor {
                 continue;
             }
 
-            player.sendMessage(s);
+            player.sendMessage(bStaffHolder.getStaffHolder(target, s));
         }
     }
 
