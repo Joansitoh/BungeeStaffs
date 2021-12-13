@@ -83,8 +83,14 @@ public class Comms {
                 /* Set comms defaults accessors with config values */
                 comms.setCooldown(section.getInt("COOLDOWN"));
                 comms.setUsage(section.getString("USAGE"));
-                comms.setFormat(section.getString("FORMAT"));
                 comms.setOutput(section.getString("OUTPUT"));
+
+                if (!section.getStringList("FORMAT").isEmpty()) {
+                    StringBuilder builder = new StringBuilder();
+                    for (String s1 : section.getStringList("FORMAT"))
+                        builder.append(s1).append("\n");
+                    comms.setFormat(builder.toString());
+                } else comms.setFormat(section.getString("FORMAT"));
 
                 if (section.getString("ALIASES") != null)
                     comms.setAliases(section.getStringList("ALIASES"));

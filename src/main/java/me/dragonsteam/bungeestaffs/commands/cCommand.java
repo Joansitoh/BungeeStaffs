@@ -66,7 +66,7 @@ public class cCommand extends Command implements TabExecutor {
                     for (ProxiedPlayer p : bStaffs.INSTANCE.getProxy().getPlayers()) {
                         if (!hasPerm(p, comms.getReceivePermission())) continue;
                         if (ToggleUtils.isToggledCommand(p, comms)) continue;
-                        p.sendMessage(new TextComponent(comms.getPlayerFormat(player, null, builder.toString())));
+                        p.sendMessage(comms.getPlayerFormat(player, null, builder.toString()));
                     }
                     break;
                 case TARGET:
@@ -99,7 +99,7 @@ public class cCommand extends Command implements TabExecutor {
                     for (ProxiedPlayer p : bStaffs.INSTANCE.getProxy().getPlayers()) {
                         if (!hasPerm(p, comms.getReceivePermission())) continue;
                         if (ToggleUtils.isToggledCommand(p, comms)) continue;
-                        p.sendMessage(new TextComponent(comms.getPlayerFormat(player, target, builder.toString())));
+                        p.sendMessage(comms.getPlayerFormat(player, target, builder.toString()));
                     }
                     break;
             }

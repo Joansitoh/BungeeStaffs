@@ -2,6 +2,7 @@ package me.dragonsteam.bungeestaffs.utils.defaults;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import me.dragonsteam.bungeestaffs.bStaffs;
+import net.md_5.bungee.api.scheduler.ScheduledTask;
 
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
@@ -20,8 +21,8 @@ public class Runnables {
         bStaffs.INSTANCE.getProxy().getScheduler().schedule(bStaffs.INSTANCE, callable::call, delay, unit);
     }
 
-    public static void runTimer(Callable callable, long delay, long interval) {
-        bStaffs.INSTANCE.getProxy().getScheduler().schedule(bStaffs.INSTANCE, callable::call, delay, interval, TimeUnit.SECONDS);
+    public static ScheduledTask runTimer(Callable callable, long delay, long interval) {
+        return bStaffs.INSTANCE.getProxy().getScheduler().schedule(bStaffs.INSTANCE, callable::call, delay, interval, TimeUnit.SECONDS);
     }
 
     public interface Callable {

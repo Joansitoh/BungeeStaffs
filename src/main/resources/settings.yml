@@ -16,3 +16,13 @@ EVENTS:
     JOIN-MESSAGE: true
     LEFT-MESSAGE: true
     MOVE-MESSAGE: true
+
+SERVERS-CONFIG:
+  LIMBO:
+    PREVENT-MOVE: true
+    STOP-COMMAND: '/stop'
+    NAME: 'Limbo'
+
+  FALLBACK-SERVERS:
+    - 'lobby1'
+    - 'lobby2'

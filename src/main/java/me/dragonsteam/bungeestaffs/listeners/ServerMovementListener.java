@@ -9,9 +9,14 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
+import net.md_5.bungee.api.event.ServerKickEvent;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Joansiitoh (DragonsTeam && SkillTeam)
@@ -54,6 +59,14 @@ public class ServerMovementListener implements Listener {
             if (!p.hasPermission(permission)) continue;
             p.sendMessage(new TextComponent(bStaffHolder.getStaffHolder(player, Lang.STAFF_MOVE.toString())));
         }
+    }
+
+    @EventHandler
+    public void onServerFallback(ServerKickEvent e) {
+        e.setCancelled(true);
+        String fallback = bStaffs.INSTANCE.getRandomFallbackServer();
+        if (fallback == null) return;
+        e.setCancelServer(ProxyServer.getInstance().getServerInfo(fallback));
     }
 
 }

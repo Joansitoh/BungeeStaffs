@@ -5,6 +5,7 @@ import me.dragonsteam.bungeestaffs.loaders.Comms;
 import me.dragonsteam.bungeestaffs.loaders.Lang;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ToggleUtils;
+import me.dragonsteam.bungeestaffs.utils.formats.TextFormatReader;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -49,7 +50,7 @@ public class ToggleCMD extends Command implements TabExecutor {
             }
 
             ToggleUtils.togglePlayerCommand(player, comms);
-            player.sendMessage(new TextComponent(Lang.COMMAND_TOGGLED.toString()
+            player.sendMessage(TextFormatReader.complexFormat(Lang.COMMAND_TOGGLED.toString()
                     .replace("<command>", comms.getCommand())
                     .replace("<value>", ToggleUtils.isToggledCommand(player, comms) ? Lang.BOOLEAN_FALSE.toString() : Lang.BOOLEAN_TRUE.toString())
             ));

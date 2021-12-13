@@ -2,9 +2,13 @@ package me.dragonsteam.bungeestaffs.loaders;
 
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
+import me.dragonsteam.bungeestaffs.utils.formats.TextFormatReader;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
@@ -48,6 +52,12 @@ public enum Lang {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    KICKED_MESSAGE("KICKED-MESSAGE", "SERVER-KICK", "&fYou have been &ckicked &fby staff."),
+    PLAYERS_KICKED("PLAYERS-KICKED", "SERVER-KICK", "&fAll players on &c<server> &fhas been kicked."),
+    SERVER_NOT_FOUND("SERVER-NOT-FOUND", "SERVER-KICK", "&fServer &c<server> &fnot found."),
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     // Control event messages
     STAFF_LIST("LIST-FORMAT", "STAFFS",
             "[<chat_bar>](rainbow)",
@@ -67,6 +77,17 @@ public enum Lang {
 
     CHAT_TOGGLED("CHAT-TOGGLED", "CHATS", "&7Chat outputs of '&b<chat>&7' has been <value>&7."),
     CHAT_NOT_FOUND("CHAT-NO-EXIST", "CHATS", "&7This chat input not exist&7."),
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    LIMBO_NOT_SET("NOT-SET", "LIMBO", "&7The limbo not exist."),
+
+    LIMBO_JOIN("JOIN", "LIMBO", "&7You join the limbo. Wait to reconnect to your old server."),
+    LIMBO_LEAVE("LEFT", "LIMBO", "&7You left the limbo."),
+    LIMBO_PREVENT_MOVE("MOVE-CANCELLED", "LIMBO", "&7You can't move while you are in Limbo."),
+
+    LIMBO_SERVER_REACHED("SERVER-REACHED", "LIMBO", "&7Server <server> is online. In 15 seconds you will be teleported."),
+    LIMBO_SERVER_NOT_REACHED("SERVER-NOT-REACHED", "LIMBO", "&7Server <server> can't be reached. Sending to fallback servers."),
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     ;
@@ -103,6 +124,10 @@ public enum Lang {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void send(ProxiedPlayer sender) {
+        sender.sendMessage(TextFormatReader.complexFormat(bStaffHolder.getStaffHolderMessage(sender, toString(true))));
+    }
 
     public String toString(boolean prefix) {
         return (prefix ? Lang.PREFIX.toString(false) : "") + ChatUtils.translate(config.getString(getFinalPath(), this.def));

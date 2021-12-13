@@ -34,11 +34,16 @@ public class Chats {
             Configuration section = config.getConfiguration().getSection("CHATS." + s);
 
             try {
-                Chats chats = new Chats(
-                        section.getString("INPUT"),
-                        section.getString("FORMAT"),
-                        section.getString("PERMISSION")
-                );
+                String format = "";
+
+                if (!section.getStringList("FORMAT").isEmpty()) {
+                    StringBuilder builder = new StringBuilder();
+                    for (String s1 : section.getStringList("FORMAT"))
+                        builder.append(s1).append("\n");
+                    format = builder.toString();
+                } else format = section.getString("FORMAT");
+
+                Chats chats = new Chats(section.getString("INPUT"), format, section.getString("PERMISSION"));
                 chatsHashMap.put(chats.getInput(), chats);
                 bStaffs.logger("* New custom chat created. (" + s + ")", "[Loader]");
             } catch (Exception e) {

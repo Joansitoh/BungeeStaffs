@@ -1,10 +1,7 @@
 package me.dragonsteam.bungeestaffs;
 
 import lombok.Getter;
-import me.dragonsteam.bungeestaffs.commands.types.SearchCMD;
-import me.dragonsteam.bungeestaffs.commands.types.StaffListCMD;
-import me.dragonsteam.bungeestaffs.commands.types.ToggleCMD;
-import me.dragonsteam.bungeestaffs.commands.types.ToggleChatCMD;
+import me.dragonsteam.bungeestaffs.commands.types.*;
 import me.dragonsteam.bungeestaffs.listeners.PlayerChatListener;
 import me.dragonsteam.bungeestaffs.listeners.PlayerCompleteListener;
 import me.dragonsteam.bungeestaffs.listeners.ServerMovementListener;
@@ -16,15 +13,13 @@ import me.dragonsteam.bungeestaffs.utils.UpdateChecker;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import me.dragonsteam.bungeestaffs.utils.defaults.Runnables;
+import me.dragonsteam.bungeestaffs.utils.formats.TextFormatReader;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.bstats.bungeecord.Metrics;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -77,7 +72,7 @@ public final class bStaffs extends Plugin {
         commands = new HashMap<>();
         knownCommands = new HashMap<>();
 
-        Runnables.runLater(() -> hookManager = new HookManager(), 2, TimeUnit.SECONDS);
+        Runnables.runLater(() -> hookManager = new HookManager(), 5, TimeUnit.SECONDS);
 
         ////////////////////////////////////////////////////////////////////////////////
 
@@ -113,7 +108,11 @@ public final class bStaffs extends Plugin {
                 new PlayerChatListener(), new ServerMovementListener(), new PlayerCompleteListener()
         );
 
-        registerCommands(new bStaffCommand(), new SearchCMD(), new StaffListCMD(), new ToggleChatCMD(), new ToggleCMD());
+        registerCommands(
+                new bStaffCommand(), new SearchCMD(), new StaffListCMD(),
+                new ToggleChatCMD(), new ToggleCMD(), new ServerKickCMD(),
+                new RestartCMD()
+        );
     }
 
     @Override
@@ -132,8 +131,11 @@ public final class bStaffs extends Plugin {
         });
     }
 
-    public List<String> getExtraCommands() {
-        return Arrays.asList("stafflist", "toggle", "search", "togglechat");
+    public String getRandomFallbackServer() {
+        if (!settingsFile.getConfiguration().contains("SERVERS-CONFIG.FALLBACK-SERVERS")) return null;
+        List<String> fallbackServers = settingsFile.getStringList("SERVERS-CONFIG.FALLBACK-SERVERS");
+        if (fallbackServers.isEmpty()) return null;
+        return fallbackServers.get(new Random().nextInt(fallbackServers.size()));
     }
 
 }
