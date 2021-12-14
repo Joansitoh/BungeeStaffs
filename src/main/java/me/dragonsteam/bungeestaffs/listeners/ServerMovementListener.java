@@ -34,7 +34,7 @@ public class ServerMovementListener implements Listener {
         if (!player.hasPermission(permission)) return;
         for (ProxiedPlayer p : ProxyServer.getInstance().getPlayers()) {
             if (!p.hasPermission(permission)) continue;
-            p.sendMessage(new TextComponent(bStaffHolder.getStaffHolder(player, Lang.STAFF_JOIN.toString())));
+            p.sendMessage(new TextComponent(bStaffHolder.getStaffHolder(player, "ACTION", Lang.STAFF_JOIN.toString())));
         }
     }
 
@@ -45,7 +45,7 @@ public class ServerMovementListener implements Listener {
         if (!player.hasPermission(permission)) return;
         for (ProxiedPlayer p : ProxyServer.getInstance().getPlayers()) {
             if (!p.hasPermission(permission)) continue;
-            p.sendMessage(new TextComponent(bStaffHolder.getStaffHolder(player, Lang.STAFF_LEFT.toString())));
+            p.sendMessage(new TextComponent(bStaffHolder.getStaffHolder(player, "ACTION", Lang.STAFF_LEFT.toString())));
         }
     }
 
@@ -57,7 +57,7 @@ public class ServerMovementListener implements Listener {
 
         for (ProxiedPlayer p : ProxyServer.getInstance().getPlayers()) {
             if (!p.hasPermission(permission)) continue;
-            p.sendMessage(new TextComponent(bStaffHolder.getStaffHolder(player, Lang.STAFF_MOVE.toString())));
+            p.sendMessage(new TextComponent(bStaffHolder.getStaffHolder(player, "ACTION", Lang.STAFF_MOVE.toString())));
         }
     }
 

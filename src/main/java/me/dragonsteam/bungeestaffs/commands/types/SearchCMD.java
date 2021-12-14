@@ -63,7 +63,7 @@ public class SearchCMD extends Command implements TabExecutor {
                 continue;
             }
 
-            player.sendMessage(bStaffHolder.getStaffHolder(target, s));
+            player.sendMessage(bStaffHolder.getStaffHolder(target, "COMMAND", s));
         }
     }
 

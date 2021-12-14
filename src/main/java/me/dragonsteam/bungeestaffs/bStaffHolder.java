@@ -5,9 +5,11 @@ import me.dragonsteam.bungeestaffs.managers.HookHandler;
 import me.dragonsteam.bungeestaffs.managers.hooks.LuckPermsHandler;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
+import me.dragonsteam.bungeestaffs.utils.formats.TextFormatReader;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.config.Configuration;
 
 public class bStaffHolder {
 
@@ -15,7 +17,7 @@ public class bStaffHolder {
         String message = s;
         if (player != null) {
             ConfigFile config = bStaffs.INSTANCE.getSettingsFile();
-            String server = "", name = player.getName();
+            String server = "", raw_server = "", name = player.getName();
             String prefix = "", suffix = "";
 
             // Checking the server motd method.
@@ -23,6 +25,8 @@ public class bStaffHolder {
                 if (config.getBoolean("USE-BUNGEE-MOTD"))
                     server = player.getServer().getInfo().getMotd();
                 else server = player.getServer().getInfo().getName();
+
+                raw_server = player.getServer().getInfo().getName();
             } catch (Exception ignore) {}
 
             // Loading prefix and suffix using LuckPerms.
@@ -40,7 +44,12 @@ public class bStaffHolder {
                 player.disconnect(TextComponent.fromLegacyText("Error on load your data, try login again."));
             }
 
-            message = message.replace("<server>", server).replace("<player>", name).replace("<prefix>", prefix).replace("<suffix>", suffix);
+            message = message
+                    .replace("<server>", server)
+                    .replace("<raw_server>", raw_server)
+                    .replace("<player>", name)
+                    .replace("<prefix>", prefix)
+                    .replace("<suffix>", suffix);
         }
 
         message = message
@@ -48,10 +57,16 @@ public class bStaffHolder {
                 .replace("<medium_chat_bar>", ChatUtils.MEDIUM_CHAT_BAR)
         ;
 
-        return message;
+        return ChatUtils.translate(message);
     }
 
-    public static BaseComponent[] getStaffHolder(ProxiedPlayer player, String s) {
+    public static BaseComponent[] getStaffHolder(ProxiedPlayer player, String method, String s) {
+        Configuration section = bStaffs.INSTANCE.getSettingsFile().getConfiguration().getSection("COMPLEX-FORMAT");
+        if (section != null && section.contains("USE-COMPLEX-FORMAT") && section.getBoolean("USE-COMPLEX-FORMAT")) {
+            if (section.getStringList("WHITELIST").contains(method))
+                return new BaseComponent[]{TextFormatReader.complexFormat(getStaffHolderMessage(player, s))};
+        }
+
         return MineDown.parse(getStaffHolderMessage(player, s));
     }
 

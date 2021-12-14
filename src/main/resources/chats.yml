@@ -5,9 +5,9 @@
 #
 ################################################
 
-# You can create how many chat what you want.
 TOGGLE-CHAT-PERMISSION: 'bstaffs.togglechat'
 
+# You can CREATE how many chat what you want.
 CHATS:
   STAFF-CHAT: # Example custom chat.
 

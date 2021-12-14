@@ -125,7 +125,7 @@ public class Comms {
      * @param message of the command.
      */
     public BaseComponent[] getPlayerFormat(ProxiedPlayer player, ProxiedPlayer target, String message) {
-        return bStaffHolder.getStaffHolder(player, format.replace("<target>", target != null ? target.getName() : "").replace("<message>", message));
+        return bStaffHolder.getStaffHolder(player, "COMMAND", format.replace("<target>", target != null ? target.getName() : "").replace("<message>", message));
     }
 
     public boolean hasPermission(CommandSender player) {

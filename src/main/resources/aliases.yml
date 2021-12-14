@@ -1,0 +1,20 @@
+################################################
+#
+# BUNGEESTAFFS - v0.3
+# https://discord.gg/gXzRaYdzsh
+#
+################################################
+
+# Server aliases is used for use /SERVER command for joining servers.
+# Example: /prac or /practice
+SERVER-ALIASES:
+
+  Practice: # Name of the server.
+    # Alias of the server.
+    - "practice"
+    - "prac"
+
+  Survival: # Name of the server.
+    # Alias of the server.
+    - "survival"
+    - "surv"

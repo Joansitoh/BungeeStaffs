@@ -14,6 +14,7 @@ import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
+import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
 
 import java.io.IOException;
@@ -46,27 +47,33 @@ public class RestartCMD extends Command implements Listener {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (sender instanceof ProxiedPlayer) {
-            ConfigFile config = bStaffs.INSTANCE.getSettingsFile();
+            ConfigFile file = bStaffs.INSTANCE.getSettingsFile();
             ProxiedPlayer player = (ProxiedPlayer) sender;
             ServerInfo server = player.getServer().getInfo();
 
             waitingServers.put(server.getName(), true);
 
+            Configuration config = file.getConfiguration().getSection("SERVERS-CONFIG.LIMBO");
+            if (config == null) {
+                player.sendMessage(Lang.LIMBO_NOT_SET.toString(true));
+                return;
+            }
+
             // Checking if configuration contains the limbo server
-            if (!config.getConfiguration().contains("SERVERS-CONFIG.LIMBO.NAME")) {
+            if (!config.contains("NAME")) {
                 player.sendMessage(Lang.LIMBO_NOT_SET.toString(true));
                 return;
             }
 
             // Checking if limbo server exist.
-            String limboName = config.getString("SERVERS-CONFIG.LIMBO.NAME");
+            String limboName = config.getString("NAME");
             ServerInfo limbo = bStaffs.INSTANCE.getProxy().getServerInfo(limboName);
             if (bStaffs.INSTANCE.getProxy().getServerInfo(limboName) == null) {
                 player.sendMessage(Lang.LIMBO_NOT_SET.toString(true));
                 return;
             }
 
-            player.chat(config.getString("SERVERS-CONFIG.LIMBO.STOP-COMMAND"));
+            player.chat(config.getString("STOP-COMMAND"));
 
             for (ProxiedPlayer online : server.getPlayers()) {
                 online.connect(limbo);
@@ -74,15 +81,18 @@ public class RestartCMD extends Command implements Listener {
                 waitingPlayers.put(online.getUniqueId(), server.getName());
             }
 
+            int timeout = config.contains("TIMEOUT") ? config.getInt("TIMEOUT") : 10;
+            int countdown = config.contains("TP-COOLDOWN") ? config.getInt("TP-COOLDOWN") : 15;
+
             // Checking if limbo is online.
             Socket socket = new Socket();
             try {
                 socket.connect(new InetSocketAddress("localhost", limbo.getAddress().getPort()), 40);
                 // Execute the stop command by player.
                 waitingTicks.put(server.getName(), 0);
-                tasksMap.put(server.getName(), bStaffs.INSTANCE.getProxy().getScheduler().schedule(bStaffs.INSTANCE, () -> {
+                tasksMap.put(server.getName(), Runnables.runTimer(() -> {
                     if (waitingTicks.containsKey(server.getName())) {
-                        if (waitingTicks.get(server.getName()) == 7) {
+                        if (waitingTicks.get(server.getName()) == timeout) {
                             clearServerPlayers(server.getName(), Lang.LIMBO_SERVER_NOT_REACHED.toString(true)
                                     .replace("<server>", server.getName()));
                             return;
@@ -108,15 +118,16 @@ public class RestartCMD extends Command implements Listener {
                                 online.sendMessage(Lang.LIMBO_SERVER_REACHED.toString(true).replace("<server>", server.getName()));
                         }
 
+                        // Teleport all players to old server.
                         Runnables.runLater(() -> {
                             for (UUID uuid : getServerPlayers(server.getName())) {
                                 ProxiedPlayer online = bStaffs.INSTANCE.getProxy().getPlayer(uuid);
                                 if (online != null) online.connect(server);
                                 waitingPlayers.remove(uuid);
                             }
-                        }, 15, TimeUnit.SECONDS);
+                        }, countdown, TimeUnit.SECONDS);
                     }
-                }, 1, 1, TimeUnit.SECONDS));
+                }, 1, 1));
 
                 socket.close();
             } catch (Exception e) {
@@ -149,11 +160,12 @@ public class RestartCMD extends Command implements Listener {
     @EventHandler
     public void onPlayerSwitch(ServerSwitchEvent e) {
         if (waitingPlayers.containsKey(e.getPlayer().getUniqueId())) {
-            ConfigFile config = bStaffs.INSTANCE.getSettingsFile();
-            String path = "SERVERS-CONFIG.LIMBO.";
+            ConfigFile file = bStaffs.INSTANCE.getSettingsFile();
+            Configuration config = file.getConfiguration().getSection("SERVERS-CONFIG.LIMBO");
+            if (config == null) return;
 
-            if (e.getPlayer().getServer().getInfo().getName().equals(config.getString(path + "NAME"))) return;
-            if (config.getConfiguration().contains(path + "PREVENT-MOVE") && config.getBoolean(path + "PREVENT-MOVE")) {
+            if (e.getPlayer().getServer().getInfo().getName().equals(config.getString("NAME"))) return;
+            if (config.contains("PREVENT-MOVE") && config.getBoolean("PREVENT-MOVE")) {
                 e.getPlayer().sendMessage(Lang.LIMBO_PREVENT_MOVE.toString(true));
                 e.getPlayer().connect(e.getFrom());
                 return;

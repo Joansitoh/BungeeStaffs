@@ -57,6 +57,6 @@ public class Chats {
     }
 
     public BaseComponent[] getPlayerFormat(ProxiedPlayer player, String message) {
-        return bStaffHolder.getStaffHolder(player, format.replace("<message>", message.substring(input.length())));
+        return bStaffHolder.getStaffHolder(player, "CHATS", format.replace("<message>", message.substring(input.length())));
     }
 }

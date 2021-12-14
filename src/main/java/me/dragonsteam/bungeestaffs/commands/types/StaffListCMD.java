@@ -20,7 +20,7 @@ public class StaffListCMD extends Command {
             if (s.contains("<player>")) {
                 for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
                     if (player.hasPermission("bstaffs.staff"))
-                        sender.sendMessage(bStaffHolder.getStaffHolder(player, s));
+                        sender.sendMessage(bStaffHolder.getStaffHolder(player, "COMMAND", s));
                 }
                 continue;
             }
@@ -28,7 +28,7 @@ public class StaffListCMD extends Command {
             // Check if sender instanceof ProxiedPlayer.
             if (sender instanceof ProxiedPlayer) {
                 ProxiedPlayer player = (ProxiedPlayer) sender;
-                sender.sendMessage(bStaffHolder.getStaffHolder(player, s));
+                sender.sendMessage(bStaffHolder.getStaffHolder(player, "COMMAND", s));
             } else sender.sendMessage(ChatUtils.translate(s));
         }
     }

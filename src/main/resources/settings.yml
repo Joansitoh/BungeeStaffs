@@ -9,6 +9,29 @@
 # for variable <server>.
 USE-BUNGEE-MOTD: true
 
+# This is a BETA feature. These options replace the MineDown api
+# for our own custom message formatter.
+#
+# Available parameters:
+#  - (show_text=) - Text to show hover message.
+#  - (run_command=) - Run command when click.
+#  - (suggest_command=) - Suggest command when click.
+#  - (color=) - Use new HEX color codes. (Actually not working)
+#
+# Parameters can be added after ${} format.
+# Example of custom message formatter:
+#  - '&eClick ${&e&lHERE}(run_command=/server <server>)(show_text=&bClick here to join) &eto join server.'
+#  - '&ePlayer is connected! Server: ${<server>}(run_command=/server <server>).'
+#
+COMPLEX-FORMAT:
+  USE-COMPLEX-FORMAT: false
+
+  # Whitelist means what type of messages will be shown complex format.
+  WHITELIST:
+    - COMMANDS # All plugin commands.
+    - CHATS # Custom chats.
+    - ACTIONS # Staff server switch.
+
 EVENTS:
   STAFFS:
     PERMISSION: 'bstaffs.staff'
@@ -19,10 +42,18 @@ EVENTS:
 
 SERVERS-CONFIG:
   LIMBO:
-    PREVENT-MOVE: true
-    STOP-COMMAND: '/stop'
-    NAME: 'Limbo'
+    # The maximum time that the server can be restarted without giving a signal.
+    TIMEOUT: 10
+    # Countdown in seconds to teleport again to old server after server give a signal.
+    TP-COOLDOWN: 15
 
+    # Prevent player moving to other servers while in limbo.
+    PREVENT-MOVE: false
+    # Command who execute player to stop the server.
+    STOP-COMMAND: '/stop'
+    NAME: 'Limbo' # Limbo server name.
+
+  # Fallback servers are server who you teleport to when the server where you are is offline.
   FALLBACK-SERVERS:
     - 'lobby1'
     - 'lobby2'
