@@ -5,16 +5,30 @@
 #
 ################################################
 
+# Server who aliases not work.
+BLACKLIST-SERVERS:
+  - lobby1
+  - lobby2
+
 # Server aliases is used for use /SERVER command for joining servers.
 # Example: /prac or /practice
 SERVER-ALIASES:
-
   Practice: # Name of the server.
+    # You can DELETE this section.
+    PERMISSION: ''
+
+    # Aliases disabled for this servers.
+    # You can DELETE this section.
+    DISABLED-SERVERS:
+      - example1
+
     # Alias of the server.
-    - "practice"
-    - "prac"
+    ALIASES:
+      - "practice"
+      - "prac"
 
   Survival: # Name of the server.
     # Alias of the server.
-    - "survival"
-    - "surv"
+    ALIASES:
+      - "survival"
+      - "surv"

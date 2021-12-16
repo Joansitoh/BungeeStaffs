@@ -33,6 +33,7 @@ public class bStaffCommand extends Command {
                         bStaffs.INSTANCE.getChatsFile(),
                         bStaffs.INSTANCE.getCommandsFile(),
                         bStaffs.INSTANCE.getSettingsFile(),
+                        bStaffs.INSTANCE.getAliasesFile(),
                         bStaffs.INSTANCE.getMessagesFile()
                 );
 

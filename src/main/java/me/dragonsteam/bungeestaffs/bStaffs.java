@@ -2,9 +2,11 @@ package me.dragonsteam.bungeestaffs;
 
 import lombok.Getter;
 import me.dragonsteam.bungeestaffs.commands.types.*;
+import me.dragonsteam.bungeestaffs.listeners.PlayerAliasesListener;
 import me.dragonsteam.bungeestaffs.listeners.PlayerChatListener;
 import me.dragonsteam.bungeestaffs.listeners.PlayerCompleteListener;
 import me.dragonsteam.bungeestaffs.listeners.ServerMovementListener;
+import me.dragonsteam.bungeestaffs.loaders.Aliases;
 import me.dragonsteam.bungeestaffs.loaders.Chats;
 import me.dragonsteam.bungeestaffs.loaders.Comms;
 import me.dragonsteam.bungeestaffs.loaders.Lang;
@@ -36,7 +38,7 @@ public final class bStaffs extends Plugin {
     private HashMap<String, String> commands;
     private Map<String, Command> knownCommands;
 
-    private ConfigFile settingsFile, commandsFile, chatsFile, messagesFile;
+    private ConfigFile settingsFile, commandsFile, chatsFile, messagesFile, aliasesFile;
     private HookManager hookManager;
     private String configVersion;
 
@@ -63,6 +65,7 @@ public final class bStaffs extends Plugin {
         ////////////////////////////////////////////////////////////////////////////////
 
         // Loading recipients
+        aliasesFile = new ConfigFile(this, "aliases.yml");
         settingsFile = new ConfigFile(this, "settings.yml");
         commandsFile = new ConfigFile(this, "commands.yml");
         chatsFile = new ConfigFile(this, "chats.yml");
@@ -85,6 +88,10 @@ public final class bStaffs extends Plugin {
         new Comms();
         Lang.load();
 
+        bStaffs.logger("Registering custom aliases.", "[Loader]");
+        for (String key : aliasesFile.getConfiguration().getSection("SERVER-ALIASES").getKeys())
+            new Aliases(key);
+
         ////////////////////////////////////////////////////////////////////////////////
 
         Runnables.runLater(() -> {
@@ -105,7 +112,7 @@ public final class bStaffs extends Plugin {
 
         logger("Registering listeners and commands...");
         registerListeners(
-                new PlayerChatListener(), new ServerMovementListener(), new PlayerCompleteListener()
+                new PlayerChatListener(), new ServerMovementListener(), new PlayerCompleteListener(), new PlayerAliasesListener()
         );
 
         registerCommands(
