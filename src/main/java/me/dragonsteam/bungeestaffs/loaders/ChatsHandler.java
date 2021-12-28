@@ -4,11 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.bStaffs;
-import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 
 import java.util.HashMap;
@@ -19,14 +17,14 @@ import java.util.HashMap;
  */
 @Getter
 @AllArgsConstructor
-public class Chats {
+public class ChatsHandler {
 
     @Getter
-    private static final HashMap<String, Chats> chatsHashMap = new HashMap<>();
+    private static final HashMap<String, ChatsHandler> chatsHashMap = new HashMap<>();
 
     private String input, format, permission;
 
-    public Chats(Plugin plugin) {
+    public ChatsHandler() {
         chatsHashMap.clear();
         bStaffs.logger("Registering custom chats.", "[Loader]");
         ConfigFile config = bStaffs.INSTANCE.getChatsFile();
@@ -43,7 +41,7 @@ public class Chats {
                     format = builder.toString();
                 } else format = section.getString("FORMAT");
 
-                Chats chats = new Chats(section.getString("INPUT"), format, section.getString("PERMISSION"));
+                ChatsHandler chats = new ChatsHandler(section.getString("INPUT"), format, section.getString("PERMISSION"));
                 chatsHashMap.put(chats.getInput(), chats);
                 bStaffs.logger("* New custom chat created. (" + s + ")", "[Loader]");
             } catch (Exception e) {
@@ -52,7 +50,7 @@ public class Chats {
         }
     }
 
-    public static Chats getChatByInput(String input) {
+    public static ChatsHandler getChatByInput(String input) {
         return chatsHashMap.get(input);
     }
 

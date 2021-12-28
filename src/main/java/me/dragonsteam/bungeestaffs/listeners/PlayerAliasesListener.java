@@ -1,8 +1,8 @@
 package me.dragonsteam.bungeestaffs.listeners;
 
 import me.dragonsteam.bungeestaffs.bStaffs;
-import me.dragonsteam.bungeestaffs.loaders.Aliases;
-import me.dragonsteam.bungeestaffs.loaders.Lang;
+import me.dragonsteam.bungeestaffs.loaders.AliasesHandler;
+import me.dragonsteam.bungeestaffs.loaders.LanguageHandler;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
@@ -28,26 +28,32 @@ public class PlayerAliasesListener implements Listener {
         }
 
         if (command.split(" ").length > 1) return;
-        Aliases aliases = Aliases.getAlias(command);
-        if (aliases == null) return;
+        AliasesHandler aliasesHandler = AliasesHandler.getAlias(command);
+        if (aliasesHandler == null) return;
 
-        if (aliases.getDisabled() != null && !aliases.getDisabled().isEmpty()) {
-            for (String s : aliases.getDisabled())
+        if (aliasesHandler.getDisabled() != null && !aliasesHandler.getDisabled().isEmpty()) {
+            for (String s : aliasesHandler.getDisabled())
                 if (p.getServer().getInfo().getName().equalsIgnoreCase(s)) return;
         }
 
         e.setCancelled(true);
 
-        if (aliases.getPermission() == null || aliases.getPermission() != null && p.hasPermission(aliases.getPermission())) {
-            if (p.getServer().getInfo().getName().equals(aliases.getServer())) {
-                p.sendMessage(Lang.ALIASES_ALREADY_TELEPORT.toString(true).replace("<server>", aliases.getServer()));
+        if (checkPermission(p, aliasesHandler.getPermission())) {
+            if (p.getServer().getInfo().getName().equals(aliasesHandler.getServer())) {
+                p.sendMessage(LanguageHandler.ALIASES_ALREADY_TELEPORT.toString(true).replace("<server>", aliasesHandler.getServer()));
                 return;
             }
 
-            p.connect(bStaffs.INSTANCE.getProxy().getServerInfo(aliases.getServer()));
-            p.sendMessage(Lang.ALIASES_TELEPORT.toString(true).replace("<server>", aliases.getServer()));
-        } else p.sendMessage(Lang.NO_PERMISSION.toString(true));
+            p.connect(bStaffs.INSTANCE.getProxy().getServerInfo(aliasesHandler.getServer()));
+            p.sendMessage(LanguageHandler.ALIASES_TELEPORT.toString(true).replace("<server>", aliasesHandler.getServer()));
+        } else p.sendMessage(LanguageHandler.NO_PERMISSION.toString(true));
 
+    }
+
+    private boolean checkPermission(ProxiedPlayer p, String permission) {
+        if (permission == null) return true;
+        if (permission.equalsIgnoreCase("")) return true;
+        return p.hasPermission(permission);
     }
 
 }

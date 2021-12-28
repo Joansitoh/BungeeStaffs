@@ -1,11 +1,8 @@
 package me.dragonsteam.bungeestaffs.commands.types;
 
-import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.bStaffs;
-import me.dragonsteam.bungeestaffs.loaders.Lang;
-import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
+import me.dragonsteam.bungeestaffs.loaders.LanguageHandler;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -29,17 +26,17 @@ public class ServerKickCMD extends Command implements TabExecutor {
 
         ServerInfo server = bStaffs.INSTANCE.getProxy().getServers().get(args[0]);
         if (server == null) {
-            sender.sendMessage(Lang.SERVER_NOT_FOUND.toString(true).replace("<server>", args[0]));
+            sender.sendMessage(LanguageHandler.SERVER_NOT_FOUND.toString(true).replace("<server>", args[0]));
             return;
         }
 
         // Kick all players from server.
         for (ProxiedPlayer player : server.getPlayers()) {
             if (!player.hasPermission("bstaffs.serverkick.bypass"))
-                player.disconnect(Lang.KICKED_MESSAGE.toString());
+                player.disconnect(LanguageHandler.KICKED_MESSAGE.toString());
         }
 
-        sender.sendMessage(Lang.PLAYERS_KICKED.toString(true).replace("<server>", args[0]));
+        sender.sendMessage(LanguageHandler.PLAYERS_KICKED.toString(true).replace("<server>", args[0]));
     }
 
     @Override

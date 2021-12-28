@@ -11,10 +11,14 @@ import me.dragonsteam.bungeestaffs.bStaffs;
 @Getter @Setter
 public abstract class HookHandler {
 
-    private boolean loaded;
+    private final String name;
 
     public HookHandler(String name) {
-        this.loaded = bStaffs.INSTANCE.getProxy().getPluginManager().getPlugin(name) != null;
+        this.name = name;
+    }
+
+    public boolean isLoaded() {
+        return bStaffs.INSTANCE.getProxy().getPluginManager().getPlugin(name) != null;
     }
 
     public abstract void setup();

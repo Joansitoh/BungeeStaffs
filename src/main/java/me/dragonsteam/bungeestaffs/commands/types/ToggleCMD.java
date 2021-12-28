@@ -1,13 +1,11 @@
 package me.dragonsteam.bungeestaffs.commands.types;
 
-import me.dragonsteam.bungeestaffs.bStaffHolder;
-import me.dragonsteam.bungeestaffs.loaders.Comms;
-import me.dragonsteam.bungeestaffs.loaders.Lang;
+import me.dragonsteam.bungeestaffs.loaders.CommandHandler;
+import me.dragonsteam.bungeestaffs.loaders.LanguageHandler;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ToggleUtils;
 import me.dragonsteam.bungeestaffs.utils.formats.TextFormatReader;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
@@ -34,25 +32,25 @@ public class ToggleCMD extends Command implements TabExecutor {
         ProxiedPlayer player = (ProxiedPlayer) sender;
 
         if (args.length == 1) {
-            Comms comms = null;
-            for (String s : Comms.getCommsHashMap().keySet()) {
-                if (s.equalsIgnoreCase(args[0])) comms = Comms.getCommandByName(s);
+            CommandHandler comms = null;
+            for (String s : CommandHandler.getCommsHashMap().keySet()) {
+                if (s.equalsIgnoreCase(args[0])) comms = CommandHandler.getCommandByName(s);
             }
 
             if (comms == null) {
-                player.sendMessage(new TextComponent(Lang.COMMAND_NOT_FOUND.toString()));
+                player.sendMessage(new TextComponent(LanguageHandler.COMMAND_NOT_FOUND.toString()));
                 return;
             }
 
             if (!hasPerm(player, comms.getTogglePermission())) {
-                player.sendMessage(new TextComponent(Lang.NO_PERMISSION.toString()));
+                player.sendMessage(new TextComponent(LanguageHandler.NO_PERMISSION.toString()));
                 return;
             }
 
             ToggleUtils.togglePlayerCommand(player, comms);
-            player.sendMessage(TextFormatReader.complexFormat(Lang.COMMAND_TOGGLED.toString()
+            player.sendMessage(TextFormatReader.complexFormat(LanguageHandler.COMMAND_TOGGLED.toString()
                     .replace("<command>", comms.getCommand())
-                    .replace("<value>", ToggleUtils.isToggledCommand(player, comms) ? Lang.BOOLEAN_FALSE.toString() : Lang.BOOLEAN_TRUE.toString())
+                    .replace("<value>", ToggleUtils.isToggledCommand(player, comms) ? LanguageHandler.BOOLEAN_FALSE.toString() : LanguageHandler.BOOLEAN_TRUE.toString())
             ));
             return;
         }
@@ -69,7 +67,7 @@ public class ToggleCMD extends Command implements TabExecutor {
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
         if (args.length == 1) {
             List<String> arguments = new ArrayList<>();
-            Comms.getCommsHashMap().keySet().forEach(cmd -> {
+            CommandHandler.getCommsHashMap().keySet().forEach(cmd -> {
                 if (cmd.toLowerCase().startsWith(args[0].toLowerCase()))
                     arguments.add(cmd);
             });

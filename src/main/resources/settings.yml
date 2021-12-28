@@ -9,14 +9,17 @@
 # for variable <server>.
 USE-BUNGEE-MOTD: true
 
+# Language file selection.
+LANGUAGE: en_US
+
 # This is a BETA feature. These options replace the MineDown api
 # for our own custom message formatter.
 #
 # Available parameters:
-#  - (show_text=) - Text to show hover message.
-#  - (run_command=) - Run command when click.
-#  - (suggest_command=) - Suggest command when click.
-#  - (color=) - Use new HEX color codes. (Actually not working)
+#  - (show_text=<message>) - Text to show hover message.
+#  - (run_command=<command>) - Run command when click.
+#  - (suggest_command=<command>) - Suggest command when click.
+#  - (color=<hex code>) - Use new HEX color codes.
 #
 # Parameters can be added after ${} format.
 # Example of custom message formatter:

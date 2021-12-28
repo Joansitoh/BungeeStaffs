@@ -1,7 +1,8 @@
 package me.dragonsteam.bungeestaffs;
 
-import me.dragonsteam.bungeestaffs.loaders.Chats;
-import me.dragonsteam.bungeestaffs.loaders.Comms;
+import me.dragonsteam.bungeestaffs.loaders.AliasesHandler;
+import me.dragonsteam.bungeestaffs.loaders.ChatsHandler;
+import me.dragonsteam.bungeestaffs.loaders.CommandHandler;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import me.dragonsteam.bungeestaffs.utils.defaults.Runnables;
@@ -49,8 +50,9 @@ public class bStaffCommand extends Command {
                     sender.sendMessage(ChatUtils.translate("&eAll files config has been reloaded."));
                     sender.sendMessage(ChatUtils.MEDIUM_CHAT_BAR);
 
-                    new Chats(bStaffs.INSTANCE);
-                    new Comms();
+                    new ChatsHandler();
+                    new CommandHandler();
+                    new AliasesHandler();
                 }, 2, TimeUnit.SECONDS);
                 return;
             }

@@ -1,10 +1,8 @@
 package me.dragonsteam.bungeestaffs.commands.types;
 
 import me.dragonsteam.bungeestaffs.bStaffs;
-import me.dragonsteam.bungeestaffs.loaders.Chats;
-import me.dragonsteam.bungeestaffs.loaders.Comms;
-import me.dragonsteam.bungeestaffs.loaders.Lang;
-import me.dragonsteam.bungeestaffs.utils.CommandType;
+import me.dragonsteam.bungeestaffs.loaders.ChatsHandler;
+import me.dragonsteam.bungeestaffs.loaders.LanguageHandler;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import me.dragonsteam.bungeestaffs.utils.defaults.ToggleUtils;
@@ -35,13 +33,13 @@ public class ToggleChatCMD extends Command implements TabExecutor {
         ProxiedPlayer player = (ProxiedPlayer) sender;
 
         if (args.length == 1) {
-            Chats chats = null;
-            for (String s : Chats.getChatsHashMap().keySet()) {
-                if (s.equalsIgnoreCase(args[0])) chats = Chats.getChatByInput(s);
+            ChatsHandler chats = null;
+            for (String s : ChatsHandler.getChatsHashMap().keySet()) {
+                if (s.equalsIgnoreCase(args[0])) chats = ChatsHandler.getChatByInput(s);
             }
 
             if (chats == null) {
-                player.sendMessage(new TextComponent(Lang.CHAT_NOT_FOUND.toString()));
+                player.sendMessage(new TextComponent(LanguageHandler.CHAT_NOT_FOUND.toString()));
                 return;
             }
 
@@ -50,14 +48,14 @@ public class ToggleChatCMD extends Command implements TabExecutor {
             file.save();
 
             if (!hasPerm(player, bStaffs.INSTANCE.getChatsFile().getString("TOGGLE-CHAT-PERMISSION"))) {
-                player.sendMessage(new TextComponent(Lang.NO_PERMISSION.toString()));
+                player.sendMessage(new TextComponent(LanguageHandler.NO_PERMISSION.toString()));
                 return;
             }
 
             ToggleUtils.togglePlayerChat(player, chats);
-            player.sendMessage(new TextComponent(Lang.CHAT_TOGGLED.toString()
+            player.sendMessage(new TextComponent(LanguageHandler.CHAT_TOGGLED.toString()
                     .replace("<chat>", chats.getInput())
-                    .replace("<value>", ToggleUtils.isToggledChat(player, chats) ? Lang.BOOLEAN_FALSE.toString() : Lang.BOOLEAN_TRUE.toString())
+                    .replace("<value>", ToggleUtils.isToggledChat(player, chats) ? LanguageHandler.BOOLEAN_FALSE.toString() : LanguageHandler.BOOLEAN_TRUE.toString())
             ));
             return;
         }
@@ -74,7 +72,7 @@ public class ToggleChatCMD extends Command implements TabExecutor {
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
         if (args.length == 1) {
             List<String> arguments = new ArrayList<>();
-            Chats.getChatsHashMap().keySet().forEach(chat -> {
+            ChatsHandler.getChatsHashMap().keySet().forEach(chat -> {
                 if (chat.startsWith(args[0]))
                     arguments.add(chat);
             });

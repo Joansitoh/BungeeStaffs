@@ -1,13 +1,11 @@
 package me.dragonsteam.bungeestaffs.commands.types;
 
-import de.themoep.minedown.MineDown;
 import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.bStaffs;
-import me.dragonsteam.bungeestaffs.loaders.Lang;
+import me.dragonsteam.bungeestaffs.loaders.LanguageHandler;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -16,7 +14,6 @@ import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class SearchCMD extends Command implements TabExecutor {
@@ -35,12 +32,12 @@ public class SearchCMD extends Command implements TabExecutor {
 
         ProxiedPlayer target = bStaffs.INSTANCE.getProxy().getPlayer(args[0]);
         if (target == null) {
-            player.sendMessage(Lang.PREFIX + Lang.PLAYER_NOT_FOUND.toString().replace("<target>", args[0]));
+            player.sendMessage(LanguageHandler.PREFIX + LanguageHandler.PLAYER_NOT_FOUND.toString().replace("<target>", args[0]));
             return;
         }
 
         String prefix = "<hover>", suffix = "</hover>";
-        for (String s : Lang.SEARCH.toList()) {
+        for (String s : LanguageHandler.SEARCH.toList()) {
             String holder = bStaffHolder.getStaffHolderMessage(target, s);
 
             // Get string between tags hover.
@@ -54,9 +51,9 @@ public class SearchCMD extends Command implements TabExecutor {
                 );
 
                 TextComponent hover = new TextComponent(between);
-                hover.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(Lang.SEARCH_HOVER.toString())));
+                hover.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(LanguageHandler.SEARCH_HOVER.toString())));
                 hover.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                        ChatColor.stripColor(bStaffHolder.getStaffHolderMessage(target, Lang.SEARCH_COMMAND.toString()))));
+                        ChatColor.stripColor(bStaffHolder.getStaffHolderMessage(target, LanguageHandler.SEARCH_COMMAND.toString()))));
 
                 TextComponent message2 = new TextComponent(arg[1].replace(suffix, ""));
                 player.sendMessage(message, hover, message2);

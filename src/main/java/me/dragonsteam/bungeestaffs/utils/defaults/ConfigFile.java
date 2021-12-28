@@ -9,7 +9,10 @@ import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,18 +33,20 @@ public class ConfigFile {
 
     public ConfigFile(Plugin plugin, String path) {
         this.file = new File(plugin.getDataFolder(), path);
+        ConfigurationProvider provider = ConfigurationProvider.getProvider(YamlConfiguration.class);
 
         if (!this.file.exists()) {
             plugin.getDataFolder().mkdir();
             try {
                 Files.copy(plugin.getResourceAsStream(path), this.file.toPath());
-                configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(this.file);
+                configuration = provider.load(file);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
             try {
-                configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(this.file);
+                FileInputStream stream = new FileInputStream(this.file);
+                configuration = provider.load(new InputStreamReader(stream, StandardCharsets.UTF_8));
             } catch (IOException e) {
                 e.printStackTrace();
             }

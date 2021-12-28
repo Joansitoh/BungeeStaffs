@@ -1,8 +1,7 @@
 package me.dragonsteam.bungeestaffs.listeners;
 
 import me.dragonsteam.bungeestaffs.bStaffs;
-import me.dragonsteam.bungeestaffs.loaders.Chats;
-import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
+import me.dragonsteam.bungeestaffs.loaders.ChatsHandler;
 import me.dragonsteam.bungeestaffs.utils.defaults.ToggleUtils;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
@@ -20,9 +19,9 @@ public class PlayerChatListener implements Listener {
         if (!(e.getSender() instanceof ProxiedPlayer)) return;
         ProxiedPlayer player = (ProxiedPlayer) e.getSender();
 
-        Chats chats = null;
-        for (String s : Chats.getChatsHashMap().keySet()) {
-            if (e.getMessage().startsWith(s)) chats = Chats.getChatByInput(s);
+        ChatsHandler chats = null;
+        for (String s : ChatsHandler.getChatsHashMap().keySet()) {
+            if (e.getMessage().startsWith(s)) chats = ChatsHandler.getChatByInput(s);
         }
 
         if (chats == null) return;

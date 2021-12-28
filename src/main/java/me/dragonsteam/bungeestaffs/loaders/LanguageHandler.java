@@ -7,7 +7,6 @@ import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import me.dragonsteam.bungeestaffs.utils.formats.TextFormatReader;
-import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
@@ -15,9 +14,7 @@ import net.md_5.bungee.config.YamlConfiguration;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Created by Joansiitoh (DragonsTeam)
@@ -26,7 +23,7 @@ import java.util.stream.Collectors;
 
 @Getter
 @Accessors(chain = true)
-public enum Lang {
+public enum LanguageHandler {
 
     PREFIX("PREFIX", "DEFAULT", "&7[&bBungeeStaffs&7] &f"),
 
@@ -106,20 +103,20 @@ public enum Lang {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    Lang(String path, String def) {
+    LanguageHandler(String path, String def) {
         this.path = path;
         this.subPath = "";
         this.def = def;
     }
 
-    Lang(String path, String subPath, String... defList) {
+    LanguageHandler(String path, String subPath, String... defList) {
         this.path = path;
         this.subPath = subPath;
         this.defList = Arrays.asList(defList);
         this.def = null;
     }
 
-    Lang(String path, String subPath, String def) {
+    LanguageHandler(String path, String subPath, String def) {
         this.path = path;
         this.subPath = subPath;
         this.defList = null;
@@ -133,7 +130,7 @@ public enum Lang {
     }
 
     public String toString(boolean prefix) {
-        return (prefix ? Lang.PREFIX.toString(false) : "") + ChatUtils.translate(config.getString(getFinalPath(), this.def));
+        return (prefix ? LanguageHandler.PREFIX.toString(false) : "") + ChatUtils.translate(config.getString(getFinalPath(), this.def));
     }
 
     public String toString() {
@@ -160,7 +157,7 @@ public enum Lang {
 
     public static void load() {
         Configuration cfg = config.getConfiguration();
-        for (Lang item : Lang.values()) {
+        for (LanguageHandler item : LanguageHandler.values()) {
             if (!config.getConfiguration().contains(item.getFinalPath())) {
                 config.getConfiguration().set(item.getFinalPath(),
                         item.getDef() == null || item.getDef().equalsIgnoreCase("") ? item.getDefList() : item.getDef());

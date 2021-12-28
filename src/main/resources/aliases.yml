@@ -17,7 +17,7 @@ SERVER-ALIASES:
     # You can DELETE this section.
     PERMISSION: ''
 
-    # Aliases disabled for this servers.
+    # AliasesHandler disabled for this servers.
     # You can DELETE this section.
     DISABLED-SERVERS:
       - example1

@@ -1,9 +1,8 @@
 package me.dragonsteam.bungeestaffs.commands;
 
 import me.dragonsteam.bungeestaffs.bStaffs;
-import me.dragonsteam.bungeestaffs.loaders.Chats;
-import me.dragonsteam.bungeestaffs.loaders.Comms;
-import me.dragonsteam.bungeestaffs.loaders.Lang;
+import me.dragonsteam.bungeestaffs.loaders.CommandHandler;
+import me.dragonsteam.bungeestaffs.loaders.LanguageHandler;
 import me.dragonsteam.bungeestaffs.utils.CommandType;
 import me.dragonsteam.bungeestaffs.utils.TimerUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
@@ -11,14 +10,11 @@ import me.dragonsteam.bungeestaffs.utils.defaults.ToggleUtils;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.TabCompleteEvent;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
-import net.md_5.bungee.event.EventHandler;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
 /**
  * Created by Joansiitoh (DragonsTeam && SkillTeam)
@@ -26,9 +22,9 @@ import java.util.List;
  */
 public class cCommand extends Command implements TabExecutor {
 
-    private final Comms comms;
+    private final CommandHandler comms;
 
-    public cCommand(Comms comms) {
+    public cCommand(CommandHandler comms) {
         super(comms.getCommand(), comms.getSendPermission(), comms.getAliases().toArray(new String[0]));
         this.comms = comms;
 
@@ -51,7 +47,7 @@ public class cCommand extends Command implements TabExecutor {
 
             // Check if player has cooldown.
             if (TimerUtils.hasCooldown(player, comms)) {
-                player.sendMessage(new TextComponent(Lang.HAVE_COOLDOWN.toString()
+                player.sendMessage(new TextComponent(LanguageHandler.HAVE_COOLDOWN.toString()
                         .replace("<cooldown>", TimerUtils.getPlayerCooldown(player, comms) + "")
                 ));
                 return;
@@ -78,7 +74,7 @@ public class cCommand extends Command implements TabExecutor {
 
                     ProxiedPlayer target = bStaffs.INSTANCE.getProxy().getPlayer(args[0]);
                     if (target == null) {
-                        player.sendMessage(new TextComponent(Lang.PLAYER_NOT_FOUND.toString().replace("<target>", args[0])));
+                        player.sendMessage(new TextComponent(LanguageHandler.PLAYER_NOT_FOUND.toString().replace("<target>", args[0])));
                         return;
                     }
 
@@ -108,7 +104,7 @@ public class cCommand extends Command implements TabExecutor {
 
     ////////////////////////////////////////////////////////////////////////////
 
-    private static void setCooldown(ProxiedPlayer player, Comms comms) {
+    private static void setCooldown(ProxiedPlayer player, CommandHandler comms) {
         // Set cooldown if player don't have bypass.
         if (comms.getCooldown() != 0 && !player.hasPermission("bstaffs.bypass"))
             TimerUtils.setPlayerCooldown(player, comms, comms.getCooldown());

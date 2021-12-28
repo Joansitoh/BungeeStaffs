@@ -1,14 +1,7 @@
 package me.dragonsteam.bungeestaffs.commands;
 
 import me.dragonsteam.bungeestaffs.bStaffs;
-import me.dragonsteam.bungeestaffs.loaders.Comms;
-import me.dragonsteam.bungeestaffs.loaders.Lang;
-import me.dragonsteam.bungeestaffs.utils.CommandType;
-import me.dragonsteam.bungeestaffs.utils.TimerUtils;
-import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
-import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import me.dragonsteam.bungeestaffs.loaders.CommandHandler;
 import net.md_5.bungee.api.plugin.Command;
 
 import java.util.HashMap;
@@ -19,16 +12,16 @@ import java.util.HashMap;
  */
 public class CommandManager {
 
-    private static final HashMap<Comms, Command> commands = new HashMap<>();
+    private static final HashMap<CommandHandler, Command> commands = new HashMap<>();
 
-    public static void registerCommand(Comms comms) {
+    public static void registerCommand(CommandHandler comms) {
         cCommand command = new cCommand(comms);
 
         bStaffs.INSTANCE.getProxy().getPluginManager().registerCommand(bStaffs.INSTANCE, command);
         commands.put(comms, command);
     }
 
-    public static void unregisterCommand(Comms comms) {
+    public static void unregisterCommand(CommandHandler comms) {
         bStaffs.INSTANCE.getProxy().getPluginManager().unregisterCommand(commands.get(comms));
         commands.remove(comms);
     }

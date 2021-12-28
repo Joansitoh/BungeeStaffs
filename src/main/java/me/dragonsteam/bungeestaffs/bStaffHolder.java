@@ -2,6 +2,7 @@ package me.dragonsteam.bungeestaffs;
 
 import de.themoep.minedown.MineDown;
 import me.dragonsteam.bungeestaffs.managers.HookHandler;
+import me.dragonsteam.bungeestaffs.managers.HookManager;
 import me.dragonsteam.bungeestaffs.managers.hooks.LuckPermsHandler;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
@@ -12,6 +13,8 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 
 public class bStaffHolder {
+
+    private static boolean tried = false;
 
     public static String getStaffHolderMessage(ProxiedPlayer player, String s) {
         String message = s;
@@ -33,6 +36,11 @@ public class bStaffHolder {
             try {
                 HookHandler handler = bStaffs.INSTANCE.getHookManager().getHandler("LuckPerms");
                 if (handler != null) {
+                    if (!handler.isLoaded() && !tried) {
+                        handler.setup();
+                        tried = true;
+                    }
+
                     LuckPermsHandler luckPermsHandler = (LuckPermsHandler) handler;
                     if (luckPermsHandler.getPrefix(player.getUniqueId()) != null)
                         prefix = luckPermsHandler.getPrefix(player.getUniqueId());
@@ -41,7 +49,7 @@ public class bStaffHolder {
                         suffix = luckPermsHandler.getSuffix(player.getUniqueId());
                 }
             } catch (Exception e) {
-                player.disconnect(TextComponent.fromLegacyText("Error on load your data, try login again."));
+                if (!tried) bStaffs.logger("LuckPerms hook is not installed or not working properly.");
             }
 
             message = message

@@ -1,7 +1,7 @@
 package me.dragonsteam.bungeestaffs.commands.types;
 
 import me.dragonsteam.bungeestaffs.bStaffHolder;
-import me.dragonsteam.bungeestaffs.loaders.Lang;
+import me.dragonsteam.bungeestaffs.loaders.LanguageHandler;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -16,7 +16,7 @@ public class StaffListCMD extends Command {
 
     @Override
     public void execute(CommandSender sender, String[] args) {
-        for (String s : Lang.STAFF_LIST.toList()) {
+        for (String s : LanguageHandler.STAFF_LIST.toList()) {
             if (s.contains("<player>")) {
                 for (ProxiedPlayer player : ProxyServer.getInstance().getPlayers()) {
                     if (player.hasPermission("bstaffs.staff"))

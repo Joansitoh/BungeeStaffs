@@ -1,6 +1,5 @@
 package me.dragonsteam.bungeestaffs.loaders;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import me.dragonsteam.bungeestaffs.bStaffHolder;
@@ -12,7 +11,6 @@ import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 
 import java.util.*;
@@ -22,10 +20,10 @@ import java.util.*;
  * Date: 03/08/2021 - 1:30.
  */
 @Getter @Setter
-public class Comms {
+public class CommandHandler {
 
     @Getter
-    private static final HashMap<String, Comms> commsHashMap = new HashMap<>();
+    private static final HashMap<String, CommandHandler> commsHashMap = new HashMap<>();
 
     ////////////////////////////////////////////////////////////////////////////////
 
@@ -39,7 +37,7 @@ public class Comms {
 
     ////////////////////////////////////////////////////////////////////////////////
 
-    public Comms(CommandType type, String command) {
+    public CommandHandler(CommandType type, String command) {
         this.type = type;
         this.command = command;
 
@@ -59,9 +57,9 @@ public class Comms {
     /**
      * Loads the config file and sets all variables.
      */
-    public Comms() {
+    public CommandHandler() {
         // Unregister comms using CommandManager.
-        for (Comms comms : commsHashMap.values())
+        for (CommandHandler comms : commsHashMap.values())
             CommandManager.unregisterCommand(comms);
 
         commsHashMap.clear();
@@ -78,7 +76,7 @@ public class Comms {
             ChatUtils.setDefaultIfNotSet(section, "PERMISSION.TOGGLE", "bstaffs.toggle." + s.toLowerCase());
 
             try {
-                Comms comms = new Comms(CommandType.valueOf(section.getString("TYPE")), section.getString("COMMAND"));
+                CommandHandler comms = new CommandHandler(CommandType.valueOf(section.getString("TYPE")), section.getString("COMMAND"));
 
                 /* Set comms defaults accessors with config values */
                 comms.setCooldown(section.getInt("COOLDOWN"));
@@ -109,7 +107,7 @@ public class Comms {
         }
     }
 
-    public static Comms getCommandByName(String input) {
+    public static CommandHandler getCommandByName(String input) {
         return commsHashMap.get(input);
     }
 

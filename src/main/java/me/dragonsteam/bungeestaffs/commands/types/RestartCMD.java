@@ -1,18 +1,15 @@
 package me.dragonsteam.bungeestaffs.commands.types;
 
 import me.dragonsteam.bungeestaffs.bStaffs;
-import me.dragonsteam.bungeestaffs.loaders.Lang;
-import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
+import me.dragonsteam.bungeestaffs.loaders.LanguageHandler;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import me.dragonsteam.bungeestaffs.utils.defaults.Runnables;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.api.plugin.TabExecutor;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
@@ -55,13 +52,13 @@ public class RestartCMD extends Command implements Listener {
 
             Configuration config = file.getConfiguration().getSection("SERVERS-CONFIG.LIMBO");
             if (config == null) {
-                player.sendMessage(Lang.LIMBO_NOT_SET.toString(true));
+                player.sendMessage(LanguageHandler.LIMBO_NOT_SET.toString(true));
                 return;
             }
 
             // Checking if configuration contains the limbo server
             if (!config.contains("NAME")) {
-                player.sendMessage(Lang.LIMBO_NOT_SET.toString(true));
+                player.sendMessage(LanguageHandler.LIMBO_NOT_SET.toString(true));
                 return;
             }
 
@@ -69,7 +66,7 @@ public class RestartCMD extends Command implements Listener {
             String limboName = config.getString("NAME");
             ServerInfo limbo = bStaffs.INSTANCE.getProxy().getServerInfo(limboName);
             if (bStaffs.INSTANCE.getProxy().getServerInfo(limboName) == null) {
-                player.sendMessage(Lang.LIMBO_NOT_SET.toString(true));
+                player.sendMessage(LanguageHandler.LIMBO_NOT_SET.toString(true));
                 return;
             }
 
@@ -77,7 +74,7 @@ public class RestartCMD extends Command implements Listener {
 
             for (ProxiedPlayer online : server.getPlayers()) {
                 online.connect(limbo);
-                online.sendMessage(Lang.LIMBO_JOIN.toString(true));
+                online.sendMessage(LanguageHandler.LIMBO_JOIN.toString(true));
                 waitingPlayers.put(online.getUniqueId(), server.getName());
             }
 
@@ -93,7 +90,7 @@ public class RestartCMD extends Command implements Listener {
                 tasksMap.put(server.getName(), Runnables.runTimer(() -> {
                     if (waitingTicks.containsKey(server.getName())) {
                         if (waitingTicks.get(server.getName()) == timeout) {
-                            clearServerPlayers(server.getName(), Lang.LIMBO_SERVER_NOT_REACHED.toString(true)
+                            clearServerPlayers(server.getName(), LanguageHandler.LIMBO_SERVER_NOT_REACHED.toString(true)
                                     .replace("<server>", server.getName()));
                             return;
                         }
@@ -115,7 +112,7 @@ public class RestartCMD extends Command implements Listener {
                         for (UUID uuid : getServerPlayers(server.getName())) {
                             ProxiedPlayer online = bStaffs.INSTANCE.getProxy().getPlayer(uuid);
                             if (online != null)
-                                online.sendMessage(Lang.LIMBO_SERVER_REACHED.toString(true).replace("<server>", server.getName()));
+                                online.sendMessage(LanguageHandler.LIMBO_SERVER_REACHED.toString(true).replace("<server>", server.getName()));
                         }
 
                         // Teleport all players to old server.
@@ -131,7 +128,7 @@ public class RestartCMD extends Command implements Listener {
 
                 socket.close();
             } catch (Exception e) {
-                clearServerPlayers(server.getName(), Lang.LIMBO_NOT_SET.toString(true));
+                clearServerPlayers(server.getName(), LanguageHandler.LIMBO_NOT_SET.toString(true));
             }
         }
     }
@@ -166,13 +163,13 @@ public class RestartCMD extends Command implements Listener {
 
             if (e.getPlayer().getServer().getInfo().getName().equals(config.getString("NAME"))) return;
             if (config.contains("PREVENT-MOVE") && config.getBoolean("PREVENT-MOVE")) {
-                e.getPlayer().sendMessage(Lang.LIMBO_PREVENT_MOVE.toString(true));
+                e.getPlayer().sendMessage(LanguageHandler.LIMBO_PREVENT_MOVE.toString(true));
                 e.getPlayer().connect(e.getFrom());
                 return;
             }
 
             waitingPlayers.remove(e.getPlayer().getUniqueId());
-            e.getPlayer().sendMessage(Lang.LIMBO_LEAVE.toString(true));
+            e.getPlayer().sendMessage(LanguageHandler.LIMBO_LEAVE.toString(true));
         }
     }
 

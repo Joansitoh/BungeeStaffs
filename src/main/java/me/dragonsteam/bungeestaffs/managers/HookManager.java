@@ -32,7 +32,9 @@ public class HookManager {
     }
 
     public HookHandler getHandler(String name) {
-        return handlerHashMap.get(name);
+        if (handlerHashMap.containsKey(name) && handlerHashMap.get(name).isLoaded())
+            return handlerHashMap.get(name);
+        return null;
     }
 
 }
