@@ -1,6 +1,3 @@
-### Formatter syntax
-#### All syntax can be combined with other events.
-
 <p align="center">
   <img width="auto" height="auto" src="https://imgur.com/MJojshJ.png">
   <img width="auto" height="auto" src="https://imgur.com/Rayaw0O.png">
@@ -8,6 +5,9 @@
 <p align="center">
   <img width="auto" height="auto" src="https://imgur.com/fvN5u59.png">
 </p>
+
+### Formatter syntax
+#### All syntax can be combined with other events.
 
 Description        | Syntax                                 | More Info
  -------------------|----------------------------------------|----
