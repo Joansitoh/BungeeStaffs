@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 public class ChatUtils {
 
-    public static String CHAT_BAR = ChatColor.STRIKETHROUGH + "------------------------------------------------";
-    public static String MEDIUM_CHAT_BAR = ChatColor.STRIKETHROUGH + "------------------------------";
+    public static String CHAT_BAR = "------------------------------------------------";
+    public static String MEDIUM_CHAT_BAR = "------------------------------";
 
     public static String translate(String input) {
         return ChatColor.translateAlternateColorCodes('&', input);
@@ -44,14 +44,17 @@ public class ChatUtils {
         return null;
     }
 
-    public static void setDefaultIfNotSet(Configuration section, String path, Object value) {
+    public static boolean setDefaultIfNotSet(Configuration section, String path, Object value) {
         try {
             if (section != null) {
-                if (!section.contains(path))
+                if (!section.contains(path)) {
                     section.set(path, value);
+                    return true;
+                }
             }
         } catch (Exception e) {
         }
+        return false;
     }
 
 }

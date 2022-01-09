@@ -1,24 +1,27 @@
 package me.dragonsteam.bungeestaffs;
 
-import de.themoep.minedown.MineDown;
 import me.dragonsteam.bungeestaffs.managers.HookHandler;
 import me.dragonsteam.bungeestaffs.managers.HookManager;
 import me.dragonsteam.bungeestaffs.managers.hooks.LuckPermsHandler;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import me.dragonsteam.bungeestaffs.utils.formats.TextFormatReader;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 
+import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class bStaffHolder {
 
     private static boolean tried = false;
 
-    public static String getStaffHolderMessage(ProxiedPlayer player, String s) {
-        String message = s;
-        if (player != null) {
+    public static String getStaffHolderMessage(ProxiedPlayer player, String text) {
+        if (player != null && player instanceof ProxiedPlayer) {
             ConfigFile config = bStaffs.INSTANCE.getSettingsFile();
             String server = "", raw_server = "", name = player.getName();
             String prefix = "", suffix = "";
@@ -52,7 +55,7 @@ public class bStaffHolder {
                 if (!tried) bStaffs.logger("LuckPerms hook is not installed or not working properly.");
             }
 
-            message = message
+            text = text
                     .replace("<server>", server)
                     .replace("<raw_server>", raw_server)
                     .replace("<player>", name)
@@ -60,26 +63,29 @@ public class bStaffHolder {
                     .replace("<suffix>", suffix);
         }
 
-        message = message
+        text = text
                 .replace("<chat_bar>", ChatUtils.CHAT_BAR)
                 .replace("<medium_chat_bar>", ChatUtils.MEDIUM_CHAT_BAR)
         ;
 
-        return ChatUtils.translate(message);
+        return ChatUtils.translate(text);
     }
 
-    public static BaseComponent[] getStaffHolder(ProxiedPlayer player, String method, String s) {
-        Configuration section = bStaffs.INSTANCE.getSettingsFile().getConfiguration().getSection("COMPLEX-FORMAT");
-        if (section != null && section.contains("USE-COMPLEX-FORMAT") && section.getBoolean("USE-COMPLEX-FORMAT")) {
-            if (section.getStringList("WHITELIST").contains(method))
-                return new BaseComponent[]{TextFormatReader.complexFormat(getStaffHolderMessage(player, s))};
+    public static BaseComponent[] getStaffHolder(ProxiedPlayer player, ProxiedPlayer viewer, String text, String message) {
+        return new BaseComponent[]{TextFormatReader.testNewPattern(viewer, getStaffHolderMessage(player, text), message)};
+    }
+
+    public static HashMap<String, String> getLinedArguments(String text) {
+        HashMap<String, String> hash = new HashMap<>();
+
+        Pattern pattern = Pattern.compile("(-[a-z]) (.*?\\S*)");
+        Matcher matcher = pattern.matcher(text);
+
+        while (matcher.find()) {
+            hash.put(matcher.group(1), matcher.group(2));
         }
 
-        return MineDown.parse(getStaffHolderMessage(player, s));
-    }
-
-    public static BaseComponent[] getStaffHolderBase(ProxiedPlayer player, String s) {
-        return MineDown.parse(s);
+        return hash;
     }
 
 }

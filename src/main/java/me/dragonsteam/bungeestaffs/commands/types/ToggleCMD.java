@@ -48,7 +48,7 @@ public class ToggleCMD extends Command implements TabExecutor {
             }
 
             ToggleUtils.togglePlayerCommand(player, comms);
-            player.sendMessage(TextFormatReader.complexFormat(LanguageHandler.COMMAND_TOGGLED.toString()
+            player.sendMessage(TextFormatReader.complexFormat(player, LanguageHandler.COMMAND_TOGGLED.toString()
                     .replace("<command>", comms.getCommand())
                     .replace("<value>", ToggleUtils.isToggledCommand(player, comms) ? LanguageHandler.BOOLEAN_FALSE.toString() : LanguageHandler.BOOLEAN_TRUE.toString())
             ));

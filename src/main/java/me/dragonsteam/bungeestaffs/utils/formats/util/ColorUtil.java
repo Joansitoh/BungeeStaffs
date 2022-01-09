@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class ColorUtil {
 
-    public static String hsvGradient(String str, Color from, Color to, Interpolator interpolator) {
+    public static String hsvGradient(String str, String extra, Color from, Color to, Interpolator interpolator) {
         // returns a float-array where hsv[0] = hue, hsv[1] = saturation, hsv[2] = value/brightness
         final float[] hsvFrom = Color.RGBtoHSB(from.getRed(), from.getGreen(), from.getBlue(), null);
         final float[] hsvTo = Color.RGBtoHSB(to.getRed(), to.getGreen(), to.getBlue(), null);
@@ -24,10 +24,14 @@ public class ColorUtil {
 
         final StringBuilder builder = new StringBuilder();
 
-        for (int i = 0 ; i < str.length(); i++) {
-            builder.append(ChatColor.of(Color.getHSBColor((float) h[i], (float) s[i], (float) v[i]))).append(str.charAt(i));
+        for (int i = 0; i < str.length(); i++) {
+            builder.append(extra).append(ChatColor.of(Color.getHSBColor((float) h[i], (float) s[i], (float) v[i]))).append(str.charAt(i));
         }
         return builder.toString();
+    }
+
+    public static String hsvGradient(String str, Color from, Color to, Interpolator interpolator) {
+        return hsvGradient(str, "", from, to, interpolator);
     }
 
     public static String rgbGradient(String str, Color from, Color to, Interpolator interpolator) {
@@ -57,6 +61,23 @@ public class ColorUtil {
             res[i] = from + i * ((to - from) / (max - 1));
         }
         return res;
+    }
+
+    // mode == true: starts of "slow" and becomes "faster", see the orange curve
+    // mode == false: starts of "fast" and becomes "slower", see the yellow curve
+    public static double[] quadratic(double from, double to, int max) {
+        final double[] results = new double[max];
+        if (true) {
+            double a = (to - from) / (max * max);
+            for (int i = 0; i < results.length; i++)
+                results[i] = a * i * i + from;
+        } else {
+            double a = (from - to) / (max * max);
+            double b = - 2 * a * max;
+            for (int i = 0; i < results.length; i++)
+                results[i] = a * i * i + b * i + from;
+        }
+        return results;
     }
 
 }

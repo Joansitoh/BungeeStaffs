@@ -15,12 +15,16 @@ import me.dragonsteam.bungeestaffs.utils.UpdateChecker;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import me.dragonsteam.bungeestaffs.utils.defaults.Runnables;
+import net.dv8tion.jda.api.AccountType;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.bstats.bungeecord.Metrics;
 
+import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -42,6 +46,8 @@ public final class bStaffs extends Plugin {
     private ConfigFile settingsFile, commandsFile, chatsFile, messagesFile, aliasesFile;
     private HookManager hookManager;
     private String configVersion;
+
+    private JDA jda;
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -109,8 +115,10 @@ public final class bStaffs extends Plugin {
         registerCommands(
                 new bStaffCommand(), new SearchCMD(), new StaffListCMD(),
                 new ToggleChatCMD(), new ToggleCMD(), new ServerKickCMD(),
-                new RestartCMD()
+                new RestartCMD(), new ServerListCMD(), new ClientStatusCMD()
         );
+
+        startDiscordBot();
     }
 
     @Override
@@ -164,6 +172,22 @@ public final class bStaffs extends Plugin {
         List<String> fallbackServers = settingsFile.getStringList("SERVERS-CONFIG.FALLBACK-SERVERS");
         if (fallbackServers.isEmpty()) return null;
         return fallbackServers.get(new Random().nextInt(fallbackServers.size()));
+    }
+
+    public void startDiscordBot() {/*
+        ChatUtils.setDefaultIfNotSet(settingsFile.getConfiguration(), "DISCORD-INTEGRATION.ENABLED", false);
+        ChatUtils.setDefaultIfNotSet(settingsFile.getConfiguration(), "DISCORD-INTEGRATION.BOT-TOKEN", "token");
+        settingsFile.save();*/
+
+        if (!settingsFile.getBoolean("DISCORD-INTEGRATION.ENABLED")) return;
+
+        try {
+            jda = JDABuilder.createDefault(settingsFile.getString("DISCORD-INTEGRATION.BOT-TOKEN")).build();
+            jda.addEventListener(new PlayerChatListener());
+            logger("&aDiscord bot successfully started.");
+        } catch (LoginException e) {
+            e.printStackTrace();
+        }
     }
 
 }

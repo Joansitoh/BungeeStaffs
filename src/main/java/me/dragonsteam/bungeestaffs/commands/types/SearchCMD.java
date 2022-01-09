@@ -36,34 +36,9 @@ public class SearchCMD extends Command implements TabExecutor {
             return;
         }
 
-        String prefix = "<hover>", suffix = "</hover>";
-        for (String s : LanguageHandler.SEARCH.toList()) {
-            String holder = bStaffHolder.getStaffHolderMessage(target, s);
-
-            // Get string between tags hover.
-            String between = ChatUtils.substringBetween(holder, prefix, suffix);
-            if (between != null && !between.equalsIgnoreCase("")) {
-                // Splitting text to create hover event.
-                String[] arg = holder.split(between);
-                TextComponent message = new TextComponent(arg[0]
-                        .replace(prefix, "")
-                        .replace("<target>", target.getName())
-                );
-
-                TextComponent hover = new TextComponent(between);
-                hover.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, TextComponent.fromLegacyText(LanguageHandler.SEARCH_HOVER.toString())));
-                hover.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,
-                        ChatColor.stripColor(bStaffHolder.getStaffHolderMessage(target, LanguageHandler.SEARCH_COMMAND.toString()))));
-
-                TextComponent message2 = new TextComponent(arg[1].replace(suffix, ""));
-                player.sendMessage(message, hover, message2);
-                continue;
-            }
-
-            player.sendMessage(bStaffHolder.getStaffHolder(target, "COMMAND", s));
-        }
+        for (String s : LanguageHandler.SEARCH.toList())
+            player.sendMessage(bStaffHolder.getStaffHolder(target, target, s, ""));
     }
-
 
     @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {

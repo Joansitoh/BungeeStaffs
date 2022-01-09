@@ -39,13 +39,11 @@ public enum LanguageHandler {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     SEARCH("SEARCH-FORMAT", "SEARCH",
-            "[<chat_bar>](rainbow)",
+            "&b${<chat_bar>}(color=#00fff7-#00ff40)(format=strikethrough)",
             "&fPlayer &a<player> &fhas been &afound&f.",
-            "&fCurrent server: &a<hover><server></hover>",
-            "[<chat_bar>](rainbow)"
+            "&fCurrent server: &a${<server>}(show_text=&eClick to join)(run_command=/<raw_server>)",
+            "&b${<chat_bar>}(color=#00fff7-#00ff40)(format=strikethrough)"
     ),
-    SEARCH_HOVER("SEARCH-HOVER", "SEARCH", "&7| &eClick to join"),
-    SEARCH_COMMAND("SEARCH-COMMAND", "SEARCH", "/server <server>"),
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -56,16 +54,32 @@ public enum LanguageHandler {
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // Control event messages
-    STAFF_LIST("LIST-FORMAT", "STAFFS",
-            "[<chat_bar>](rainbow)",
-            "&b>> &fCurrent &bstaffs&f online:",
-            "&f* &a<player> &7(<server>)",
-            "[<chat_bar>](rainbow)"
+    CLIENT_STATUS("CLIENT-STATUS-FORMAT", "SERVERS",
+            "&b${<chat_bar>}(color=#00fff7-#00ff40)(format=strikethrough)",
+            "&b>> &fPlayers using version 1.7 - 1.7.10: &a<players_3-5> &f(&b<percent_3-5>%&f)",
+            "&b>> &fPlayers using version 1.8 - 1.8.9: &a<players_47-47> &f(&b<percent_47-47>%&f)",
+            "&b>> &fPlayers using version 1.9 - 1.12.2: &a<players_107-340> &f(&b<percent_107-340>%&f)",
+            "&b>> &fPlayers using version 1.13 - 1.18.1: &a<players_393-757> &f(&b<percent_393-757>%&f)",
+            "&b${<chat_bar>}(color=#00fff7-#00ff40)(format=strikethrough)"
     ),
 
-    STAFF_JOIN("JOIN", "STAFFS", "&b<prefix><player> &7has joined the server."),
-    STAFF_LEFT("LEFT", "STAFFS", "&b<prefix><player> &7has left the server."),
-    STAFF_MOVE("MOVE", "STAFFS", "&b<prefix><player> &7has switch to &b<server>&7."),
+    SERVER_LIST("LIST-FORMAT", "SERVERS",
+            "&b${<chat_bar>}(color=#00fff7-#00ff40)(format=strikethrough)",
+            "&b>> &e${BUNGEE SERVER LIST}(color=#5e2fb5-#00f2ff)(format=bold)",
+            "&a[${<raw_server>}(show_text=&eClick to join)(run_command=/<raw_server>)&a] &7&l| &e[${Online}(show_text=<server_players>)&e] &f> &b<server_online>",
+            "&b${<chat_bar>}(color=#00fff7-#00ff40)(format=strikethrough)"
+    ),
+
+    STAFF_LIST("LIST-FORMAT", "STAFFS",
+            "&b${<chat_bar>}(color=#00fff7-#00ff40)(format=strikethrough)",
+            "&b>> &fCurrent &bstaffs&f online:",
+            "&f* &a<player> &7(<server>)",
+            "&b${<chat_bar>}(color=#00fff7-#00ff40)(format=strikethrough)"
+    ),
+
+    STAFF_JOIN("JOIN", "STAFFS", "&b<prefix><player> &fhas joined the server."),
+    STAFF_LEFT("LEFT", "STAFFS", "&b<prefix><player> &fhas left the server."),
+    STAFF_MOVE("MOVE", "STAFFS", "&b<prefix><player> &fhas switch to &b<server>&f."),
 
     HAVE_COOLDOWN("HAVE-COOLDOWN", "COOLDOWN", "&bPlease, wait &9<cooldown> &7second(s) to execute this command &bagain&7."),
 
@@ -124,10 +138,6 @@ public enum LanguageHandler {
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public void send(ProxiedPlayer sender) {
-        sender.sendMessage(TextFormatReader.complexFormat(bStaffHolder.getStaffHolderMessage(sender, toString(true))));
-    }
 
     public String toString(boolean prefix) {
         return (prefix ? LanguageHandler.PREFIX.toString(false) : "") + ChatUtils.translate(config.getString(getFinalPath(), this.def));

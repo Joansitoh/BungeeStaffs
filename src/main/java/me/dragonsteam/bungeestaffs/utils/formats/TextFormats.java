@@ -24,6 +24,7 @@ public enum TextFormats {
     OPEN_URL("open_url"),
     SHOW_TEXT("show_text"),
     COLOR("color"),
+    FORMAT("format"),
     ;
 
     private final String format;
@@ -49,23 +50,49 @@ public enum TextFormats {
             case OPEN_URL:
                 text.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, param));
                 break;
+            case FORMAT:
+                switch (param.toLowerCase()) {
+                    case "bold":
+                        text.setBold(true);
+                        break;
+                    case "italic":
+                        text.setItalic(true);
+                        break;
+                    case "underline":
+                        text.setUnderlined(true);
+                        break;
+                    case "strikethrough":
+                        text.setStrikethrough(true);
+                        break;
+                    case "obfuscated":
+                        text.setObfuscated(true);
+                        break;
+                    case "reset":
+                        text.setBold(false);
+                        text.setItalic(false);
+                        text.setUnderlined(false);
+                        text.setStrikethrough(false);
+                        text.setObfuscated(false);
+                        break;
+                }
+                break;
             case COLOR:
                 // Using gradient colors.
                 if (param.contains("-")) {
-                    boolean bold = text.getText().startsWith(ChatColor.BOLD.toString());
-                    if (bold) text.setText(text.getText().replace(ChatColor.BOLD.toString(), ""));
-
                     String[] colors = param.split("-");
+                    String extra = "";
+                    if (colors.length == 3) {
+                        if (!colors[2].contains("#")) extra = colors[2];
+                    }
+
                     Color color1 = Color.decode(colors[0]), color2 = Color.decode(colors[1]);
-                    BaseComponent[] components = TextComponent.fromLegacyText(ColorUtil.rgbGradient(text.getText(), color1, color2, ColorUtil::linear));
+                    BaseComponent[] components = TextComponent.fromLegacyText(ColorUtil.hsvGradient(text.getText(), extra, color1, color2, ColorUtil::quadratic));
                     text.setText("");
                     for (BaseComponent component : components) {
                         component.setClickEvent(text.getClickEvent());
                         component.setHoverEvent(text.getHoverEvent());
-                        component.setBold(bold);
                         text.addExtra(component);
                     }
-
                 } else text.setColor(ChatColor.of(param));
                 break;
         }

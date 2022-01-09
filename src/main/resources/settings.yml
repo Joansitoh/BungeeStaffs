@@ -12,28 +12,27 @@ USE-BUNGEE-MOTD: true
 # Language file selection.
 LANGUAGE: en_US
 
-# This is a BETA feature. These options replace the MineDown api
+########################################################################################
+# CUSTOM CHAT FORMATTER
 # for our own custom message formatter.
 #
 # Available parameters:
 #  - (show_text=<message>) - Text to show hover message.
 #  - (run_command=<command>) - Run command when click.
 #  - (suggest_command=<command>) - Suggest command when click.
+#  - (format=<text_format>) - Available text format: underline, strikethrough, bold, italic
 #  - (color=<hex code>) - Use new HEX color codes.
+#  - (color=<hex code>-<hex code>) - Use new HEX color codes with gradient.
 #
 # Parameters can be added after ${} format.
 # Example of custom message formatter:
 #  - '&eClick ${&e&lHERE}(run_command=/server <server>)(show_text=&bClick here to join) &eto join server.'
 #  - '&ePlayer is connected! Server: ${<server>}(run_command=/server <server>).'
-#
-COMPLEX-FORMAT:
-  USE-COMPLEX-FORMAT: false
+########################################################################################
 
-  # Whitelist means what type of messages will be shown complex format.
-  WHITELIST:
-    - COMMANDS # All plugin commands.
-    - CHATS # Custom chats.
-    - ACTIONS # Staff server switch.
+DISCORD-INTEGRATION:
+  ENABLED: false
+  BOT-TOKEN: '<token>'
 
 EVENTS:
   STAFFS:

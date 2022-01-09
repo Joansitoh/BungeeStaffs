@@ -26,6 +26,9 @@
 # * SEND > PERMISSION FOR USE COMMAND:
 # * RECEIVE > PERMISSION FOR SEE OUTPUT:
 # * TOGGLE > PERMISSION FOR TOGGLE OUTPUTS:
+
+# ALL OPTIONS ON DISCORD CAN BE DELETED. DON'T NEED TO LEAVE THEM EMPTY.
+# FOR DISABLE WITHOUT DELETING, LEAVE EMPTY CHANNEL.
 ###############################################################
 
 COMMANDS:
@@ -38,6 +41,27 @@ COMMANDS:
       SEND: ""
       RECEIVE: "bstaffs.helpop"
       TOGGLE: "bstaffs.helpop.toggle"
+
+    # ALL OPTIONS ON DISCORD CAN BE DELETED. DON'T NEED TO LEAVE THEM EMPTY.
+    # FOR DISABLE WITHOUT DELETING, LEAVE EMPTY CHANNEL.
+    DISCORD:
+      CHANNEL: 'channel-id'
+      FORMAT: 'New request of `<player>`.\n\nMessage: **<message>**'
+      EMBED:
+        ENABLED: true
+        AUTHOR:
+          NAME: '' # All options can be deleted.
+          ICON: ''
+          URL: ''
+        TITLE:
+          TEXT: 'MC TICKET SYSTEM'
+          URL: '{player-url}'
+        FOOTER:
+          TEXT: 'Powered by SkillTeam Development.'
+          ICON: 'https://i.imgur.com/ADyMeQc.png'
+        IMAGE: ''
+        THUMBNAIL: 'https://i.imgur.com/ADyMeQc.png'
+        COLOR: 16711680
 
     FORMAT: '&5&lHELPOP &7&l| &c<player>&f: <message>'
     OUTPUT: '&5&lHELPOP &7&l| &aMessage successfully send to staffs.'

@@ -6,7 +6,7 @@
 
     <groupId>me.dragonsteam.bungeestaffs</groupId>
     <artifactId>bStaffs</artifactId>
-    <version>0.3.6-b${buildNumber}</version>
+    <version>0.3.7-b${buildNumber}</version>
 
     <properties>
         <!-- Removes warnings -->
@@ -32,19 +32,30 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-
+<!--
         <repository>
             <id>minebench-repo</id>
             <url>https://repo.minebench.de/</url>
-        </repository>
+        </repository>-->
     </repositories>
 
     <dependencies>
-        <dependency>
+       <!-- <dependency>
             <groupId>de.themoep</groupId>
             <artifactId>minedown</artifactId>
             <version>1.7.1-SNAPSHOT</version>
             <scope>compile</scope>
+        </dependency>-->
+        <dependency>
+            <groupId>com.github.DV8FromTheWorld</groupId>
+            <artifactId>JDA</artifactId>
+            <version>v4.4.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>club.minnced</groupId>
+                    <artifactId>opus-java</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -159,6 +170,10 @@
                                 <relocation>
                                     <pattern>de.themoep.minedown</pattern>
                                     <shadedPattern>${project.groupId}.libs.minedown</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.github.DV8FromTheWorld</pattern>
+                                    <shadedPattern>${project.groupId}.libs.jda</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>

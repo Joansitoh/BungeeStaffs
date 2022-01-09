@@ -27,8 +27,10 @@ public class CommandHandler {
 
     ////////////////////////////////////////////////////////////////////////////////
 
+    private boolean administrative;
     private int cooldown;
     private CommandType type;
+    private DiscordHandler discordHandler;
 
     private String command, usage, format, output;
     private String sendPermission, receivePermission, togglePermission;
@@ -83,6 +85,8 @@ public class CommandHandler {
                 comms.setUsage(section.getString("USAGE"));
                 comms.setOutput(section.getString("OUTPUT"));
 
+                comms.setDiscordHandler(new DiscordHandler(section.getSection("DISCORD")));
+
                 if (!section.getStringList("FORMAT").isEmpty()) {
                     StringBuilder builder = new StringBuilder();
                     for (String s1 : section.getStringList("FORMAT"))
@@ -92,6 +96,9 @@ public class CommandHandler {
 
                 if (section.getString("ALIASES") != null)
                     comms.setAliases(section.getStringList("ALIASES"));
+
+                if (section.contains("ADMINISTRATIVE"))
+                    comms.setAdministrative(section.getBoolean("ADMINISTRATIVE"));
 
                 /* Set comms permission accessors with config values */
                 comms.setSendPermission(section.getString("PERMISSIONS.SEND"));
@@ -123,7 +130,7 @@ public class CommandHandler {
      * @param message of the command.
      */
     public BaseComponent[] getPlayerFormat(ProxiedPlayer player, ProxiedPlayer target, String message) {
-        return bStaffHolder.getStaffHolder(player, "COMMAND", format.replace("<target>", target != null ? target.getName() : "").replace("<message>", message));
+        return bStaffHolder.getStaffHolder(player, player, format.replace("<target>", target != null ? target.getName() : ""), message);
     }
 
     public boolean hasPermission(CommandSender player) {

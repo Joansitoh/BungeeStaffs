@@ -14,7 +14,17 @@ CHATS:
     # The input are the char how you use to write a message on this chat.
     # Example: (#I love minecraft) // "STAFF (Lobby) | Joansiitoh: I love minecraft"
     INPUT: '#'
-    FORMAT: '[&lSTAFF](#ff1100-#ff0095) &7(&o<server>&7) &7&l| <prefix>[<player>](rainbow): &f<message>'
+    FORMAT: '&5${STAFF}(color=#ff1100-#ff0095)(format=bold) &7(&o<server>&7) &7&l| <prefix><player>: &f<message>'
 
     # Permission needed to use and read this chat.
     PERMISSION: 'bstaffs.staffchat'
+
+    DISCORD:
+      ENABLED: false
+      BIDIRECTIONAL: true
+
+      CHANNEL: 'channel-id'
+      # Format for the bidirectional chat.
+      FORMAT:
+        GAME: "&5[Staff] &9[Disc] &d<player>&f: <message>"
+        DISCORD: "```\n[Staff] <prefix><player> (<server>): <message>\n```"
