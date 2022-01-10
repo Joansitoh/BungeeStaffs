@@ -139,11 +139,11 @@ public enum LanguageHandler {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public String toString(boolean prefix) {
-        return (prefix ? LanguageHandler.PREFIX.toString(false) : "") + ChatUtils.translate(config.getString(getFinalPath(), this.def));
+    public String toString() {
+        return toString(false);
     }
 
-    public String toString() {
+    public String toString(boolean prefix) {
         // Check if final path is a list using config.getStringList().
         if (config.getStringList(getFinalPath()) != null && config.getStringList(getFinalPath()).size() > 0) {
             // Transform list to string using "\n".
@@ -152,7 +152,7 @@ public enum LanguageHandler {
             return sb.toString();
         }
 
-        return ChatUtils.translate(config.getString(getFinalPath(), this.def));
+        return ChatUtils.translate((prefix ? LanguageHandler.PREFIX.toString() : "") + config.getString(getFinalPath(), this.def));
     }
 
     public List<String> toList() {

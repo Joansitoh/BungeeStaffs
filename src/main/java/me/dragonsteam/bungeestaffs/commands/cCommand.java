@@ -128,7 +128,7 @@ public class cCommand extends Command implements TabExecutor {
             if (replace) message = message.replace("<" + entry.getKey().charAt(1) + "-arg>", entry.getValue());
             else {
                 message = message.replace("<" + entry.getKey().charAt(1) + "-arg>", "").replace(entry.getValue(), "");
-                message = message.replace(entry.getValue(), "");
+                message = message.replace(entry.getKey(), "");
             }
         }
 

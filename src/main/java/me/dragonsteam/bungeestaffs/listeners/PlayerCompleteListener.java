@@ -25,6 +25,8 @@ public class PlayerCompleteListener implements Listener {
     public void onTabComplete(TabCompleteEvent e) {
         if (!e.getCursor().startsWith("/") || e.getCursor().length() == 1) return;
 
+        if (bStaffs.INSTANCE.getSettingsFile().getBoolean("DISABLE-PRIMARY-COMMAND-TAB")) return;
+
         // Return if is not proxied player.
         if (!(e.getSender() instanceof ProxiedPlayer)) return;
         ProxiedPlayer player = (ProxiedPlayer) e.getSender();

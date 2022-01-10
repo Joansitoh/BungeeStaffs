@@ -45,26 +45,26 @@ COMMANDS:
     # ALL OPTIONS ON DISCORD CAN BE DELETED. DON'T NEED TO LEAVE THEM EMPTY.
     # FOR DISABLE WITHOUT DELETING, LEAVE EMPTY CHANNEL.
     DISCORD:
-      CHANNEL: 'channel-id'
-      FORMAT: 'New request of `<player>`.\n\nMessage: **<message>**'
+      CHANNEL: "channel-id"
+      FORMAT: "New request of `<player>`.\n\nMessage: **<message>**"
       EMBED:
         ENABLED: true
         AUTHOR:
-          NAME: '' # All options can be deleted.
-          ICON: ''
-          URL: ''
+          NAME: "" # All options can be deleted.
+          ICON: ""
+          URL: ""
         TITLE:
-          TEXT: 'MC TICKET SYSTEM'
-          URL: '{player-url}'
+          TEXT: "MC TICKET SYSTEM"
+          URL: ""
         FOOTER:
-          TEXT: 'Powered by SkillTeam Development.'
-          ICON: 'https://i.imgur.com/ADyMeQc.png'
-        IMAGE: ''
-        THUMBNAIL: 'https://i.imgur.com/ADyMeQc.png'
+          TEXT: "Powered by SkillTeam Development."
+          ICON: "https://i.imgur.com/ADyMeQc.png"
+        IMAGE: ""
+        THUMBNAIL: "https://i.imgur.com/ADyMeQc.png"
         COLOR: 16711680
 
-    FORMAT: '&5&lHELPOP &7&l| &c<player>&f: <message>'
-    OUTPUT: '&5&lHELPOP &7&l| &aMessage successfully send to staffs.'
+    FORMAT: "&5&lHELPOP &7&l| &c<player>&f: <message>"
+    OUTPUT: "&5&lHELPOP &7&l| &aMessage successfully send to staffs."
     COOLDOWN: 20
 
   REPORT-CMD:

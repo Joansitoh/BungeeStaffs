@@ -25,7 +25,7 @@ public class ChatsHandler {
     @Getter
     private static final HashMap<String, ChatsHandler> chatsHashMap = new HashMap<>();
 
-    private String input, format, permission;
+    private String input, format, permission, toggleCommand;
     private String discordChannel, discordFormatGame, discordFormatDiscord;
 
     private boolean bidirectional;
@@ -54,6 +54,7 @@ public class ChatsHandler {
                 } else format = section.getString("FORMAT");
 
                 ChatsHandler chats = new ChatsHandler(section.getString("INPUT"), format, section.getString("PERMISSION"));
+                if (section.contains("TOGGLE-CMD")) chats.setToggleCommand(section.getString("TOGGLE-CMD"));
                 if (section.contains("DISCORD") && section.getBoolean("DISCORD.ENABLED")) {
                     chats.setDiscordFormatGame(section.getString("DISCORD.FORMAT.GAME"));
                     chats.setDiscordFormatDiscord(section.getString("DISCORD.FORMAT.DISCORD"));

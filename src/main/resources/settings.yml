@@ -12,6 +12,9 @@ USE-BUNGEE-MOTD: true
 # Language file selection.
 LANGUAGE: en_US
 
+# Disable primary command tab executor. Example: /report
+DISABLE-PRIMARY-COMMAND-TAB: false
+
 ########################################################################################
 # CUSTOM CHAT FORMATTER
 # for our own custom message formatter.

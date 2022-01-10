@@ -14,10 +14,11 @@ CHATS:
     # The input are the char how you use to write a message on this chat.
     # Example: (#I love minecraft) // "STAFF (Lobby) | Joansiitoh: I love minecraft"
     INPUT: '#'
-    FORMAT: '&5${STAFF}(color=#ff1100-#ff0095)(format=bold) &7(&o<server>&7) &7&l| <prefix><player>: &f<message>'
+    TOGGLE-CMD: "staffchat"
+    FORMAT: "&5${STAFF}(color=#ff1100-#ff0095)(format=bold) &7(&o<server>&7) &7&l| <prefix><player>: &f<message>"
 
     # Permission needed to use and read this chat.
-    PERMISSION: 'bstaffs.staffchat'
+    PERMISSION: "bstaffs.staffchat"
 
     DISCORD:
       ENABLED: false
