@@ -29,16 +29,22 @@ public class PlayerChatListener extends ListenerAdapter implements Listener {
         ProxiedPlayer player = (ProxiedPlayer) e.getSender();
 
         ChatsHandler chats = null;
-        for (String s : ChatsHandler.getChatsHashMap().keySet()) {
-            if (e.getMessage().startsWith(s)) chats = ChatsHandler.getChatByInput(s);
+        if (!ChatsHandler.getPlayersChatsMap().containsKey(player.getUniqueId())) {
+            for (String s : ChatsHandler.getChatsHashMap().keySet()) {
+                if (e.getMessage().startsWith(s)) chats = ChatsHandler.getChatByInput(s);
+            }
+
+            if (chats == null) return;
+            if (e.getMessage().substring(chats.getInput().length()).equalsIgnoreCase("")) return;
+            if (!player.hasPermission(chats.getPermission()) && !chats.getPermission().equals("")) return;
+            e.setCancelled(true);
+
+            e.setMessage(e.getMessage().substring(chats.getInput().length()));
+        } else {
+            chats = ChatsHandler.getPlayersChatsMap().get(player.getUniqueId());
+            if (e.isCommand()) return;
+            e.setCancelled(true);
         }
-
-        if (chats == null) return;
-        if (e.getMessage().substring(chats.getInput().length()).equalsIgnoreCase("")) return;
-        if (!player.hasPermission(chats.getPermission())) return;
-        e.setCancelled(true);
-
-        e.setMessage(e.getMessage().substring(chats.getInput().length()));
 
         if (bStaffs.INSTANCE.getJda() != null) {
             try {

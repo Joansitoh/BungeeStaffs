@@ -88,6 +88,8 @@ public enum LanguageHandler {
 
     CHAT_TOGGLED("CHAT-TOGGLED", "CHATS", "&7Chat outputs of '&b<chat>&7' has been <value>&7."),
     CHAT_NOT_FOUND("CHAT-NO-EXIST", "CHATS", "&7This chat input not exist&7."),
+    CHAT_DISABLED("CHAT-DISABLED", "CHATS", "&7Chat input '&b<chat>&7' is &cdisabled&7."),
+    CHAT_ENABLED("CHAT-ENABLED", "CHATS", "&7Chat input '&b<chat>&7' is &aenabled&7."),
 
     ALIASES_TELEPORT("TELEPORT", "ALIASES", "&7Connecting to &b<server>&7."),
     ALIASES_ALREADY_TELEPORT("ALREADY", "ALIASES", "&cYou already connected to this server."),

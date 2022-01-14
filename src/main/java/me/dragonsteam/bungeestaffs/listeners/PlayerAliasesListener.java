@@ -9,6 +9,8 @@ import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
+import java.util.Random;
+
 /**
  * Created by Joansiitoh (DragonsTeam && SkillTeam)
  * Date: 16/12/2021 - 1:46.
@@ -28,7 +30,8 @@ public class PlayerAliasesListener implements Listener {
         }
 
         if (command.split(" ").length > 1) return;
-        AliasesHandler aliasesHandler = AliasesHandler.getAlias(command);
+        if (AliasesHandler.getAlias(command).isEmpty()) return;
+        AliasesHandler aliasesHandler = AliasesHandler.getAlias(command).get(new Random().nextInt(AliasesHandler.getAlias(command).size()));
         if (aliasesHandler == null) return;
 
         if (aliasesHandler.getDisabled() != null && !aliasesHandler.getDisabled().isEmpty()) {

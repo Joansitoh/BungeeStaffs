@@ -6,6 +6,7 @@ import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import net.md_5.bungee.config.Configuration;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,13 +19,13 @@ import java.util.List;
 public class AliasesHandler {
 
     @Getter
-    private static final HashMap<String, AliasesHandler> aliasesHashMap = new HashMap<>();
+    private static final HashMap<String, List<AliasesHandler>> aliasesHashMap = new HashMap<>();
 
     private String server, permission;
     private List<String> aliases, disabled;
 
-    public static AliasesHandler getAlias(String alias) {
-        return aliasesHashMap.get(alias);
+    public static List<AliasesHandler> getAlias(String alias) {
+        return aliasesHashMap.getOrDefault(alias, new ArrayList<>());
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -40,9 +41,12 @@ public class AliasesHandler {
             List<String> disabled = configuration.getStringList("DISABLED-SERVERS");
 
             AliasesHandler alias = new AliasesHandler(server, permission, aliases, disabled);
-            aliasesHashMap.put(server, alias);
-            for (String alias1 : aliases)
-                aliasesHashMap.put(alias1, alias);
+            aliasesHashMap.putIfAbsent(server, new ArrayList<>());
+            aliasesHashMap.get(server).add(alias);
+            for (String alias1 : aliases) {
+                aliasesHashMap.putIfAbsent(alias1, new ArrayList<>());
+                aliasesHashMap.get(alias1).add(alias);
+            }
             bStaffs.logger("* New custom aliases created. (" + server + " / " + aliases.size() + ")", "[Loader]");
         }
     }
