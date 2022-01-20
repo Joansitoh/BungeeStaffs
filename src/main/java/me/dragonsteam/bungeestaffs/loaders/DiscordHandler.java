@@ -56,6 +56,20 @@ public class DiscordHandler {
 
             this.color = config.getInt("EMBED.COLOR", 0);
         }
+
+        // Removing blank boxes.
+        if (this.authorName != null && this.authorName.equals("")) this.authorName = null;
+        if (this.authorUrl != null && this.authorUrl.equals("")) this.authorUrl = null;
+        if (this.authorIcon != null && this.authorIcon.equals("")) this.authorIcon = null;
+
+        if (this.footerText != null && this.footerText.equals("")) this.footerText = null;
+        if (this.footerIcon != null && this.footerIcon.equals("")) this.footerIcon = null;
+
+        if (this.titleText != null && this.titleText.equals("")) this.titleText = null;
+        if (this.titleUrl != null && this.titleUrl.equals("")) this.titleUrl = null;
+
+        if (this.image != null && this.image.equals("")) this.image = null;
+        if (this.thumbnail != null && this.thumbnail.equals("")) this.thumbnail = null;
     }
 
     ///////////////////////////////////////////////////////////////////////////

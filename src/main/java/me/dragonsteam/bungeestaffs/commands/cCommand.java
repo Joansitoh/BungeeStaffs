@@ -46,6 +46,12 @@ public class cCommand extends Command implements TabExecutor {
             ProxiedPlayer player = (ProxiedPlayer) sender;
 
             if (args.length == 0) {
+                if (comms.getType().equals(CommandType.CONSOLE)) {
+                    setCooldown(player, comms);
+                    player.sendMessage(bStaffHolder.getStaffHolder(player, player, comms.getOutput(), "message"));
+                    return;
+                }
+
                 player.sendMessage(new TextComponent(comms.getUsage()));
                 return;
             }
@@ -143,6 +149,8 @@ public class cCommand extends Command implements TabExecutor {
                 if (textChannel != null) {
                     String format = handler.getFormat();
                     format = format
+                            .replace("<server>", player.getServer().getInfo().getName())
+                            .replace("<target_server>", target != null ? target.getServer().getInfo().getName() : "")
                             .replace("<message>", message)
                             .replace("<target>", target == null ? "Console" : target.getName())
                             .replace("<player>", player.getName())
@@ -155,8 +163,7 @@ public class cCommand extends Command implements TabExecutor {
                         textChannel.sendMessageEmbeds(handler.build(format)).queue();
                     } else textChannel.sendMessage(format).queue();
                 }
-            } catch (Exception ignored) {
-            }
+            } catch (Exception ignored) {}
         }
     }
 

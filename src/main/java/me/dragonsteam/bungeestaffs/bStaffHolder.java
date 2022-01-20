@@ -9,9 +9,11 @@ import me.dragonsteam.bungeestaffs.utils.formats.TextFormatReader;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,8 +22,8 @@ public class bStaffHolder {
 
     private static boolean tried = false;
 
-    public static String getStaffHolderMessage(ProxiedPlayer player, String text) {
-        if (player != null && player instanceof ProxiedPlayer) {
+    public static String getStaffHolderMessage(@Nullable ProxiedPlayer player, String text) {
+        if (player != null) {
             ConfigFile config = bStaffs.INSTANCE.getSettingsFile();
             String server = "", raw_server = "", name = player.getName();
             String prefix = "", suffix = "";
@@ -40,16 +42,18 @@ public class bStaffHolder {
                 HookHandler handler = bStaffs.INSTANCE.getHookManager().getHandler("LuckPerms");
                 if (handler != null) {
                     if (!handler.isLoaded() && !tried) {
-                        handler.setup();
                         tried = true;
+                        handler.setup();
                     }
 
-                    LuckPermsHandler luckPermsHandler = (LuckPermsHandler) handler;
-                    if (luckPermsHandler.getPrefix(player.getUniqueId()) != null)
-                        prefix = luckPermsHandler.getPrefix(player.getUniqueId());
+                    try {
+                        LuckPermsHandler luckPermsHandler = (LuckPermsHandler) handler;
+                        if (luckPermsHandler.getPrefix(player.getUniqueId()) != null)
+                            prefix = luckPermsHandler.getPrefix(player.getUniqueId());
 
-                    if (luckPermsHandler.getSuffix(player.getUniqueId()) != null)
-                        suffix = luckPermsHandler.getSuffix(player.getUniqueId());
+                        if (luckPermsHandler.getSuffix(player.getUniqueId()) != null)
+                            suffix = luckPermsHandler.getSuffix(player.getUniqueId());
+                    } catch (Exception ignored) {}
                 }
             } catch (Exception e) {
                 if (!tried) bStaffs.logger("LuckPerms hook is not installed or not working properly.");
@@ -61,6 +65,12 @@ public class bStaffHolder {
                     .replace("<player>", name)
                     .replace("<prefix>", prefix)
                     .replace("<suffix>", suffix);
+        } else {
+            for (ServerInfo info : bStaffs.INSTANCE.getProxy().getServers().values()) {
+                text = text.replace("<bungee_" + info.getName() + ">", info.getPlayers().size() + "");
+            }
+
+            text = text.replace("<bungee_online>", bStaffs.INSTANCE.getProxy().getOnlineCount() + "");
         }
 
         text = text

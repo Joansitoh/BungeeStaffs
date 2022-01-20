@@ -35,9 +35,16 @@ DISABLE-PRIMARY-COMMAND-TAB: false
 
 DISCORD-INTEGRATION:
   ENABLED: false
+
   BOT-TOKEN: '<token>'
 
+  UPDATE-DELAY: 5 # In seconds
+  ACTIVITY: 'Players online: <bungee_online>'
+  ACTIVITY-TYPE: 'DEFAULT' ## Available parameters: DEFAULT, STREAMING, LISTENING, WATCHING, CUSTOM_STATUS, COMPETING.
+
 EVENTS:
+  JOIN-UPDATE-MESSAGE: true
+
   STAFFS:
     PERMISSION: 'bstaffs.staff'
 

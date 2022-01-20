@@ -53,6 +53,7 @@ public class bStaffCommand extends Command {
                     new ChatsHandler();
                     new CommandHandler();
                     new AliasesHandler();
+                    bStaffs.INSTANCE.startDiscordBot();
                 }, 2, TimeUnit.SECONDS);
                 return;
             }

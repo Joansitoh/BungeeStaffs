@@ -32,3 +32,15 @@ SERVER-ALIASES:
     ALIASES:
       - "survival"
       - "surv"
+
+  Lobby1: # Name of the server.
+    # Alias of the server.
+    ALIASES:
+      - "lobby"
+      - "hub"
+
+  Lobby2: # Name of the server.
+    # Alias of the server.
+    ALIASES:
+      - "lobby"
+      - "hub"

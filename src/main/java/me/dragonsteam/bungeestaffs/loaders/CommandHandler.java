@@ -81,18 +81,23 @@ public class CommandHandler {
                 CommandHandler comms = new CommandHandler(CommandType.valueOf(section.getString("TYPE")), section.getString("COMMAND"));
 
                 /* Set comms defaults accessors with config values */
-                comms.setCooldown(section.getInt("COOLDOWN"));
-                comms.setUsage(section.getString("USAGE"));
-                comms.setOutput(section.getString("OUTPUT"));
+
+                if (section.contains("COOLDOWN")) comms.setCooldown(section.getInt("COOLDOWN"));
+                else comms.setCooldown(0);
+
+                if (section.contains("USAGE")) comms.setUsage(section.getString("USAGE"));
+                if (section.contains("OUTPUT")) comms.setOutput(section.getString("OUTPUT"));
 
                 comms.setDiscordHandler(new DiscordHandler(section.getSection("DISCORD")));
 
-                if (!section.getStringList("FORMAT").isEmpty()) {
-                    StringBuilder builder = new StringBuilder();
-                    for (String s1 : section.getStringList("FORMAT"))
-                        builder.append(s1).append("\n");
-                    comms.setFormat(builder.toString());
-                } else comms.setFormat(section.getString("FORMAT"));
+                if (section.contains("FORMAT")) {
+                    if (!section.getStringList("FORMAT").isEmpty()) {
+                        StringBuilder builder = new StringBuilder();
+                        for (String s1 : section.getStringList("FORMAT"))
+                            builder.append(s1).append("\n");
+                        comms.setFormat(builder.toString());
+                    } else comms.setFormat(section.getString("FORMAT"));
+                }
 
                 if (section.getString("ALIASES") != null)
                     comms.setAliases(section.getStringList("ALIASES"));
@@ -102,8 +107,8 @@ public class CommandHandler {
 
                 /* Set comms permission accessors with config values */
                 comms.setSendPermission(section.getString("PERMISSIONS.SEND"));
-                comms.setReceivePermission(section.getString("PERMISSIONS.RECEIVE"));
-                comms.setTogglePermission(section.getString("PERMISSIONS.TOGGLE"));
+                if (section.contains("PERMISSIONS.RECEIVE")) comms.setReceivePermission(section.getString("PERMISSIONS.RECEIVE"));
+                if (section.contains("PERMISSIONS.TOGGLE")) comms.setTogglePermission(section.getString("PERMISSIONS.TOGGLE"));
 
                 CommandManager.registerCommand(comms);
                 commsHashMap.put(comms.getCommand(), comms);

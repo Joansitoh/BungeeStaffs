@@ -73,8 +73,9 @@ public class PlayerChatListener extends ListenerAdapter implements Listener {
                 for (ProxiedPlayer p : bStaffs.INSTANCE.getProxy().getPlayers()) {
                     if (!p.hasPermission(handler.getPermission())) continue;
                     if (ToggleUtils.isToggledChat(p, handler)) continue;
+                    if (event.getMember() == null) continue;
                     p.sendMessage(ChatUtils.translate(handler.getDiscordFormatGame()
-                            .replace("<player>", event.getMember().getNickname())
+                            .replace("<player>", event.getMember().getNickname() != null ? event.getMember().getNickname() : event.getMember().getEffectiveName())
                             .replace("<message>", event.getMessage().getContentRaw())
                     ));
                 }

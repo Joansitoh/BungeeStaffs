@@ -6,7 +6,7 @@
 
     <groupId>me.dragonsteam.bungeestaffs</groupId>
     <artifactId>bStaffs</artifactId>
-    <version>0.3.7-b${buildNumber}</version>
+    <version>0.3.8-b${buildNumber}</version>
 
     <properties>
         <!-- Removes warnings -->
@@ -176,6 +176,27 @@
                                     <shadedPattern>${project.groupId}.libs.jda</shadedPattern>
                                 </relocation>
                             </relocations>
+
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/maven/**</exclude>
+                                        <exclude>META-INF/**</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+
+                            <artifactSet>
+                                <excludes>
+                                    <exclude>META-INF:**</exclude>
+<!--
+                                    <exclude>com.google.code.findbugs:**</exclude>
+                                    <exclude>org.jetbrains:annotations:**</exclude>
+                                    <exclude>org.slf4j:**</exclude>
+                                    <exclude>net.sf.trove4j:**</exclude>-->
+                                </excludes>
+                            </artifactSet>
                         </configuration>
                     </execution>
                 </executions>

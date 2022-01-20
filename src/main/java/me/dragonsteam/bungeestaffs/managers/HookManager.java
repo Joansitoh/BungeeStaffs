@@ -11,10 +11,11 @@ import java.util.HashMap;
  */
 public class HookManager {
 
-    private final HashMap<String, HookHandler> handlerHashMap;
+    private final HashMap<String, HookHandler> handlerHashMap, handlersLoaded;
 
     public HookManager() {
         handlerHashMap = new HashMap<>();
+        handlersLoaded = new HashMap<>();
 
         // Register all the hooks
         handlerHashMap.put("LuckPerms", new LuckPermsHandler());
@@ -24,6 +25,7 @@ public class HookManager {
 
             try {
                 handler.setup();
+                handlersLoaded.put(handler.getName(), handler);
                 bStaffs.logger("&fLuckPerms provider &aregistered&f.", "Hooks");
             } catch (Exception e) {
                 bStaffs.logger("&fError on &cregister &fLuckPerms provider.", "Hooks");
@@ -32,8 +34,7 @@ public class HookManager {
     }
 
     public HookHandler getHandler(String name) {
-        if (handlerHashMap.containsKey(name) && handlerHashMap.get(name).isLoaded())
-            return handlerHashMap.get(name);
+        if (handlersLoaded.containsKey(name)) return handlersLoaded.get(name);
         return null;
     }
 

@@ -94,6 +94,7 @@ public class TextFormatReader {
         Matcher matcher = pattern.matcher(format);
 
         HashMap<String, TextComponent> tag_components = new HashMap<>();
+        boolean message_replaced = false;
 
         /*
          * Start finding all pattern format.
@@ -145,13 +146,24 @@ public class TextFormatReader {
                     message_component.addExtra(component);
                 }
 
-                message_component.addExtra(new TextComponent(extra.replace("<message>", message)));
+                if (extra.contains("<message>") && !message_replaced) {
+                    extra = extra.replace("<message>", message);
+                    message_replaced = true;
+                }
+
+                message_component.addExtra(new TextComponent(extra));
                 last_color = getLastColor(s);
                 continue;
             }
 
             last_color = getLastColor(s);
-            message_component.addExtra(ChatUtils.translate(s.replace("<message>", message)));
+
+            if (s.contains("<message>") && !message_replaced) {
+                s = s.replace("<message>", message);
+                message_replaced = true;
+            }
+
+            message_component.addExtra(ChatUtils.translate(s));
         }
 
         /*String last_color = "";

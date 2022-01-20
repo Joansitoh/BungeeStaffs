@@ -25,6 +25,10 @@ public class Runnables {
         return bStaffs.INSTANCE.getProxy().getScheduler().schedule(bStaffs.INSTANCE, callable::call, delay, interval, TimeUnit.SECONDS);
     }
 
+    public static ScheduledTask runTimerAsync(Callable callable, long delay, long interval) {
+        return bStaffs.INSTANCE.getProxy().getScheduler().schedule(bStaffs.INSTANCE, callable::call, delay, interval, TimeUnit.SECONDS);
+    }
+
     public interface Callable {
         void call();
     }

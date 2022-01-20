@@ -8,8 +8,11 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 
+import javax.xml.soap.Text;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,7 +42,14 @@ public enum TextFormats {
 
         switch (this) {
             case SHOW_TEXT:
-                text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponent[]{new TextComponent(param)}));
+                String[] s = param.split("\\\\n");
+                List<TextComponent> list = new ArrayList<>();
+                for (int x = 0; x < s.length; x++) {
+                    TextComponent t = new TextComponent(s[x]);
+                    if (x != s.length - 1) t.addExtra(new TextComponent(ComponentSerializer.parse("{text: \"\n\"}")));
+                    list.add(t);
+                }
+                text.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, list.toArray(new TextComponent[0])));
                 break;
             case RUN_COMMAND:
                 text.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, param));

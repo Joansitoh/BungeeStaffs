@@ -9,7 +9,7 @@
 #                         ALL VARIABLES                       #
 ###############################################################
 # * COMMAND: The command name.
-# * TYPE: Command type. (Available: SOLO, TARGET; PRIVATE)
+# * TYPE: Command type. (Available: SOLO; TARGET; PRIVATE; CONSOLE)
 # * USAGE: Command usage help message.
 # * ALIASES: Command aliases.
 
@@ -21,6 +21,7 @@
 # * SOLO: Send simple message to players.
 # * TARGET: Send message using target.
 # * PRIVATE: Send private message to player.
+# * CONSOLE: Get message from console.
 
 # * PERMISSION LIST:
 # * SEND > PERMISSION FOR USE COMMAND:
@@ -32,6 +33,15 @@
 ###############################################################
 
 COMMANDS:
+  DISCORD-CMD:
+    TYPE: CONSOLE
+    COMMAND: 'discord'
+
+    PERMISSIONS:
+      SEND: ""
+
+    OUTPUT: "&5Our discord server is: &fhttps://discord.gg/gXzRaYdzsh"
+
   HELPOP-CMD:
     TYPE: SOLO
     COMMAND: 'helpop'

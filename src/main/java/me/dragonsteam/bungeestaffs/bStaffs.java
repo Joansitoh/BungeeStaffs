@@ -18,10 +18,13 @@ import me.dragonsteam.bungeestaffs.utils.defaults.Runnables;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.api.scheduler.ScheduledTask;
 import org.bstats.bungeecord.Metrics;
 
 import javax.security.auth.login.LoginException;
@@ -46,6 +49,8 @@ public final class bStaffs extends Plugin {
     private ConfigFile settingsFile, commandsFile, chatsFile, messagesFile, aliasesFile;
     private HookManager hookManager;
     private String configVersion;
+
+    private ScheduledTask task;
 
     private JDA jda;
 
@@ -179,11 +184,36 @@ public final class bStaffs extends Plugin {
         ChatUtils.setDefaultIfNotSet(settingsFile.getConfiguration(), "DISCORD-INTEGRATION.BOT-TOKEN", "token");
         settingsFile.save();*/
 
+        if (task != null) task.cancel();
         if (!settingsFile.getBoolean("DISCORD-INTEGRATION.ENABLED")) return;
 
         try {
-            jda = JDABuilder.createDefault(settingsFile.getString("DISCORD-INTEGRATION.BOT-TOKEN")).build();
-            jda.addEventListener(new PlayerChatListener());
+            if (jda == null) {
+                jda = JDABuilder.createDefault(settingsFile.getString("DISCORD-INTEGRATION.BOT-TOKEN")).build();
+                jda.addEventListener(new PlayerChatListener());
+            }
+
+            if (settingsFile.getConfiguration().contains("DISCORD-INTEGRATION.ACTIVITY")) {
+                Activity.ActivityType type = Activity.ActivityType.DEFAULT;
+                if (settingsFile.getConfiguration().contains("DISCORD-INTEGRATION.ACTIVITY-TYPE")) {
+                    try { type = Activity.ActivityType.valueOf(settingsFile.getString("DISCORD-INTEGRATION.ACTIVITY-TYPE").toUpperCase()); }
+                    catch (Exception ignored) {}
+                }
+
+                if (settingsFile.getConfiguration().contains("DISCORD-INTEGRATION.UPDATE-DELAY")) {
+                    int delay = settingsFile.getInt("DISCORD-INTEGRATION.UPDATE-DELAY");
+                    if (delay != 0) {
+                        Activity.ActivityType finalType = type;
+                        task = Runnables.runTimerAsync(() -> {
+                            String activity = bStaffHolder.getStaffHolderMessage(null, settingsFile.getString("DISCORD-INTEGRATION.ACTIVITY"));
+                            jda.getPresence().setActivity(Activity.of(finalType, activity));
+                        }, delay, delay);
+                        return;
+                    }
+                }
+
+                jda.getPresence().setActivity(Activity.of(type, bStaffHolder.getStaffHolderMessage(null, settingsFile.getString("DISCORD-INTEGRATION.ACTIVITY"))));
+            }
             logger("&aDiscord bot successfully started.");
         } catch (LoginException e) {
             e.printStackTrace();

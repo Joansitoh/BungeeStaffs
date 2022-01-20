@@ -28,8 +28,10 @@ public class ServerMovementListener implements Listener {
 
     @EventHandler
     public void onPostLogin(PostLoginEvent e) {
-        if (e.getPlayer().hasPermission("bstaffs.admin"))
-            Runnables.runLater(() -> bStaffs.INSTANCE.update(e.getPlayer()), 3, TimeUnit.SECONDS);
+        if (e.getPlayer().hasPermission("bstaffs.admin")) {
+            if (config.getBoolean("EVENTS.JOIN-UPDATE-MESSAGE"))
+                 Runnables.runLater(() -> bStaffs.INSTANCE.update(e.getPlayer()), 3, TimeUnit.SECONDS);
+        }
 
         if (!config.getBoolean("EVENTS.STAFFS.JOIN-MESSAGE")) return;
         ProxiedPlayer player = e.getPlayer();
