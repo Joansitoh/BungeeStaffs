@@ -64,6 +64,7 @@ public class cCommand extends Command implements TabExecutor {
                 return;
             }
 
+            bStaffs.log(player, "commands", "Executed command: " + comms.getCommand() + " with args: " + String.join(" ", args));
             StringBuilder builder = new StringBuilder();
             if (comms.getType().equals(CommandType.SOLO)) {
                 setCooldown(player, comms);

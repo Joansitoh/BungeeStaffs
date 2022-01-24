@@ -3,6 +3,7 @@ package me.dragonsteam.bungeestaffs.listeners;
 import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.loaders.ChatsHandler;
+import me.dragonsteam.bungeestaffs.loaders.LanguageHandler;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ToggleUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -14,8 +15,13 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.event.EventHandler;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by Joansiitoh (DragonsTeam && SkillTeam)
@@ -46,6 +52,7 @@ public class PlayerChatListener extends ListenerAdapter implements Listener {
             e.setCancelled(true);
         }
 
+        bStaffs.log(player, "chat", TextComponent.toPlainText(chats.getPlayerFormat(player, player, e.getMessage())));
         if (bStaffs.INSTANCE.getJda() != null) {
             try {
                 TextChannel textChannel = bStaffs.INSTANCE.getJda().getTextChannelById(chats.getDiscordChannel());
@@ -54,6 +61,75 @@ public class PlayerChatListener extends ListenerAdapter implements Listener {
                             .replace("<message>", e.getMessage()))).queue();
                 }
             } catch (Exception ignored) {
+            }
+        }
+
+        Configuration config = bStaffs.INSTANCE.getChatsFile().getConfiguration().getSection("CHAT-FILTER");
+        if (config != null) {
+            if (!player.hasPermission(config.getString("BYPASS-PERMISSION"))) {
+                boolean replacer = config.getBoolean("REPLACER"), textMode = config.getString("REPLACE-MODE").equalsIgnoreCase("TEXT");
+
+                String regex = "[(http(s)?):\\/\\/(www\\.)?a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)";
+                Pattern pattern = Pattern.compile(regex);
+
+                if (config.getBoolean("BLOCK-LINKS")) {
+                    Matcher matcher = pattern.matcher(e.getMessage());
+                    if (matcher.find()) {
+                        if (config.getBoolean("NOTIFY-BLOCK")) {
+                            for (ProxiedPlayer p : bStaffs.INSTANCE.getProxy().getPlayers()) {
+                                if (!p.hasPermission("bstaffs.staff")) continue;
+                                p.sendMessage(LanguageHandler.CHAT_BLOCKED.toString(true)
+                                        .replace("<player>", player.getName())
+                                        .replace("<message>", matcher.group())
+                                );
+                            }
+                        }
+
+                        if (replacer) {
+                            if (textMode)
+                                e.setMessage(config.getStringList("REPLACER-TEXTS").get(new Random().nextInt(config.getStringList("REPLACER-TEXTS").size())));
+                            else {
+                                for (int x = 0; x < matcher.groupCount(); x++) {
+                                    String random = config.getStringList("REPLACER-WORDS").get(new Random().nextInt(config.getStringList("REPLACER-WORDS").size()));
+                                    e.setMessage(e.getMessage().replaceFirst(matcher.group(x), random));
+                                }
+                            }
+                        } else {
+                            player.sendMessage(LanguageHandler.CANT_SEND_LINK.toString(true));
+                            e.setCancelled(true);
+                            return;
+                        }
+                    }
+
+                    for (String s : config.getStringList("BLOCKED-WORDS")) {
+                        if (e.getMessage().toLowerCase().contains(s.toLowerCase())) {
+                            if (config.getBoolean("NOTIFY-BLOCK")) {
+                                for (ProxiedPlayer p : bStaffs.INSTANCE.getProxy().getPlayers()) {
+                                    if (!p.hasPermission("bstaffs.staff")) continue;
+                                    p.sendMessage(LanguageHandler.CHAT_BLOCKED.toString(true)
+                                            .replace("<player>", player.getName())
+                                            .replace("<message>", matcher.group())
+                                    );
+                                }
+                            }
+
+                            if (replacer) {
+                                if (textMode)
+                                    e.setMessage(config.getStringList("REPLACER-TEXTS").get(new Random().nextInt(config.getStringList("REPLACER-TEXTS").size())));
+                                else {
+                                    while (e.getMessage().toLowerCase().contains(s.toLowerCase())) {
+                                        String random = config.getStringList("REPLACER-WORDS").get(new Random().nextInt(config.getStringList("REPLACER-WORDS").size()));
+                                        e.setMessage(e.getMessage().replaceFirst(s, random));
+                                    }
+                                }
+                            } else {
+                                player.sendMessage(LanguageHandler.CANT_WRITE_WORD.toString(true).replace("<word>", s));
+                                e.setCancelled(true);
+                                return;
+                            }
+                        }
+                    }
+                }
             }
         }
 

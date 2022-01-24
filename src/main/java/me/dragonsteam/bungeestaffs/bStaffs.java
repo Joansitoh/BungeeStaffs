@@ -20,7 +20,11 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.event.PermissionCheckEvent;
+import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -29,6 +33,7 @@ import org.bstats.bungeecord.Metrics;
 
 import javax.security.auth.login.LoginException;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -46,7 +51,7 @@ public final class bStaffs extends Plugin {
     private HashMap<String, String> commands;
     private Map<String, Command> knownCommands;
 
-    private ConfigFile settingsFile, commandsFile, chatsFile, messagesFile, aliasesFile;
+    private ConfigFile settingsFile, commandsFile, chatsFile, messagesFile, aliasesFile, logsFile;
     private HookManager hookManager;
     private String configVersion;
 
@@ -62,6 +67,37 @@ public final class bStaffs extends Plugin {
 
     public static void logger(String message, String subMsg) {
         INSTANCE.getProxy().getConsole().sendMessage(ChatUtils.translate(LanguageHandler.PREFIX.getDef() + (subMsg != null ? (subMsg + " &f") : "") + message));
+    }
+
+    public static void log(ProxiedPlayer player, String method, String message) {
+        boolean chat = INSTANCE.getSettingsFile().getBoolean("EVENTS.LOGS.CHAT"), move = INSTANCE.getSettingsFile().getBoolean("EVENTS.LOGS.MOVE");
+        boolean commands = INSTANCE.getSettingsFile().getBoolean("EVENTS.LOGS.COMMANDS");
+        if (method.equalsIgnoreCase("chats") && !chat) return;
+        if (method.equalsIgnoreCase("move") && !move) return;
+        if (method.equalsIgnoreCase("commands") && !commands) return;
+
+        boolean console = !INSTANCE.getSettingsFile().getString("EVENTS.LOGS.LOG-METHOD").equalsIgnoreCase("FILE");
+        boolean both = INSTANCE.getSettingsFile().getString("EVENTS.LOGS.LOG-METHOD").equalsIgnoreCase("BOTH");
+
+        if (console) {
+            INSTANCE.getProxy().getConsole().sendMessage(message);
+            if (!both) return;
+        }
+
+        message = ChatColor.stripColor(message);
+
+        String timeFormat = "HH:mm:ss";
+        String dateFormat = "dd/MM/yyyy";
+
+        String date = new SimpleDateFormat(dateFormat).format(new Date()), time = new SimpleDateFormat(timeFormat).format(new Date());
+        String prefix = "[" + date + " " + time + "] ";
+
+        if (INSTANCE.getLogsFile().getConfiguration().contains(player.getUniqueId().toString())) {
+            List<String> logs = INSTANCE.getLogsFile().getStringList(player.getUniqueId().toString());
+            logs.add(prefix + message);
+            INSTANCE.getLogsFile().getConfiguration().set(player.getUniqueId().toString(), logs);
+        } else INSTANCE.getLogsFile().getConfiguration().set(player.getUniqueId().toString(), Collections.singletonList(prefix + message));
+        Runnables.runAsync(() -> INSTANCE.getLogsFile().save());
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -81,6 +117,7 @@ public final class bStaffs extends Plugin {
         settingsFile = new ConfigFile(this, "settings.yml");
         commandsFile = new ConfigFile(this, "commands.yml");
         chatsFile = new ConfigFile(this, "chats.yml");
+        logsFile = new ConfigFile(this, "logs.yml");
 
         new File(getDataFolder(), "langs").mkdir();
         String lang = "en_US";
@@ -206,7 +243,9 @@ public final class bStaffs extends Plugin {
                         Activity.ActivityType finalType = type;
                         task = Runnables.runTimerAsync(() -> {
                             String activity = bStaffHolder.getStaffHolderMessage(null, settingsFile.getString("DISCORD-INTEGRATION.ACTIVITY"));
-                            jda.getPresence().setActivity(Activity.of(finalType, activity));
+                            if (settingsFile.getConfiguration().contains("DISCORD-INTEGRATION.ACTIVITY-URL")) {
+                                jda.getPresence().setActivity(Activity.of(finalType, activity, settingsFile.getString("DISCORD-INTEGRATION.ACTIVITY-URL")));
+                            } else jda.getPresence().setActivity(Activity.of(finalType, activity));
                         }, delay, delay);
                         return;
                     }

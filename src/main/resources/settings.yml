@@ -40,10 +40,18 @@ DISCORD-INTEGRATION:
 
   UPDATE-DELAY: 5 # In seconds
   ACTIVITY: 'Players online: <bungee_online>'
-  ACTIVITY-TYPE: 'DEFAULT' ## Available parameters: DEFAULT, STREAMING, LISTENING, WATCHING, CUSTOM_STATUS, COMPETING.
+  ACTIVITY-URL: 'play.example.net'
+  ACTIVITY-TYPE: 'STREAMING' ## Available parameters: DEFAULT, STREAMING, LISTENING, WATCHING, COMPETING.
 
 EVENTS:
   JOIN-UPDATE-MESSAGE: true
+
+  LOGS:
+    LOG-METHOD: 'CONSOLE' ## Available parameters: CONSOLE, FILE, BOTH.
+
+    CHAT: true
+    COMMANDS: true
+    MOVE: true
 
   STAFFS:
     PERMISSION: 'bstaffs.staff'
@@ -64,6 +72,10 @@ SERVERS-CONFIG:
     # Command who execute player to stop the server.
     STOP-COMMAND: '/stop'
     NAME: 'Limbo' # Limbo server name.
+
+  # If message contains a words of below list, the player will not move to fallback server.
+  KICK-MESSAGE-BLACKLIST:
+    - 'cheating'
 
   # Fallback servers are server who you teleport to when the server where you are is offline.
   FALLBACK-SERVERS:

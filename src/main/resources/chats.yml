@@ -7,6 +7,29 @@
 
 TOGGLE-CHAT-PERMISSION: 'bstaffs.togglechat'
 
+CHAT-FILTER:
+  BYPASS-PERMISSION: 'bstaffs.chatbypass'
+
+  REPLACER: true
+  NOTIFY-BLOCK: true
+
+  # Select the mode of the replaces.
+  # Text mode replaces the entire message. (Default)
+  # Word mode replaces each word.
+  REPLACE-MODE: 'TEXT' # Available modes: TEXT, WORDS
+  # If true, the chat will be filtered and words will be replaced for one of the following:
+  REPLACER-TEXTS:
+    - 'This is the best server in the world!'
+  REPLACER-WORDS:
+    - '********'
+
+  # Block all url links.
+  BLOCK-LINKS: true
+  BLOCKED-WORDS:
+    - 'fuck'
+    - 'shit'
+    - 'bitch'
+
 # You can CREATE how many chat what you want.
 CHATS:
   STAFF-CHAT: # Example custom chat.

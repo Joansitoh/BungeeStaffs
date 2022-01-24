@@ -15,6 +15,7 @@ import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -36,6 +37,8 @@ public class ServerMovementListener implements Listener {
         if (!config.getBoolean("EVENTS.STAFFS.JOIN-MESSAGE")) return;
         ProxiedPlayer player = e.getPlayer();
         if (!player.hasPermission(permission)) return;
+
+        bStaffs.log(player, "move", bStaffHolder.getStaffHolderMessage(player, LanguageHandler.STAFF_MOVE.toString()));
         for (ProxiedPlayer p : ProxyServer.getInstance().getPlayers()) {
             if (!p.hasPermission(permission)) continue;
             p.sendMessage(new TextComponent(bStaffHolder.getStaffHolder(player, p, LanguageHandler.STAFF_JOIN.toString(), "")));
@@ -47,6 +50,8 @@ public class ServerMovementListener implements Listener {
         if (!config.getBoolean("EVENTS.STAFFS.LEFT-MESSAGE")) return;
         ProxiedPlayer player = e.getPlayer();
         if (!player.hasPermission(permission)) return;
+
+        bStaffs.log(player, "move", bStaffHolder.getStaffHolderMessage(player, LanguageHandler.STAFF_MOVE.toString()));
         for (ProxiedPlayer p : ProxyServer.getInstance().getPlayers()) {
             if (!p.hasPermission(permission)) continue;
             p.sendMessage(new TextComponent(bStaffHolder.getStaffHolder(player, p, LanguageHandler.STAFF_LEFT.toString(), "")));
@@ -59,6 +64,7 @@ public class ServerMovementListener implements Listener {
         ProxiedPlayer player = e.getPlayer();
         if (!player.hasPermission(permission)) return;
 
+        bStaffs.log(player, "move", bStaffHolder.getStaffHolderMessage(player, LanguageHandler.STAFF_MOVE.toString()));
         for (ProxiedPlayer p : ProxyServer.getInstance().getPlayers()) {
             if (!p.hasPermission(permission)) continue;
             p.sendMessage(new TextComponent(bStaffHolder.getStaffHolder(player, p, LanguageHandler.STAFF_MOVE.toString(), "")));
@@ -69,6 +75,12 @@ public class ServerMovementListener implements Listener {
     public void onServerFallback(ServerKickEvent e) {
         String fallback = bStaffs.INSTANCE.getRandomFallbackServer();
         if (fallback == null) return;
+
+        if (config.getConfiguration().contains("SERVERS-CONFIG.KICK-MESSAGE-BLACKLIST")) {
+            for (String s : config.getStringList("SERVERS-CONFIG.KICK-MESSAGE-BLACKLIST")) {
+                if (e.getKickReason().contains(s)) return;
+            }
+        }
 
         if (e.getPlayer().getServer().getInfo().getName().equalsIgnoreCase(fallback)) {
             for (String fall : bStaffs.INSTANCE.getFallbackServers()) {

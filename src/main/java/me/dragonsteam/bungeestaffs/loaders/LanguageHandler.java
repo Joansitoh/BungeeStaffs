@@ -36,6 +36,11 @@ public enum LanguageHandler {
     BOOLEAN_TRUE("TRUE-ARGUMENT", "DEFAULT.OBJECTS", "&aenabled"),
     BOOLEAN_FALSE("FALSE-ARGUMENT", "DEFAULT.OBJECTS", "&cdisabled"),
 
+    CANT_WRITE_WORD("CANT-WRITE-WORD", "CHATS-FILTER", "&fYou &cuse &fa &cbanned &fword. (<word>)"),
+    CANT_SEND_LINK("CANT-SEND-LINK", "CHATS-FILTER", "&fYou &ccant &fsend links in this chat."),
+
+    CHAT_BLOCKED("CHAT-BLOCKED", "CHATS-FILTER", "&fPlayer &c<player> &fhas try to send a blocked message. (<message>)"),
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     SEARCH("SEARCH-FORMAT", "SEARCH",
