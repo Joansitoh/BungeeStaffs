@@ -72,17 +72,22 @@ public class PlayerChatListener extends ListenerAdapter implements Listener {
                 String regex = "[(http(s)?):\\/\\/(www\\.)?a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)";
                 Pattern pattern = Pattern.compile(regex);
 
+                boolean notify = false;
+                if (config.contains("NOTIFY-BLOCK")) notify = config.getBoolean("NOTIFY-BLOCK");
+
                 if (config.getBoolean("BLOCK-LINKS")) {
                     Matcher matcher = pattern.matcher(e.getMessage());
                     if (matcher.find()) {
-                        if (config.getBoolean("NOTIFY-BLOCK")) {
-                            for (ProxiedPlayer p : bStaffs.INSTANCE.getProxy().getPlayers()) {
-                                if (!p.hasPermission("bstaffs.staff")) continue;
-                                p.sendMessage(LanguageHandler.CHAT_BLOCKED.toString(true)
-                                        .replace("<player>", player.getName())
-                                        .replace("<message>", matcher.group())
-                                );
-                            }
+                        if (notify) {
+                            try {
+                                for (ProxiedPlayer p : bStaffs.INSTANCE.getProxy().getPlayers()) {
+                                    if (!p.hasPermission("bstaffs.staff")) continue;
+                                    p.sendMessage(LanguageHandler.CHAT_BLOCKED.toString(true)
+                                            .replace("<player>", player.getName())
+                                            .replace("<message>", matcher.group())
+                                    );
+                                }
+                            } catch (Exception ignored) {}
                         }
 
                         if (replacer) {
@@ -103,14 +108,16 @@ public class PlayerChatListener extends ListenerAdapter implements Listener {
 
                     for (String s : config.getStringList("BLOCKED-WORDS")) {
                         if (e.getMessage().toLowerCase().contains(s.toLowerCase())) {
-                            if (config.getBoolean("NOTIFY-BLOCK")) {
-                                for (ProxiedPlayer p : bStaffs.INSTANCE.getProxy().getPlayers()) {
-                                    if (!p.hasPermission("bstaffs.staff")) continue;
-                                    p.sendMessage(LanguageHandler.CHAT_BLOCKED.toString(true)
-                                            .replace("<player>", player.getName())
-                                            .replace("<message>", matcher.group())
-                                    );
-                                }
+                            if (notify) {
+                                try {
+                                    for (ProxiedPlayer p : bStaffs.INSTANCE.getProxy().getPlayers()) {
+                                        if (!p.hasPermission("bstaffs.staff")) continue;
+                                        p.sendMessage(LanguageHandler.CHAT_BLOCKED.toString(true)
+                                                .replace("<player>", player.getName())
+                                                .replace("<message>", matcher.group())
+                                        );
+                                    }
+                                } catch (Exception ignored) {}
                             }
 
                             if (replacer) {

@@ -16,10 +16,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Joansiitoh (DragonsTeam && SkillTeam)
@@ -28,6 +25,8 @@ import java.util.Map;
 public class cCommand extends Command implements TabExecutor {
 
     private final CommandHandler comms;
+
+    private HashMap<UUID, UUID> lastTarget = new HashMap<>();
 
     public cCommand(CommandHandler comms) {
         super(comms.getCommand(), comms.getSendPermission(), comms.getAliases().toArray(new String[0]));
@@ -88,12 +87,23 @@ public class cCommand extends Command implements TabExecutor {
 
             if (comms.getType().equals(CommandType.TARGET) || comms.getType().equals(CommandType.PRIVATE)) {
                 if (args.length == 1) {
-                    player.sendMessage(new TextComponent(comms.getUsage()));
-                    return;
+                    if (comms.getType() != CommandType.PRIVATE && !lastTarget.containsKey(player.getUniqueId())) {
+                        player.sendMessage(new TextComponent(comms.getUsage()));
+                        return;
+                    }
                 }
 
                 ProxiedPlayer target = bStaffs.INSTANCE.getProxy().getPlayer(args[0]);
                 if (target == null) {
+                    if (comms.getType() == CommandType.PRIVATE && lastTarget.containsKey(player.getUniqueId())) {
+                        target = bStaffs.INSTANCE.getProxy().getPlayer(lastTarget.get(player.getUniqueId()));
+                        for (String arg : args) builder.append(arg).append(" ");
+                        if (ToggleUtils.isToggledCommand(target, comms)) return;
+                        target.sendMessage(comms.getPlayerFormat(player, target, builder.toString()));
+                        lastTarget.put(player.getUniqueId(), target.getUniqueId());
+                        return;
+                    }
+
                     player.sendMessage(new TextComponent(LanguageHandler.PLAYER_NOT_FOUND.toString().replace("<target>", args[0])));
                     return;
                 }
@@ -117,6 +127,7 @@ public class cCommand extends Command implements TabExecutor {
                 if (comms.getType() == CommandType.PRIVATE) {
                     if (ToggleUtils.isToggledCommand(target, comms)) return;
                     target.sendMessage(comms.getPlayerFormat(player, target, result));
+                    lastTarget.put(player.getUniqueId(), target.getUniqueId());
                     return;
                 }
 
@@ -125,6 +136,7 @@ public class cCommand extends Command implements TabExecutor {
                     if (ToggleUtils.isToggledCommand(p, comms)) continue;
                     p.sendMessage(comms.getPlayerFormat(player, target, result));
                 }
+                lastTarget.put(player.getUniqueId(), target.getUniqueId());
                 return;
             }
         }
