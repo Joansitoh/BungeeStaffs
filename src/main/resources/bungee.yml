@@ -5,3 +5,8 @@ main: ${mainClass}
 
 softdepends:
   - LuckPerms
+  - RedisBungee
+
+loadbefore:
+  - LuckPerms
+  - RedisBungee

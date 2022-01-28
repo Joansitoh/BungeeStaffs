@@ -11,6 +11,7 @@ import me.dragonsteam.bungeestaffs.loaders.ChatsHandler;
 import me.dragonsteam.bungeestaffs.loaders.CommandHandler;
 import me.dragonsteam.bungeestaffs.loaders.LanguageHandler;
 import me.dragonsteam.bungeestaffs.managers.HookManager;
+import me.dragonsteam.bungeestaffs.managers.hooks.RedisBungeeHandler;
 import me.dragonsteam.bungeestaffs.utils.UpdateChecker;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
@@ -58,6 +59,17 @@ public final class bStaffs extends Plugin {
     private ScheduledTask task;
 
     private JDA jda;
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    public static boolean isRedisPresent() {
+        return bStaffs.INSTANCE.getSettingsFile().getBoolean("REDIS-INTEGRATION") &&
+                bStaffs.INSTANCE.getHookManager().getHandler("RedisBungee") != null;
+    }
+
+    public static RedisBungeeHandler getRedisHandler() {
+        return (RedisBungeeHandler) bStaffs.INSTANCE.getHookManager().getHandler("RedisBungee");
+    }
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -128,7 +140,7 @@ public final class bStaffs extends Plugin {
         commands = new HashMap<>();
         knownCommands = new HashMap<>();
 
-        Runnables.runLater(() -> hookManager = new HookManager(), 5, TimeUnit.SECONDS);
+        Runnables.runLater(() -> hookManager = new HookManager(), 3, TimeUnit.SECONDS);
 
         ////////////////////////////////////////////////////////////////////////////////
 
@@ -166,6 +178,11 @@ public final class bStaffs extends Plugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        if (hookManager.getHandler("RedisBunee") != null) {
+            RedisBungeeHandler redisBungeeHandler = (RedisBungeeHandler) hookManager.getHandler("RedisBungee");
+            redisBungeeHandler.disable();
+        }
+
     }
 
     public void update(ProxiedPlayer player) {

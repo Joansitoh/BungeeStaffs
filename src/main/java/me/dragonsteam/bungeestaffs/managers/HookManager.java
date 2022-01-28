@@ -2,6 +2,7 @@ package me.dragonsteam.bungeestaffs.managers;
 
 import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.managers.hooks.LuckPermsHandler;
+import me.dragonsteam.bungeestaffs.managers.hooks.RedisBungeeHandler;
 
 import java.util.HashMap;
 
@@ -19,6 +20,7 @@ public class HookManager {
 
         // Register all the hooks
         handlerHashMap.put("LuckPerms", new LuckPermsHandler());
+        handlerHashMap.put("RedisBungee", new RedisBungeeHandler());
 
         for (HookHandler handler : handlerHashMap.values()) {
             if (!handler.isLoaded()) continue;

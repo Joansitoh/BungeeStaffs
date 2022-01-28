@@ -3,6 +3,7 @@ package me.dragonsteam.bungeestaffs;
 import me.dragonsteam.bungeestaffs.managers.HookHandler;
 import me.dragonsteam.bungeestaffs.managers.HookManager;
 import me.dragonsteam.bungeestaffs.managers.hooks.LuckPermsHandler;
+import me.dragonsteam.bungeestaffs.utils.PlayerCache;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import me.dragonsteam.bungeestaffs.utils.formats.TextFormatReader;
@@ -20,57 +21,28 @@ import java.util.regex.Pattern;
 
 public class bStaffHolder {
 
-    private static boolean tried = false;
-
-    public static String getStaffHolderMessage(@Nullable ProxiedPlayer player, String text) {
+    public static String getStaffHolderMessage(@Nullable PlayerCache player, String text) {
         if (player != null) {
-            ConfigFile config = bStaffs.INSTANCE.getSettingsFile();
-            String server = "", raw_server = "", name = player.getName();
-            String prefix = "", suffix = "";
-
-            // Checking the server motd method.
-            try {
-                if (config.getBoolean("USE-BUNGEE-MOTD"))
-                    server = player.getServer().getInfo().getMotd();
-                else server = player.getServer().getInfo().getName();
-
-                raw_server = player.getServer().getInfo().getName();
-            } catch (Exception ignore) {}
-
-            // Loading prefix and suffix using LuckPerms.
-            try {
-                HookHandler handler = bStaffs.INSTANCE.getHookManager().getHandler("LuckPerms");
-                if (handler != null) {
-                    if (!handler.isLoaded() && !tried) {
-                        tried = true;
-                        handler.setup();
-                    }
-
-                    try {
-                        LuckPermsHandler luckPermsHandler = (LuckPermsHandler) handler;
-                        if (luckPermsHandler.getPrefix(player.getUniqueId()) != null)
-                            prefix = luckPermsHandler.getPrefix(player.getUniqueId());
-
-                        if (luckPermsHandler.getSuffix(player.getUniqueId()) != null)
-                            suffix = luckPermsHandler.getSuffix(player.getUniqueId());
-                    } catch (Exception ignored) {}
-                }
-            } catch (Exception e) {
-                if (!tried) bStaffs.logger("LuckPerms hook is not installed or not working properly.");
-            }
-
             text = text
-                    .replace("<server>", server)
-                    .replace("<raw_server>", raw_server)
-                    .replace("<player>", name)
-                    .replace("<prefix>", prefix)
-                    .replace("<suffix>", suffix);
+                    .replace("<server>", player.getServer())
+                    .replace("<raw_server>", player.getRawServer())
+                    .replace("<player>", player.getName())
+                    .replace("<prefix>", player.getPrefix())
+                    .replace("<suffix>", player.getPrefix());
         } else {
-            for (ServerInfo info : bStaffs.INSTANCE.getProxy().getServers().values()) {
-                text = text.replace("<bungee_" + info.getName() + ">", info.getPlayers().size() + "");
-            }
+            if (bStaffs.isRedisPresent()) {
+                for (String server : bStaffs.getRedisHandler().getApi().getAllServers()) {
+                    text = text.replace("<bungee_" + server + ">", bStaffs.getRedisHandler().getApi().getPlayersOnServer(server).size() + "");
+                }
 
-            text = text.replace("<bungee_online>", bStaffs.INSTANCE.getProxy().getOnlineCount() + "");
+                text = text.replace("<bungee_online>", bStaffs.getRedisHandler().getApi().getPlayerCount() + "");
+            } else {
+                for (ServerInfo info : bStaffs.INSTANCE.getProxy().getServers().values()) {
+                    text = text.replace("<bungee_" + info.getName() + ">", info.getPlayers().size() + "");
+                }
+
+                text = text.replace("<bungee_online>", bStaffs.INSTANCE.getProxy().getOnlineCount() + "");
+            }
         }
 
         text = text
@@ -81,8 +53,8 @@ public class bStaffHolder {
         return ChatUtils.translate(text);
     }
 
-    public static BaseComponent[] getStaffHolder(ProxiedPlayer player, ProxiedPlayer viewer, String text, String message) {
-        return new BaseComponent[]{TextFormatReader.testNewPattern(viewer, getStaffHolderMessage(player, text), message)};
+    public static BaseComponent[] getStaffHolder(PlayerCache playerCache, ProxiedPlayer viewer, String text, String message) {
+        return new BaseComponent[]{TextFormatReader.testNewPattern(viewer, getStaffHolderMessage(playerCache, text), message)};
     }
 
     public static HashMap<String, String> getLinedArguments(String text) {

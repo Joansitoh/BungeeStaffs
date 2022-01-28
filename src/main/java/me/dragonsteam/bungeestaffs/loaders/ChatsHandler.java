@@ -7,6 +7,7 @@ import lombok.Setter;
 import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.commands.CommandManager;
+import me.dragonsteam.bungeestaffs.utils.PlayerCache;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import net.md_5.bungee.api.CommandSender;
@@ -122,7 +123,7 @@ public class ChatsHandler {
         return chatsHashMap.get(input);
     }
 
-    public BaseComponent[] getPlayerFormat(ProxiedPlayer player, ProxiedPlayer viewer, String message) {
+    public BaseComponent[] getPlayerFormat(PlayerCache player, ProxiedPlayer viewer, String message) {
         return bStaffHolder.getStaffHolder(player, viewer, format, message);
     }
 

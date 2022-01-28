@@ -2,6 +2,7 @@ package me.dragonsteam.bungeestaffs.commands.types;
 
 import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.loaders.LanguageHandler;
+import me.dragonsteam.bungeestaffs.utils.PlayerCache;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -37,7 +38,7 @@ public class ServerListCMD extends Command {
 
                     if (sender instanceof ProxiedPlayer) {
                         ProxiedPlayer player = (ProxiedPlayer) sender;
-                        sender.sendMessage(bStaffHolder.getStaffHolder(player, player, text, ""));
+                        sender.sendMessage(bStaffHolder.getStaffHolder(new PlayerCache(player), player, text, ""));
                     } else sender.sendMessage(TextComponent.toPlainText(bStaffHolder.getStaffHolder(null, null, text, "")));
                 }
                 continue;
@@ -46,7 +47,7 @@ public class ServerListCMD extends Command {
             // Check if sender instanceof ProxiedPlayer.
             if (sender instanceof ProxiedPlayer) {
                 ProxiedPlayer player = (ProxiedPlayer) sender;
-                sender.sendMessage(bStaffHolder.getStaffHolder(player, player, s, ""));
+                sender.sendMessage(bStaffHolder.getStaffHolder(new PlayerCache(player), player, s, ""));
             } else sender.sendMessage(TextComponent.toPlainText(bStaffHolder.getStaffHolder(null, null, s, "")));
         }
     }

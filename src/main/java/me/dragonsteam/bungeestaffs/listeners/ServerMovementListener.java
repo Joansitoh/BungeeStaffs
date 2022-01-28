@@ -3,6 +3,8 @@ package me.dragonsteam.bungeestaffs.listeners;
 import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.loaders.LanguageHandler;
+import me.dragonsteam.bungeestaffs.managers.hooks.RedisBungeeHandler;
+import me.dragonsteam.bungeestaffs.utils.PlayerCache;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import me.dragonsteam.bungeestaffs.utils.defaults.Runnables;
 import net.md_5.bungee.api.ProxyServer;
@@ -13,8 +15,10 @@ import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.ServerKickEvent;
 import net.md_5.bungee.api.event.ServerSwitchEvent;
 import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.chat.ComponentSerializer;
 import net.md_5.bungee.event.EventHandler;
 
+import javax.xml.soap.Text;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -31,17 +35,24 @@ public class ServerMovementListener implements Listener {
     public void onPostLogin(PostLoginEvent e) {
         if (e.getPlayer().hasPermission("bstaffs.admin")) {
             if (config.getBoolean("EVENTS.JOIN-UPDATE-MESSAGE"))
-                 Runnables.runLater(() -> bStaffs.INSTANCE.update(e.getPlayer()), 3, TimeUnit.SECONDS);
+                Runnables.runLater(() -> bStaffs.INSTANCE.update(e.getPlayer()), 3, TimeUnit.SECONDS);
         }
 
         if (!config.getBoolean("EVENTS.STAFFS.JOIN-MESSAGE")) return;
         ProxiedPlayer player = e.getPlayer();
         if (!player.hasPermission(permission)) return;
 
-        bStaffs.log(player, "move", bStaffHolder.getStaffHolderMessage(player, LanguageHandler.STAFF_MOVE.toString()));
+        PlayerCache playerCache = new PlayerCache(player);
+        bStaffs.log(player, "move", bStaffHolder.getStaffHolderMessage(playerCache, LanguageHandler.STAFF_MOVE.toString()));
+        if (bStaffs.isRedisPresent()) {
+            String result = "staff_move<split>" + permission + "<split>" + playerCache.toJson() + "<split>" + LanguageHandler.STAFF_JOIN;
+            bStaffs.getRedisHandler().getApi().sendChannelMessage(bStaffs.getRedisHandler().CHANNEL, result);
+            return;
+        }
+
         for (ProxiedPlayer p : ProxyServer.getInstance().getPlayers()) {
             if (!p.hasPermission(permission)) continue;
-            p.sendMessage(new TextComponent(bStaffHolder.getStaffHolder(player, p, LanguageHandler.STAFF_JOIN.toString(), "")));
+            p.sendMessage(new TextComponent(bStaffHolder.getStaffHolder(playerCache, p, LanguageHandler.STAFF_JOIN.toString(), "")));
         }
     }
 
@@ -51,10 +62,17 @@ public class ServerMovementListener implements Listener {
         ProxiedPlayer player = e.getPlayer();
         if (!player.hasPermission(permission)) return;
 
-        bStaffs.log(player, "move", bStaffHolder.getStaffHolderMessage(player, LanguageHandler.STAFF_MOVE.toString()));
+        PlayerCache playerCache = new PlayerCache(player);
+        bStaffs.log(player, "move", bStaffHolder.getStaffHolderMessage(playerCache, LanguageHandler.STAFF_MOVE.toString()));
+        if (bStaffs.isRedisPresent()) {
+            String result = "staff_move<split>" + permission + "<split>" + playerCache.toJson() + "<split>" + LanguageHandler.STAFF_LEFT;
+            bStaffs.getRedisHandler().getApi().sendChannelMessage(bStaffs.getRedisHandler().CHANNEL, result);
+            return;
+        }
+
         for (ProxiedPlayer p : ProxyServer.getInstance().getPlayers()) {
             if (!p.hasPermission(permission)) continue;
-            p.sendMessage(new TextComponent(bStaffHolder.getStaffHolder(player, p, LanguageHandler.STAFF_LEFT.toString(), "")));
+            p.sendMessage(new TextComponent(bStaffHolder.getStaffHolder(playerCache, p, LanguageHandler.STAFF_LEFT.toString(), "")));
         }
     }
 
@@ -64,10 +82,18 @@ public class ServerMovementListener implements Listener {
         ProxiedPlayer player = e.getPlayer();
         if (!player.hasPermission(permission)) return;
 
-        bStaffs.log(player, "move", bStaffHolder.getStaffHolderMessage(player, LanguageHandler.STAFF_MOVE.toString()));
+        PlayerCache playerCache = new PlayerCache(player);
+        bStaffs.log(player, "move", bStaffHolder.getStaffHolderMessage(playerCache, LanguageHandler.STAFF_MOVE.toString()));
+
+        if (bStaffs.isRedisPresent()) {
+            String result = "staff_move<split>" + permission + "<split>" + playerCache.toJson() + "<split>" + LanguageHandler.STAFF_MOVE;
+            bStaffs.getRedisHandler().getApi().sendChannelMessage(bStaffs.getRedisHandler().CHANNEL, result);
+            return;
+        }
+
         for (ProxiedPlayer p : ProxyServer.getInstance().getPlayers()) {
             if (!p.hasPermission(permission)) continue;
-            p.sendMessage(new TextComponent(bStaffHolder.getStaffHolder(player, p, LanguageHandler.STAFF_MOVE.toString(), "")));
+            p.sendMessage(new TextComponent(bStaffHolder.getStaffHolder(playerCache, p, LanguageHandler.STAFF_MOVE.toString(), "")));
         }
     }
 

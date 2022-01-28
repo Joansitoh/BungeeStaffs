@@ -32,20 +32,16 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-<!--
-        <repository>
-            <id>minebench-repo</id>
-            <url>https://repo.minebench.de/</url>
-        </repository>-->
     </repositories>
 
     <dependencies>
-       <!-- <dependency>
-            <groupId>de.themoep</groupId>
-            <artifactId>minedown</artifactId>
-            <version>1.7.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>-->
+        <dependency>
+            <groupId>com.github.limework</groupId>
+            <artifactId>redisbungee</artifactId>
+            <version>0.6.5</version>
+            <scope>provided</scope>
+        </dependency>
+
         <dependency>
             <groupId>com.github.DV8FromTheWorld</groupId>
             <artifactId>JDA</artifactId>
@@ -63,6 +59,13 @@
             <artifactId>api</artifactId>
             <version>5.3</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>3.10.2</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>

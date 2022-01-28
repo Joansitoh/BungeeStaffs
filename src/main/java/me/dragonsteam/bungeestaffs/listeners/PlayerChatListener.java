@@ -4,6 +4,8 @@ import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.loaders.ChatsHandler;
 import me.dragonsteam.bungeestaffs.loaders.LanguageHandler;
+import me.dragonsteam.bungeestaffs.utils.PlayerCache;
+import me.dragonsteam.bungeestaffs.utils.RedisMessageFormat;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ToggleUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -33,6 +35,7 @@ public class PlayerChatListener extends ListenerAdapter implements Listener {
     public void onPlayerChat(ChatEvent e) {
         if (!(e.getSender() instanceof ProxiedPlayer)) return;
         ProxiedPlayer player = (ProxiedPlayer) e.getSender();
+        PlayerCache cache = new PlayerCache(player);
 
         ChatsHandler chats = null;
         if (!ChatsHandler.getPlayersChatsMap().containsKey(player.getUniqueId())) {
@@ -43,6 +46,7 @@ public class PlayerChatListener extends ListenerAdapter implements Listener {
             if (chats == null) return;
             if (e.getMessage().substring(chats.getInput().length()).equalsIgnoreCase("")) return;
             if (!player.hasPermission(chats.getPermission()) && !chats.getPermission().equals("")) return;
+
             e.setCancelled(true);
 
             e.setMessage(e.getMessage().substring(chats.getInput().length()));
@@ -52,12 +56,12 @@ public class PlayerChatListener extends ListenerAdapter implements Listener {
             e.setCancelled(true);
         }
 
-        bStaffs.log(player, "chat", TextComponent.toPlainText(chats.getPlayerFormat(player, player, e.getMessage())));
+        bStaffs.log(player, "chat", TextComponent.toPlainText(chats.getPlayerFormat(cache, player, e.getMessage())));
         if (bStaffs.INSTANCE.getJda() != null) {
             try {
                 TextChannel textChannel = bStaffs.INSTANCE.getJda().getTextChannelById(chats.getDiscordChannel());
                 if (textChannel != null) {
-                    textChannel.sendMessage(ChatColor.stripColor(bStaffHolder.getStaffHolderMessage(player, chats.getDiscordFormatDiscord())
+                    textChannel.sendMessage(ChatColor.stripColor(bStaffHolder.getStaffHolderMessage(cache, chats.getDiscordFormatDiscord())
                             .replace("<message>", e.getMessage()))).queue();
                 }
             } catch (Exception ignored) {
@@ -140,11 +144,7 @@ public class PlayerChatListener extends ListenerAdapter implements Listener {
             }
         }
 
-        for (ProxiedPlayer p : bStaffs.INSTANCE.getProxy().getPlayers()) {
-            if (!p.hasPermission(chats.getPermission())) continue;
-            if (ToggleUtils.isToggledChat(p, chats)) continue;
-            p.sendMessage(chats.getPlayerFormat(player, p, e.getMessage()));
-        }
+        RedisMessageFormat.sendMessage(RedisMessageFormat.MessageType.CHAT, bStaffs.isRedisPresent(), chats.getInput(), cache.toJson(), e.getMessage());
     }
 
     @Override

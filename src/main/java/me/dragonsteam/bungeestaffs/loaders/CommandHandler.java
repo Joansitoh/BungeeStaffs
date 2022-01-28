@@ -6,6 +6,7 @@ import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.commands.CommandManager;
 import me.dragonsteam.bungeestaffs.utils.CommandType;
+import me.dragonsteam.bungeestaffs.utils.PlayerCache;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import net.md_5.bungee.api.CommandSender;
@@ -134,8 +135,8 @@ public class CommandHandler {
      * @param target for no SOLO commands.
      * @param message of the command.
      */
-    public BaseComponent[] getPlayerFormat(ProxiedPlayer player, ProxiedPlayer target, String message) {
-        return bStaffHolder.getStaffHolder(player, player, format.replace("<target>", target != null ? target.getName() : ""), message);
+    public BaseComponent[] getPlayerFormat(PlayerCache player, PlayerCache target, String message) {
+        return bStaffHolder.getStaffHolder(player, null, format.replace("<target>", target != null && target.getName() != null ? target.getName() : ""), message);
     }
 
     public boolean hasPermission(CommandSender player) {
