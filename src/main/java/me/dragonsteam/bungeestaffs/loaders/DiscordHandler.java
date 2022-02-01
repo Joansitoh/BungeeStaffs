@@ -5,11 +5,9 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 
 import javax.annotation.Nullable;
-import java.awt.*;
 
 /**
  * Class for project BungeeStaffs

@@ -1,4 +1,4 @@
-package me.dragonsteam.bungeestaffs.utils;
+package me.dragonsteam.bungeestaffs.utils.formats;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,6 +6,7 @@ import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.loaders.ChatsHandler;
 import me.dragonsteam.bungeestaffs.loaders.CommandHandler;
+import me.dragonsteam.bungeestaffs.utils.PlayerCache;
 import me.dragonsteam.bungeestaffs.utils.defaults.ToggleUtils;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.bson.Document;

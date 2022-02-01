@@ -38,7 +38,7 @@ CHATS:
     # Example: (#I love minecraft) // "STAFF (Lobby) | Joansiitoh: I love minecraft"
     INPUT: '#'
     TOGGLE-CMD: "staffchat"
-    FORMAT: "&5${STAFF}(color=#ff1100-#ff0095)(format=bold) &7(&o<server>&7) &7&l| <prefix><player>: &f<message>"
+    FORMAT: "&5${STAFF}(color=#ff1100-#ff0095)(format=bold) &7(&o<server>&7) &7&l| &f<prefix><player>: &f<message>"
 
     # Permission needed to use and read this chat.
     PERMISSION: "bstaffs.staffchat"

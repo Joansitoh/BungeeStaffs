@@ -6,7 +6,7 @@
 
     <groupId>me.dragonsteam.bungeestaffs</groupId>
     <artifactId>bStaffs</artifactId>
-    <version>0.3.9-b${buildNumber}</version>
+    <version>0.4.0-b${buildNumber}</version>
 
     <properties>
         <!-- Removes warnings -->
@@ -163,20 +163,20 @@
                             <finalName>${project.name}_v${project.version}</finalName>
                             <relocations>
                                 <relocation>
-                                    <pattern>com.google.gson</pattern>
-                                    <shadedPattern>${project.groupId}.libs.gson</shadedPattern>
-                                </relocation>
-                                <relocation>
                                     <pattern>org.bstats</pattern>
                                     <shadedPattern>${project.groupId}.libs.bstats</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>de.themoep.minedown</pattern>
-                                    <shadedPattern>${project.groupId}.libs.minedown</shadedPattern>
+                                    <pattern>net.dv8tion.jda</pattern>
+                                    <shadedPattern>${project.groupId}.libs.jda</shadedPattern>
                                 </relocation>
                                 <relocation>
                                     <pattern>com.github.DV8FromTheWorld</pattern>
                                     <shadedPattern>${project.groupId}.libs.jda</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.slf4j</pattern>
+                                    <shadedPattern>${project.groupId}.libs.slf4j</shadedPattern>
                                 </relocation>
                             </relocations>
 

@@ -5,20 +5,20 @@ import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.loaders.CommandHandler;
 import me.dragonsteam.bungeestaffs.loaders.DiscordHandler;
 import me.dragonsteam.bungeestaffs.loaders.LanguageHandler;
-import me.dragonsteam.bungeestaffs.managers.hooks.RedisBungeeHandler;
 import me.dragonsteam.bungeestaffs.utils.CommandType;
 import me.dragonsteam.bungeestaffs.utils.PlayerCache;
 import me.dragonsteam.bungeestaffs.utils.TimerUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ToggleUtils;
+import me.dragonsteam.bungeestaffs.utils.formats.RedisMessageFormat;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
-import net.md_5.bungee.chat.ComponentSerializer;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -29,7 +29,7 @@ public class cCommand extends Command implements TabExecutor {
 
     private final CommandHandler comms;
 
-    private HashMap<UUID, UUID> lastTarget = new HashMap<>();
+    private final HashMap<UUID, UUID> lastTarget = new HashMap<>();
 
     public cCommand(CommandHandler comms) {
         super(comms.getCommand(), comms.getSendPermission(), comms.getAliases().toArray(new String[0]));
@@ -85,17 +85,8 @@ public class cCommand extends Command implements TabExecutor {
 
                 // Sending the message receiver output to staffs.
                 sendDiscordMessage(player, null, result, map);
-                if (bStaffs.isRedisPresent()) {
-                    String message = "command<split>" + comms.getCommand() + "<split>" + playerCache.toJson() + "<split>" + result;
-                    bStaffs.getRedisHandler().getApi().sendChannelMessage(bStaffs.getRedisHandler().CHANNEL, message);
-                    return;
-                }
-
-                for (ProxiedPlayer p : bStaffs.INSTANCE.getProxy().getPlayers()) {
-                    if (!hasPerm(p, comms.getReceivePermission())) continue;
-                    if (ToggleUtils.isToggledCommand(p, comms)) continue;
-                    p.sendMessage(comms.getPlayerFormat(playerCache, null, builder.toString()));
-                }
+                RedisMessageFormat.sendMessage(RedisMessageFormat.MessageType.COMMAND, bStaffs.isRedisPresent(),
+                        comms.getCommand(), playerCache.toJson(), result);
                 return;
             }
 
@@ -107,7 +98,7 @@ public class cCommand extends Command implements TabExecutor {
                     }
                 }
 
-                ProxiedPlayer target = bStaffs.INSTANCE.getProxy().getPlayer(args[0]);
+                @Nullable ProxiedPlayer target = bStaffs.INSTANCE.getProxy().getPlayer(args[0]);
                 if (target == null) {
                     if (comms.getType() == CommandType.PRIVATE && lastTarget.containsKey(player.getUniqueId())) {
                         target = bStaffs.INSTANCE.getProxy().getPlayer(lastTarget.get(player.getUniqueId()));
@@ -118,44 +109,48 @@ public class cCommand extends Command implements TabExecutor {
                         return;
                     }
 
-                    player.sendMessage(new TextComponent(LanguageHandler.PLAYER_NOT_FOUND.toString().replace("<target>", args[0])));
-                    return;
+                    if (!comms.isIgnore()) {
+                        player.sendMessage(new TextComponent(LanguageHandler.PLAYER_NOT_FOUND.toString().replace("<target>", args[0])));
+                        return;
+                    }
                 }
 
+                /**
+                 * Get the playercache of the target.
+                 * With this method we can save the information of the target into
+                 * the playercache and get verified information.
+                 */
+                PlayerCache targetCache = null;
+                if (target != null) targetCache = new PlayerCache(target);
+                else targetCache = new PlayerCache(args[0], "");
+
+                /* Send cooldown to player. */
                 setCooldown(player, comms);
                 for (int x = 1; x < args.length; x++) builder.append(args[x]).append(" ");
                 player.sendMessage(ChatUtils.translate(comms.getOutput())
                         .replace("<message>", builder.toString())
-                        .replace("<target>", target.getName())
+                        .replace("<target>", target != null ? target.getName() : args[0])
                         .replace("<player>", player.getName())
                 );
 
                 String result = builder.toString();
-                PlayerCache targetCache = new PlayerCache(target);
                 HashMap<String, String> map = bStaffHolder.getLinedArguments(result);
 
                 if (player.hasPermission("bstaffs.staff") && comms.isAdministrative())
                     result = modify(result, false, map);
 
-                sendDiscordMessage(player, target, result, map);
-                if (comms.getType() == CommandType.PRIVATE) {
+                sendDiscordMessage(player, targetCache, result, map);
+
+                // If target is not null, send the message.
+                if (comms.getType() == CommandType.PRIVATE && target != null) {
                     if (ToggleUtils.isToggledCommand(target, comms)) return;
                     target.sendMessage(comms.getPlayerFormat(playerCache, targetCache, result));
                     lastTarget.put(player.getUniqueId(), target.getUniqueId());
                     return;
                 }
 
-                if (bStaffs.isRedisPresent()) {
-                    String message = "command<split>" + comms.getCommand() + "<split>" + playerCache.toJson() + "<split>" + result + "<split>" + targetCache.toJson();
-                    bStaffs.getRedisHandler().getApi().sendChannelMessage(bStaffs.getRedisHandler().CHANNEL, message);
-                    return;
-                }
-
-                for (ProxiedPlayer p : bStaffs.INSTANCE.getProxy().getPlayers()) {
-                    if (!hasPerm(p, comms.getReceivePermission())) continue;
-                    if (ToggleUtils.isToggledCommand(p, comms)) continue;
-                    p.sendMessage(comms.getPlayerFormat(playerCache, targetCache, result));
-                }
+                RedisMessageFormat.sendMessage(RedisMessageFormat.MessageType.COMMAND, bStaffs.isRedisPresent(),
+                        comms.getCommand(), playerCache.toJson(), result, targetCache.toJson());
                 return;
             }
         }
@@ -173,7 +168,7 @@ public class cCommand extends Command implements TabExecutor {
         return message;
     }
 
-    public void sendDiscordMessage(ProxiedPlayer player, ProxiedPlayer target, String message, HashMap<String, String> map) {
+    public void sendDiscordMessage(ProxiedPlayer player, PlayerCache target, String message, HashMap<String, String> map) {
         if (bStaffs.INSTANCE.getJda() != null) {
             try {
                 DiscordHandler handler = comms.getDiscordHandler();
@@ -182,9 +177,9 @@ public class cCommand extends Command implements TabExecutor {
                     String format = handler.getFormat();
                     format = format
                             .replace("<server>", player.getServer().getInfo().getName())
-                            .replace("<target_server>", target != null ? target.getServer().getInfo().getName() : "")
+                            .replace("<target_server>", target != null ? target.getServer() : "")
                             .replace("<message>", message)
-                            .replace("<target>", target == null ? "Console" : target.getName())
+                            .replace("<target>", target != null ? target.getName() : "Console")
                             .replace("<player>", player.getName())
                     ;
 
@@ -205,11 +200,6 @@ public class cCommand extends Command implements TabExecutor {
         // Set cooldown if player don't have bypass.
         if (comms.getCooldown() != 0 && !player.hasPermission("bstaffs.bypass"))
             TimerUtils.setPlayerCooldown(player, comms, comms.getCooldown());
-    }
-
-    private static boolean hasPerm(ProxiedPlayer player, String permission) {
-        if (permission.equalsIgnoreCase("")) return true;
-        return player.hasPermission(permission);
     }
 
     @Override

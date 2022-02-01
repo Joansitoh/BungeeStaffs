@@ -6,8 +6,8 @@ import lombok.Getter;
 import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.managers.HookHandler;
 import me.dragonsteam.bungeestaffs.utils.PlayerCache;
-import me.dragonsteam.bungeestaffs.utils.RedisMessageFormat;
 import me.dragonsteam.bungeestaffs.utils.defaults.Runnables;
+import me.dragonsteam.bungeestaffs.utils.formats.RedisMessageFormat;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
@@ -120,60 +120,6 @@ public class RedisBungeeHandler extends HookHandler implements Listener {
                 RedisMessageFormat.sendMessage(RedisMessageFormat.MessageType.STAFF_MOVE, false, args);
                 break;
         }
-/*
-
-        if (channel.equals("chat")) {
-            String chat = split[1], sender = split[2], text = split[3];
-            ChatsHandler chats = ChatsHandler.getChatByInput(chat);
-            PlayerCache playerCache = new PlayerCache(Document.parse(sender));
-
-            for (ProxiedPlayer p : bStaffs.INSTANCE.getProxy().getPlayers()) {
-                if (!hasPermission(p, chats.getPermission())) continue;
-                if (ToggleUtils.isToggledChat(p, chats)) continue;
-                p.sendMessage(chats.getPlayerFormat(playerCache, p, text));
-            }
-            return;
-        }
-
-        if (channel.equals("command")) {
-            String command = split[1], cache = split[2], result = split[3], target = null;
-            CommandHandler comms = CommandHandler.getCommandByName(command);
-            PlayerCache playerCache = null, targetCache = null;
-
-            if (split.length > 4) target = split[4];
-
-            try {
-                playerCache = new PlayerCache(Document.parse(cache));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-            if (target != null) {
-                try {
-                    targetCache = new PlayerCache(Document.parse(target));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            for (ProxiedPlayer player : bStaffs.INSTANCE.getProxy().getPlayers()) {
-                if (!hasPermission(player, comms.getReceivePermission())) continue;
-                if (ToggleUtils.isToggledCommand(player, comms)) continue;
-                player.sendMessage(comms.getPlayerFormat(playerCache, targetCache, result));
-            }
-            return;
-        }
-
-        if (channel.equals("staff_move")) {
-            String permission = split[1], sender = split[2], language = split[3];
-            PlayerCache playerCache = new PlayerCache(Document.parse(sender));
-
-            for (ProxiedPlayer player : bStaffs.INSTANCE.getProxy().getPlayers()) {
-                if (hasPermission(player, permission))
-                    player.sendMessage(bStaffHolder.getStaffHolder(playerCache, player, language, ""));
-            }
-            return;
-        }*/
     }
 
     private boolean hasPermission(ProxiedPlayer player, String permission) {

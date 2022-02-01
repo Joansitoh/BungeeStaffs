@@ -33,8 +33,7 @@ DISABLE-PRIMARY-COMMAND-TAB: false
 #  - '&ePlayer is connected! Server: ${<server>}(run_command=/server <server>).'
 ########################################################################################
 
-REDIS-INTEGRATION:
-  ENABLED: true
+REDIS-INTEGRATION: false
 
 DISCORD-INTEGRATION:
   ENABLED: false

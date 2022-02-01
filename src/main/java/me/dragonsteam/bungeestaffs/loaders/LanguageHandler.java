@@ -2,12 +2,9 @@ package me.dragonsteam.bungeestaffs.loaders;
 
 import lombok.Getter;
 import lombok.experimental.Accessors;
-import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
-import me.dragonsteam.bungeestaffs.utils.formats.TextFormatReader;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
@@ -32,6 +29,9 @@ public enum LanguageHandler {
     NO_PERMISSION("NO-PERMISSIONS", "DEFAULT", "&cYou don't have permission to execute this command."),
     PLAYER_NOT_FOUND("PLAYER-NOT-FOUND", "DEFAULT", "&cPlayer <target> not found."),
     ONLY_FOR_PLAYERS("ONLY-PLAYERS", "DEFAULT", "&cOnly players can execute this command."),
+
+    CHAT_SPY("CHAT-SPY", "DEFAULT", "&fChat spy has been <value>&f."),
+    CHAT_SPY_PREFIX("CHAT-SPY-PREFIX", "DEFAULT", "&9[SPY (<player>)] &f"),
 
     BOOLEAN_TRUE("TRUE-ARGUMENT", "DEFAULT.OBJECTS", "&aenabled"),
     BOOLEAN_FALSE("FALSE-ARGUMENT", "DEFAULT.OBJECTS", "&cdisabled"),
@@ -117,7 +117,7 @@ public enum LanguageHandler {
 
     private final String path, subPath;
 
-    private String def;
+    private final String def;
     private List<String> defList;
 
     private static final ConfigFile config = bStaffs.INSTANCE.getMessagesFile();

@@ -11,10 +11,11 @@ import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.config.Configuration;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Joansiitoh (DragonsTeam && SkillTeam)
@@ -28,7 +29,7 @@ public class CommandHandler {
 
     ////////////////////////////////////////////////////////////////////////////////
 
-    private boolean administrative;
+    private boolean administrative, ignore;
     private int cooldown;
     private CommandType type;
     private DiscordHandler discordHandler;
@@ -88,6 +89,7 @@ public class CommandHandler {
 
                 if (section.contains("USAGE")) comms.setUsage(section.getString("USAGE"));
                 if (section.contains("OUTPUT")) comms.setOutput(section.getString("OUTPUT"));
+                if (section.contains("IGNORE-ONLINE")) comms.setIgnore(section.getBoolean("IGNORE-ONLINE"));
 
                 comms.setDiscordHandler(new DiscordHandler(section.getSection("DISCORD")));
 

@@ -12,20 +12,16 @@ import me.dragonsteam.bungeestaffs.loaders.CommandHandler;
 import me.dragonsteam.bungeestaffs.loaders.LanguageHandler;
 import me.dragonsteam.bungeestaffs.managers.HookManager;
 import me.dragonsteam.bungeestaffs.managers.hooks.RedisBungeeHandler;
+import me.dragonsteam.bungeestaffs.utils.CommandType;
 import me.dragonsteam.bungeestaffs.utils.UpdateChecker;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import me.dragonsteam.bungeestaffs.utils.defaults.Runnables;
-import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.event.PermissionCheckEvent;
-import net.md_5.bungee.api.event.PreLoginEvent;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -82,6 +78,20 @@ public final class bStaffs extends Plugin {
     }
 
     public static void log(ProxiedPlayer player, String method, String message) {
+        if (method.equalsIgnoreCase("commands")) {
+            String command = message.replace("Executed command: ", "").split(" ")[0];
+            if (CommandHandler.getCommandByName(command) != null) {
+                CommandHandler commandHandler = CommandHandler.getCommandByName(command);
+                if (commandHandler.getType().equals(CommandType.PRIVATE)) {
+                    String reduced = message.replace("Executed command: " + command + " with args: ", "");
+                    for (ProxiedPlayer p : bStaffs.INSTANCE.getProxy().getPlayers()) {
+                        if (ChatSpyCMD.getPlayerList().contains(p.getUniqueId()))
+                            p.sendMessage(LanguageHandler.CHAT_SPY_PREFIX.toString().replace("<player>", player.getName()) + reduced);
+                    }
+                }
+            }
+        }
+
         boolean chat = INSTANCE.getSettingsFile().getBoolean("EVENTS.LOGS.CHAT"), move = INSTANCE.getSettingsFile().getBoolean("EVENTS.LOGS.MOVE");
         boolean commands = INSTANCE.getSettingsFile().getBoolean("EVENTS.LOGS.COMMANDS");
         if (method.equalsIgnoreCase("chats") && !chat) return;
@@ -169,7 +179,8 @@ public final class bStaffs extends Plugin {
         registerCommands(
                 new bStaffCommand(), new SearchCMD(), new StaffListCMD(),
                 new ToggleChatCMD(), new ToggleCMD(), new ServerKickCMD(),
-                new RestartCMD(), new ServerListCMD(), new ClientStatusCMD()
+                new RestartCMD(), new ServerListCMD(), new ClientStatusCMD(),
+                new ChatSpyCMD()
         );
 
         startDiscordBot();

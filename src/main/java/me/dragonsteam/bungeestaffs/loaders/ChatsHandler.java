@@ -1,14 +1,10 @@
 package me.dragonsteam.bungeestaffs.loaders;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.bStaffs;
-import me.dragonsteam.bungeestaffs.commands.CommandManager;
 import me.dragonsteam.bungeestaffs.utils.PlayerCache;
-import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -16,9 +12,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.config.Configuration;
 
-import java.util.BitSet;
 import java.util.HashMap;
-import java.util.Optional;
 import java.util.UUID;
 
 /**

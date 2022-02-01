@@ -1,18 +1,11 @@
 package me.dragonsteam.bungeestaffs;
 
-import me.dragonsteam.bungeestaffs.managers.HookHandler;
-import me.dragonsteam.bungeestaffs.managers.HookManager;
-import me.dragonsteam.bungeestaffs.managers.hooks.LuckPermsHandler;
 import me.dragonsteam.bungeestaffs.utils.PlayerCache;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
-import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import me.dragonsteam.bungeestaffs.utils.formats.TextFormatReader;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.config.Configuration;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
@@ -31,7 +24,7 @@ public class bStaffHolder {
                     .replace("<suffix>", player.getPrefix());
         } else {
             if (bStaffs.isRedisPresent()) {
-                for (String server : bStaffs.getRedisHandler().getApi().getAllServers()) {
+                for (String server : bStaffs.getRedisHandler().getApi().getServerToPlayers().keySet()) {
                     text = text.replace("<bungee_" + server + ">", bStaffs.getRedisHandler().getApi().getPlayersOnServer(server).size() + "");
                 }
 

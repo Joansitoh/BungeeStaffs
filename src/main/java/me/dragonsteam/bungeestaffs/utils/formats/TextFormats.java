@@ -10,7 +10,6 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 
-import javax.xml.soap.Text;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;

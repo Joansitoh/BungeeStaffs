@@ -1,11 +1,8 @@
 package me.dragonsteam.bungeestaffs.utils.formats.util;
 
-import com.sun.javafx.collections.MappingChange;
 import net.md_5.bungee.api.ChatColor;
 
 import java.awt.*;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by Joansiitoh (DragonsTeam && SkillTeam)

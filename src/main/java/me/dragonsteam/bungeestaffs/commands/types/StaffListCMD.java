@@ -4,7 +4,6 @@ import me.dragonsteam.bungeestaffs.bStaffHolder;
 import me.dragonsteam.bungeestaffs.bStaffs;
 import me.dragonsteam.bungeestaffs.loaders.LanguageHandler;
 import me.dragonsteam.bungeestaffs.utils.PlayerCache;
-import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;

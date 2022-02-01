@@ -80,6 +80,7 @@ COMMANDS:
   REPORT-CMD:
     TYPE: TARGET
     COMMAND: 'report'
+    IGNORE-ONLINE: false
     ALIASES:
       - 'rep'
     USAGE: 'Use /report <player> <message>'
