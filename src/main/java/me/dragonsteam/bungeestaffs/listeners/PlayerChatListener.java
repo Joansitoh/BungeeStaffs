@@ -31,6 +31,72 @@ import java.util.regex.Pattern;
 public class PlayerChatListener extends ListenerAdapter implements Listener {
 
     @EventHandler
+    public void onPlayerFilterChat(ChatEvent event) {
+        ProxiedPlayer player = (ProxiedPlayer) event.getSender();
+        Configuration config = bStaffs.INSTANCE.getChatsFile().getConfiguration().getSection("CHAT-FILTER");
+
+        if (event.isCommand()) return;
+        if (config != null) {
+            if (config.getBoolean("ONLY-CUSTOM-CHATS")) return;
+            if (config.getStringList("BLACKLIST-SERVERS").contains(player.getServer().getInfo().getName()))
+                return;
+
+            if (!player.hasPermission(config.getString("BYPASS-PERMISSION"))) {
+                boolean replacer = config.getBoolean("REPLACER"), textMode = config.getString("REPLACE-MODE").equalsIgnoreCase("TEXT");
+
+                String regex = "[(http(s)?):\\/\\/(www\\.)?a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)";
+                Pattern pattern = Pattern.compile(regex);
+
+                boolean notify = false;
+                if (config.contains("NOTIFY-BLOCK")) notify = config.getBoolean("NOTIFY-BLOCK");
+
+                if (config.getBoolean("BLOCK-LINKS")) {
+                    Matcher matcher = pattern.matcher(event.getMessage());
+                    if (matcher.find()) {
+                        if (notify) notifier(player, matcher.group());
+
+                        if (replacer) {
+                            if (textMode)
+                                event.setMessage(config.getStringList("REPLACER-TEXTS").get(new Random().nextInt(config.getStringList("REPLACER-TEXTS").size())));
+                            else {
+                                for (int x = 0; x < matcher.groupCount(); x++) {
+                                    String random = config.getStringList("REPLACER-WORDS").get(new Random().nextInt(config.getStringList("REPLACER-WORDS").size()));
+                                    event.setMessage(event.getMessage().replaceFirst(matcher.group(x), random));
+                                }
+                            }
+                        } else {
+                            player.sendMessage(LanguageHandler.CANT_SEND_LINK.toString(true));
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                }
+
+                for (String s : config.getStringList("BLOCKED-WORDS")) {
+                    if (event.getMessage().toLowerCase().contains(s.toLowerCase())) {
+                        if (notify) notifier(player, s);
+
+                        if (replacer) {
+                            if (textMode)
+                                event.setMessage(config.getStringList("REPLACER-TEXTS").get(new Random().nextInt(config.getStringList("REPLACER-TEXTS").size())));
+                            else {
+                                while (event.getMessage().toLowerCase().contains(s.toLowerCase())) {
+                                    String random = config.getStringList("REPLACER-WORDS").get(new Random().nextInt(config.getStringList("REPLACER-WORDS").size()));
+                                    event.setMessage(event.getMessage().replaceFirst(s, random));
+                                }
+                            }
+                        } else {
+                            player.sendMessage(LanguageHandler.CANT_WRITE_WORD.toString(true).replace("<word>", s));
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @EventHandler(priority = 0)
     public void onPlayerChat(ChatEvent e) {
         if (!(e.getSender() instanceof ProxiedPlayer)) return;
         ProxiedPlayer player = (ProxiedPlayer) e.getSender();
@@ -164,4 +230,17 @@ public class PlayerChatListener extends ListenerAdapter implements Listener {
             }
         }
     }
+
+    public void notifier(ProxiedPlayer player, String message) {
+        try {
+            for (ProxiedPlayer p : bStaffs.INSTANCE.getProxy().getPlayers()) {
+                if (!p.hasPermission("bstaffs.staff")) continue;
+                p.sendMessage(LanguageHandler.CHAT_BLOCKED.toString(true)
+                        .replace("<player>", player.getName())
+                        .replace("<message>", message)
+                );
+            }
+        } catch (Exception ignored) {}
+    }
+
 }

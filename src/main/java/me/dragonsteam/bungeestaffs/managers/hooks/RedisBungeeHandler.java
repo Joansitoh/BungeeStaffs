@@ -74,7 +74,7 @@ public class RedisBungeeHandler extends HookHandler implements Listener {
             /* We remove the pending staffs from the staffHash */
             for (String staff : pending) staffsHash.remove(staff);
 
-            api.sendChannelMessage(CHANNEL, "staffs<split>" + getStaffPlayers());
+            api.sendChannelMessage(CHANNEL, "staffs" + RedisMessageFormat.SPLIT_FORMAT + getStaffPlayers());
             for (ProxiedPlayer player : bStaffs.INSTANCE.getProxy().getPlayers()) {
                 if (hasPermission(player, "bstaffs.staff"))
                     staffsHash.put(player.getName(), new PlayerCache(player));
@@ -93,7 +93,7 @@ public class RedisBungeeHandler extends HookHandler implements Listener {
     public void onRedisBungeeMessage(PubSubMessageEvent event) {
         if (!event.getChannel().equals(CHANNEL)) return;
         String message = event.getMessage();
-        String[] split = message.split("<split>");
+        String[] split = message.split(RedisMessageFormat.SPLIT_FORMAT);
 
         // Global variables
         String channel = split[0];
@@ -109,16 +109,11 @@ public class RedisBungeeHandler extends HookHandler implements Listener {
         String[] args = new String[split.length - 1];
         System.arraycopy(split, 1, args, 0, split.length - 1);
 
-        switch (channel) {
-            case "chat":
-                RedisMessageFormat.sendMessage(RedisMessageFormat.MessageType.CHAT, false, args);
+        for (RedisMessageFormat.MessageType type : RedisMessageFormat.MessageType.values()) {
+            if (type.getName().equals(channel)) {
+                RedisMessageFormat.sendMessage(type, false, args);
                 break;
-            case "command":
-                RedisMessageFormat.sendMessage(RedisMessageFormat.MessageType.COMMAND, false, args);
-                break;
-            case "staff_move":
-                RedisMessageFormat.sendMessage(RedisMessageFormat.MessageType.STAFF_MOVE, false, args);
-                break;
+            }
         }
     }
 
@@ -132,7 +127,7 @@ public class RedisBungeeHandler extends HookHandler implements Listener {
         int index = bStaffs.INSTANCE.getProxy().getPlayers().size();
         for (ProxiedPlayer player : bStaffs.INSTANCE.getProxy().getPlayers()) {
             if (hasPermission(player, "bstaffs.staff"))
-                builder.append(new PlayerCache(player).toJson()).append(index-- > 1 ? "<split>" : "");
+                builder.append(new PlayerCache(player).toJson()).append(index-- > 1 ? RedisMessageFormat.SPLIT_FORMAT : "");
             index--;
         }
 

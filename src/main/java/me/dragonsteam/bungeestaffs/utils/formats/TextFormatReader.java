@@ -143,7 +143,7 @@ public class TextFormatReader {
                     message_component.addExtra(component);
                 }
 
-                if (extra.contains("<message>") && !message_replaced) {
+                if (message != null && extra.contains("<message>") && !message_replaced) {
                     extra = extra.replace("<message>", message);
                     message_replaced = true;
                 }
@@ -155,7 +155,7 @@ public class TextFormatReader {
 
             last_color = getLastColor(s);
 
-            if (s.contains("<message>") && !message_replaced) {
+            if (message != null && s.contains("<message>") && !message_replaced) {
                 s = s.replace("<message>", message);
                 message_replaced = true;
             }

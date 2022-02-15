@@ -29,9 +29,10 @@ public enum LanguageHandler {
     NO_PERMISSION("NO-PERMISSIONS", "DEFAULT", "&cYou don't have permission to execute this command."),
     PLAYER_NOT_FOUND("PLAYER-NOT-FOUND", "DEFAULT", "&cPlayer <target> not found."),
     ONLY_FOR_PLAYERS("ONLY-PLAYERS", "DEFAULT", "&cOnly players can execute this command."),
+    NO_TARGET("NO-TARGET", "DEFAULT", "&cNo one has send you a message."),
 
     CHAT_SPY("CHAT-SPY", "DEFAULT", "&fChat spy has been <value>&f."),
-    CHAT_SPY_PREFIX("CHAT-SPY-PREFIX", "DEFAULT", "&9[SPY (<player>)] &f"),
+    CHAT_SPY_PREFIX("CHAT-SPY-PREFIX", "DEFAULT", "&9[SPY] &7(<player> > <target>) &f"),
 
     BOOLEAN_TRUE("TRUE-ARGUMENT", "DEFAULT.OBJECTS", "&aenabled"),
     BOOLEAN_FALSE("FALSE-ARGUMENT", "DEFAULT.OBJECTS", "&cdisabled"),

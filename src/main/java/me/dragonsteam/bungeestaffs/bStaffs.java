@@ -2,7 +2,6 @@ package me.dragonsteam.bungeestaffs;
 
 import lombok.Getter;
 import me.dragonsteam.bungeestaffs.commands.types.*;
-import me.dragonsteam.bungeestaffs.listeners.PlayerAliasesListener;
 import me.dragonsteam.bungeestaffs.listeners.PlayerChatListener;
 import me.dragonsteam.bungeestaffs.listeners.PlayerCompleteListener;
 import me.dragonsteam.bungeestaffs.listeners.ServerMovementListener;
@@ -13,14 +12,17 @@ import me.dragonsteam.bungeestaffs.loaders.LanguageHandler;
 import me.dragonsteam.bungeestaffs.managers.HookManager;
 import me.dragonsteam.bungeestaffs.managers.hooks.RedisBungeeHandler;
 import me.dragonsteam.bungeestaffs.utils.CommandType;
+import me.dragonsteam.bungeestaffs.utils.PlayerCache;
 import me.dragonsteam.bungeestaffs.utils.UpdateChecker;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import me.dragonsteam.bungeestaffs.utils.defaults.ConfigFile;
 import me.dragonsteam.bungeestaffs.utils.defaults.Runnables;
+import me.dragonsteam.bungeestaffs.utils.formats.RedisMessageFormat;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Listener;
@@ -78,20 +80,6 @@ public final class bStaffs extends Plugin {
     }
 
     public static void log(ProxiedPlayer player, String method, String message) {
-        if (method.equalsIgnoreCase("commands")) {
-            String command = message.replace("Executed command: ", "").split(" ")[0];
-            if (CommandHandler.getCommandByName(command) != null) {
-                CommandHandler commandHandler = CommandHandler.getCommandByName(command);
-                if (commandHandler.getType().equals(CommandType.PRIVATE)) {
-                    String reduced = message.replace("Executed command: " + command + " with args: ", "");
-                    for (ProxiedPlayer p : bStaffs.INSTANCE.getProxy().getPlayers()) {
-                        if (ChatSpyCMD.getPlayerList().contains(p.getUniqueId()))
-                            p.sendMessage(LanguageHandler.CHAT_SPY_PREFIX.toString().replace("<player>", player.getName()) + reduced);
-                    }
-                }
-            }
-        }
-
         boolean chat = INSTANCE.getSettingsFile().getBoolean("EVENTS.LOGS.CHAT"), move = INSTANCE.getSettingsFile().getBoolean("EVENTS.LOGS.MOVE");
         boolean commands = INSTANCE.getSettingsFile().getBoolean("EVENTS.LOGS.COMMANDS");
         if (method.equalsIgnoreCase("chats") && !chat) return;
@@ -173,7 +161,7 @@ public final class bStaffs extends Plugin {
 
         logger("Registering listeners and commands...");
         registerListeners(
-                new PlayerChatListener(), new ServerMovementListener(), new PlayerCompleteListener(), new PlayerAliasesListener()
+                new PlayerChatListener(), new ServerMovementListener(), new PlayerCompleteListener()
         );
 
         registerCommands(
@@ -194,6 +182,7 @@ public final class bStaffs extends Plugin {
             redisBungeeHandler.disable();
         }
 
+        if (jda != null) jda.shutdown();
     }
 
     public void update(ProxiedPlayer player) {
@@ -242,6 +231,18 @@ public final class bStaffs extends Plugin {
         List<String> fallbackServers = settingsFile.getStringList("SERVERS-CONFIG.FALLBACK-SERVERS");
         if (fallbackServers.isEmpty()) return null;
         return fallbackServers.get(new Random().nextInt(fallbackServers.size()));
+    }
+
+    public boolean isOnline(String name) {
+        if (bStaffs.isRedisPresent()) {
+            return bStaffs.getRedisHandler().getApi().getHumanPlayersOnline().contains(name);
+        } else return bStaffs.INSTANCE.getProxy().getPlayer(name) != null;
+    }
+
+    public boolean isOnline(UUID uuid) {
+        if (bStaffs.isRedisPresent()) {
+            return bStaffs.getRedisHandler().getApi().isPlayerOnline(uuid);
+        } else return bStaffs.INSTANCE.getProxy().getPlayer(uuid) != null;
     }
 
     public void startDiscordBot() {/*

@@ -21,6 +21,7 @@
 # * SOLO: Send simple message to players.
 # * TARGET: Send message using target.
 # * PRIVATE: Send private message to player.
+# * RESPONSE: Send message to last player who used command.
 # * CONSOLE: Get message from console.
 
 # * PERMISSION LIST:
@@ -98,6 +99,20 @@ COMMANDS:
     TYPE: PRIVATE
     COMMAND: 'msg'
     USAGE: 'Use /msg <player> <message>'
+
+    PERMISSIONS:
+      SEND: ""
+      RECEIVE: ""
+      TOGGLE: ""
+
+    FORMAT: '&7&l| &fFrom &c<player>&f: &f<message>'
+    OUTPUT: '&7&l| &fTo &c<target>&f: <message>'
+    COOLDOWN: 3
+
+  RESPONSE-CMD:
+    TYPE: RESPONSE
+    COMMAND: 'r'
+    USAGE: 'Use /r <message>'
 
     PERMISSIONS:
       SEND: ""

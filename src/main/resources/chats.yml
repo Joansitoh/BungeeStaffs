@@ -9,6 +9,10 @@ TOGGLE-CHAT-PERMISSION: 'bstaffs.togglechat'
 
 CHAT-FILTER:
   BYPASS-PERMISSION: 'bstaffs.chatbypass'
+  ONLY-CUSTOM-CHATS: true
+
+  BLACKLIST-SERVERS:
+    - 'lobby'
 
   REPLACER: true
   NOTIFY-BLOCK: true

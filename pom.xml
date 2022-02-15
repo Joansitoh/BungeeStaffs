@@ -6,7 +6,7 @@
 
     <groupId>me.dragonsteam.bungeestaffs</groupId>
     <artifactId>bStaffs</artifactId>
-    <version>0.4.0-b${buildNumber}</version>
+    <version>0.4.1-b${buildNumber}</version>
 
     <properties>
         <!-- Removes warnings -->

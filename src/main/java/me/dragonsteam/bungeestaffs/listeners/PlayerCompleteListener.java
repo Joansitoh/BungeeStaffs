@@ -1,6 +1,7 @@
 package me.dragonsteam.bungeestaffs.listeners;
 
 import me.dragonsteam.bungeestaffs.bStaffs;
+import me.dragonsteam.bungeestaffs.loaders.AliasesHandler;
 import me.dragonsteam.bungeestaffs.utils.defaults.ChatUtils;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.TabCompleteEvent;
@@ -48,6 +49,7 @@ public class PlayerCompleteListener implements Listener {
             }
 
             completions.sort(String.CASE_INSENSITIVE_ORDER);
+
             e.getSuggestions().addAll(completions);
         }
     }
